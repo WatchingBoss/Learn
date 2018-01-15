@@ -1,0 +1,3 @@
+F:/Documents/Projects_C/Learning/factorial/cmake-build-debug/CMakeFiles/edit_cache.dir
+F:/Documents/Projects_C/Learning/factorial/cmake-build-debug/CMakeFiles/factorial.dir
+F:/Documents/Projects_C/Learning/factorial/cmake-build-debug/CMakeFiles/rebuild_cache.dir
