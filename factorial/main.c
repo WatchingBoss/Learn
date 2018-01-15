@@ -2,6 +2,7 @@
 
 int fact(int x){
     if (x == 1) return 1;
+    printf("%i\n", x);
     return x * fact (x - 1);
 }
 
