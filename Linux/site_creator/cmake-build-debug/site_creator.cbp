@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="site_creator"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="example.c">
+				<Option output="/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/example.c" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/Makefile&quot;  VERBOSE=1 example.c"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="example.c/fast">
+				<Option output="/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/example.c" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/Makefile&quot;  VERBOSE=1 example.c/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="site_creator">
+				<Option output="/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/site_creator" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/Makefile&quot;  VERBOSE=1 site_creator"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="site_creator/fast">
+				<Option output="/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/site_creator" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/Makefile&quot;  VERBOSE=1 site_creator/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/ubu/CLionProjects/LearningC/site_creator/example.c">
+			<Option target="example.c"/>
+		</Unit>
+		<Unit filename="/home/ubu/CLionProjects/LearningC/site_creator/main.c">
+			<Option target="site_creator"/>
+		</Unit>
+		<Unit filename="/home/ubu/CLionProjects/LearningC/site_creator/template.h">
+			<Option target="site_creator"/>
+		</Unit>
+		<Unit filename="/home/ubu/CLionProjects/LearningC/site_creator/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

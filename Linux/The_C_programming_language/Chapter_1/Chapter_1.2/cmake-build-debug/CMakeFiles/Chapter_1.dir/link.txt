@@ -1,0 +1,1 @@
+/usr/bin/cc -g   CMakeFiles/Chapter_1.dir/hello.c.o CMakeFiles/Chapter_1.dir/FahtoCel.c.o CMakeFiles/Chapter_1.dir/exercise_1_3.c.o CMakeFiles/Chapter_1.dir/exercise_1_4.c.o  -o Chapter_1 

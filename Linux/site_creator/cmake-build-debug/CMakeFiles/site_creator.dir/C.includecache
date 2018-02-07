@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/ubu/CLionProjects/LearningC/site_creator/main.c
+stdio.h
+-
+sys/stat.h
+-
+template.h
+/home/ubu/CLionProjects/LearningC/site_creator/template.h
+
+/home/ubu/CLionProjects/LearningC/site_creator/template.h
+

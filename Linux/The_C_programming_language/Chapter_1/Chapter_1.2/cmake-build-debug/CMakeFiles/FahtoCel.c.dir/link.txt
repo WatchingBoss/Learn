@@ -1,0 +1,1 @@
+/usr/bin/cc -g   CMakeFiles/FahtoCel.c.dir/FahtoCel.c.o  -o FahtoCel.c 

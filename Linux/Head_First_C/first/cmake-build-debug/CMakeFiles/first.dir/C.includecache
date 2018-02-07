@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/ubu/CLionProjects/LearningC/first/bermuda.c
+stdio.h
+-
+
+/home/ubu/CLionProjects/LearningC/first/main.c
+stdio.h
+-
+string.h
+-
+

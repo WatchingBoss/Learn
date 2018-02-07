@@ -1,0 +1,3 @@
+/home/ubu/CLionProjects/LearningC/third/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/ubu/CLionProjects/LearningC/third/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/ubu/CLionProjects/LearningC/third/cmake-build-debug/CMakeFiles/third.dir

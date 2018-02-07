@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/ubu/CLionProjects/LearningC/The_C_programming_language/Chapter_1/FahtoCel.c
+stdio.h
+-
+
+/home/ubu/CLionProjects/LearningC/The_C_programming_language/Chapter_1/hello.c
+stdio.h
+-
+

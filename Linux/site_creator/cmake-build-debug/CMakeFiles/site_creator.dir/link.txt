@@ -1,0 +1,1 @@
+/usr/bin/cc -g   CMakeFiles/site_creator.dir/main.c.o  -o site_creator 
