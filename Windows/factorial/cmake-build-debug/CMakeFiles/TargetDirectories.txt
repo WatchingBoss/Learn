@@ -1,3 +1,0 @@
-/media/ubu/DATA/Documents/Projects_C/LearningC/factorial/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/media/ubu/DATA/Documents/Projects_C/LearningC/factorial/cmake-build-debug/CMakeFiles/edit_cache.dir
-/media/ubu/DATA/Documents/Projects_C/LearningC/factorial/cmake-build-debug/CMakeFiles/factorial.dir
