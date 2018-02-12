@@ -1,1 +1,1 @@
-/usr/bin/cc -g   CMakeFiles/just_for_fun.c.dir/just_for_fun.c.o  -o just_for_fun.c 
+/usr/bin/cc -g   CMakeFiles/just_for_fun.c.dir/just_for_fun.c.o  -o just_for_fun.c -lm 

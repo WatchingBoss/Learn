@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/just_for_fun.c" "/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/CMakeFiles/just_for_fun.c.dir/just_for_fun.c.o"
+  "/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/just_for_fun.c" "/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/CMakeFiles/just_for_fun.c.dir/just_for_fun.c.o"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 

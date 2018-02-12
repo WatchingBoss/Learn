@@ -20,3 +20,4 @@ add_executable(${BUILD_3} ${SOURCE_FILES_3})
 
 target_link_libraries(some.c m)
 target_link_libraries(first m)
+target_link_libraries(just_for_fun.c m)

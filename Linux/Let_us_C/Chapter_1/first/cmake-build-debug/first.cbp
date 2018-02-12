@@ -8,38 +8,38 @@
 		<Option virtualFolders="CMake Files\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug"/>
+				<Option working_dir="/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug"/>
+				<Option working_dir="/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="edit_cache">
-				<Option working_dir="/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug"/>
+				<Option working_dir="/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="some.c">
-				<Option output="/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/some.c" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug"/>
+				<Option output="/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/some.c" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -51,15 +51,15 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 some.c"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 some.c"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="some.c/fast">
-				<Option output="/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/some.c" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug"/>
+				<Option output="/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/some.c" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -71,15 +71,15 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 some.c/fast"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 some.c/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="just_for_fun.c">
-				<Option output="/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/just_for_fun.c" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug"/>
+				<Option output="/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/just_for_fun.c" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -91,15 +91,15 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 just_for_fun.c"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 just_for_fun.c"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="just_for_fun.c/fast">
-				<Option output="/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/just_for_fun.c" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug"/>
+				<Option output="/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/just_for_fun.c" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -111,15 +111,15 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 just_for_fun.c/fast"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 just_for_fun.c/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="main.c">
-				<Option output="/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/main.c" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug"/>
+				<Option output="/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/main.c" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -131,15 +131,15 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 main.c"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 main.c"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="main.c/fast">
-				<Option output="/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/main.c" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug"/>
+				<Option output="/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/main.c" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -151,15 +151,15 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 main.c/fast"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 main.c/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="first">
-				<Option output="/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/first" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug"/>
+				<Option output="/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/first" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -171,15 +171,15 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 first"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 first"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="first/fast">
-				<Option output="/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/first" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug"/>
+				<Option output="/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/first" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -191,28 +191,28 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 first/fast"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 first/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/func_for_io.h">
+		<Unit filename="/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/func_for_io.h">
 			<Option target="some.c"/>
 			<Option target="first"/>
 		</Unit>
-		<Unit filename="/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/just_for_fun.c">
+		<Unit filename="/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/just_for_fun.c">
 			<Option target="just_for_fun.c"/>
 		</Unit>
-		<Unit filename="/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/main.c">
+		<Unit filename="/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/main.c">
 			<Option target="main.c"/>
 			<Option target="first"/>
 		</Unit>
-		<Unit filename="/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/some.c">
+		<Unit filename="/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/some.c">
 			<Option target="some.c"/>
 		</Unit>
-		<Unit filename="/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/CMakeLists.txt">
+		<Unit filename="/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
 	</Project>

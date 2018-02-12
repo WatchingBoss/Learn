@@ -1,6 +1,6 @@
-/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/CMakeFiles/some.c.dir
-/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/CMakeFiles/just_for_fun.c.dir
-/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/CMakeFiles/main.c.dir
-/home/ubu/CLionProjects/LearningC/Let_us_C/Chapter_1/first/cmake-build-debug/CMakeFiles/first.dir
+/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/CMakeFiles/some.c.dir
+/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/CMakeFiles/just_for_fun.c.dir
+/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/CMakeFiles/main.c.dir
+/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_1/first/cmake-build-debug/CMakeFiles/first.dir
