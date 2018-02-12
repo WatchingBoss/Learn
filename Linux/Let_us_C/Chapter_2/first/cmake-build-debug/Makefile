@@ -111,6 +111,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named exercise.c
+
+# Build rule for target.
+exercise.c: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 exercise.c
+.PHONY : exercise.c
+
+# fast build rule for target.
+exercise.c/fast:
+	$(MAKE) -f CMakeFiles/exercise.c.dir/build.make CMakeFiles/exercise.c.dir/build
+.PHONY : exercise.c/fast
+
+#=============================================================================
 # Target rules for targets named first
 
 # Build rule for target.
@@ -122,6 +135,33 @@ first: cmake_check_build_system
 first/fast:
 	$(MAKE) -f CMakeFiles/first.dir/build.make CMakeFiles/first.dir/build
 .PHONY : first/fast
+
+exercise.o: exercise.c.o
+
+.PHONY : exercise.o
+
+# target to build an object file
+exercise.c.o:
+	$(MAKE) -f CMakeFiles/exercise.c.dir/build.make CMakeFiles/exercise.c.dir/exercise.c.o
+.PHONY : exercise.c.o
+
+exercise.i: exercise.c.i
+
+.PHONY : exercise.i
+
+# target to preprocess a source file
+exercise.c.i:
+	$(MAKE) -f CMakeFiles/exercise.c.dir/build.make CMakeFiles/exercise.c.dir/exercise.c.i
+.PHONY : exercise.c.i
+
+exercise.s: exercise.c.s
+
+.PHONY : exercise.s
+
+# target to generate assembly for a file
+exercise.c.s:
+	$(MAKE) -f CMakeFiles/exercise.c.dir/build.make CMakeFiles/exercise.c.dir/exercise.c.s
+.PHONY : exercise.c.s
 
 main.o: main.c.o
 
@@ -158,7 +198,11 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
+	@echo "... exercise.c"
 	@echo "... first"
+	@echo "... exercise.o"
+	@echo "... exercise.i"
+	@echo "... exercise.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
