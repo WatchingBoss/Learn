@@ -51,7 +51,7 @@ void CD(int year)
 {
     int i;
     char *dayWeek[] = {"Monday", "Tuesday", "Wednesday", "Thursday",
-    "Friday", "Saturday", "Sunday"};
+                       "Friday", "Saturday", "Sunday"};
     i = (1 + 306 + (365 * (year + 4800 - 13 / 12)) +
             ((year + 4800 - 13 / 12) / 4) -
             ((year + 4800 - 13 / 12) / 100) +
@@ -59,39 +59,22 @@ void CD(int year)
     printf("%d\n", i);
     printf("%s\n", dayWeek[i]);
 }
+/* Find day of week for every day, month and year*/
+void weekDayName(int day, int month, int year)
+{
+    char *dayWeek[] = {"Monday", "Tuesday", "Wednesday", "Thursday",
+                       "Friday", "Saturday", "Sunday"};
+    int i = (day
+            + ((153 * (month + 12 * ((14 - month) / 12) - 3) + 2) / 5)
+            + (365 * (year + 4800 - ((14 - month) / 12)))
+            + ((year + 4800 - ((14 - month) / 12)) / 4)
+            - ((year + 4800 - ((14 - month) / 12)) / 100)
+            + ((year + 4800 - ((14 - month) / 12)) / 400) - 32045) % 7;
+    printf("It is %s\n", dayWeek[i]);
+}
 
-/* const char *wd(int year, int month, int day) {
-  using C99 compound literals in a single line: notice the splicing
-return ((const char *[])                                         \
-          {"Monday", "Tuesday", "Wednesday",                       \
-           "Thursday", "Friday", "Saturday", "Sunday"})[           \
-      (                                                            \
-          day                                                      \
-        + ((153 * (month + 12 * ((14 - month) / 12) - 3) + 2) / 5) \
-        + (365 * (year + 4800 - ((14 - month) / 12)))              \
-        + ((year + 4800 - ((14 - month) / 12)) / 4)                \
-        - ((year + 4800 - ((14 - month) / 12)) / 100)              \
-        + ((year + 4800 - ((14 - month) / 12)) / 400)              \
-        - 32045                                                    \
-      ) % 7];
-}*/
-
-/* const char *wd(int year, int month, int day) {
-  static const char *weekdayname[] = {"Monday", "Tuesday",
-        "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
-  size_t JND =                                                     \
-          day                                                      \
-        + ((153 * (month + 12 * ((14 - month) / 12) - 3) + 2) / 5) \
-        + (365 * (year + 4800 - ((14 - month) / 12)))              \
-        + ((year + 4800 - ((14 - month) / 12)) / 4)                \
-        - ((year + 4800 - ((14 - month) / 12)) / 100)              \
-        + ((year + 4800 - ((14 - month) / 12)) / 400)              \
-        - 32045;
-  return weekdayname[JND % 7];
-}*/
 
 int main()
 {
-    CD(2015);
     return 0;
 }
