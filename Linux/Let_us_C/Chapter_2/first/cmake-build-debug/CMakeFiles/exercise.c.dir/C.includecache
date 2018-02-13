@@ -9,4 +9,6 @@
 /home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_2/first/exercise.c
 stdio.h
 -
+math.h
+-
 

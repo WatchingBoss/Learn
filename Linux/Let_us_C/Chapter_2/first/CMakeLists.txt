@@ -10,3 +10,4 @@ set(SOURCE_FILES_1 exercise.c)
 add_executable(${BUILD_1} ${SOURCE_FILES_1})
 
 target_link_libraries(first m)
+target_link_libraries(exercise.c m)

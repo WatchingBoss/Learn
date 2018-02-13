@@ -1,1 +1,1 @@
-/usr/bin/cc -g   CMakeFiles/exercise.c.dir/exercise.c.o  -o exercise.c 
+/usr/bin/cc -g   CMakeFiles/exercise.c.dir/exercise.c.o  -o exercise.c -lm 
