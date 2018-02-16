@@ -471,8 +471,105 @@ void EG()
     }
 }
 
+/* Exercise h
+ * Program to print the multiplication table of the number entered by the user.*/
+void EH()
+{
+    int number, multi;
+    printf("Enter some number and max value for multiplication: ");
+    scanf("%d %d", &number, &multi);
+    for (int i = 1; i <= multi; i++)
+    {
+        printf("%d * %d = %d\n", number, i, number * i);
+    }
+}
+
+/* Exercise i
+ * Program to produce output*/
+void EI(int l)
+{
+    int n = 1, s;
+    for (int i = 1; i <= l; i++)
+    {
+        for (s = (l - i) * 2; s > 0; s--)
+            printf(" ");
+        for (int p = i; p > 0; p--)
+        {
+            printf("%-4d", n);
+            n++;
+        }
+        puts("");
+    }
+}
+
+/* Exercise j
+ * Program to produce the Pascal's triangle*/
+/*void EJ(int n)
+{
+    for (int line = 1; line <= n; line++)
+    {
+        for (int j = (n - line) * 3; j > 0; j--)
+            printf(" ");
+        int C = 1; // used to represent C(line, i)
+        for (int i = 1; i <= line; i++)
+        {
+            printf("%-6d", C); // The first value in a line is always 1
+            C = C * (line - i) / i;
+        }
+        printf("\n");
+    }
+}*/
+
+void EJ(int n)
+{
+    for (int l = 1; l <= n; l++)
+    {
+        for (int s = (n - l) * 2; s > 0; s--)
+            printf(" ");
+        int num = 1;
+        for (int i = 1; i <= l; i++)
+        {
+            printf("%-3d ", num);
+            num = num * (l - i) / i;
+        }
+        printf("\n");
+    }
+}
+
+/* Exercise k
+ * Program to calculate minimum count of years machine's life to make
+ * investment to its more attractive*/
+void EK()
+{
+    int cost = 6000 - 2000, yearEM = 1000, yearEA = yearEM * 12 / 100;
+    int alt = 0, year = 0, inv = 0;
+    do {
+        year++;
+        alt = yearEA * year;
+        inv = yearEM * year - cost;
+    } while (alt > inv);
+    printf("After %d years investment to machine will brine %d and alternative - %d\n",
+           year, inv, alt);
+}
+
+/* Exercise i
+ * Program to read sets of p, r, n, q and calculate compound interest*/
+void EL()
+{
+    int p, n, q;
+    double r, a;
+    printf("Enter:\n"
+                   "p (the money you start with, your first deposit)\n"
+                   "r (the annual rate of interest as a decimal)\n"
+                   "n (the number of years you leave it on deposit)\n"
+                   "q (times of interest compounds per year)\n");
+    scanf("%d %lf %d %d", &p, &r, &n, &q);
+    a = pow(p * (1 + r / q), (n * q));
+    printf("a equal: %0.2lf", a);
+}
+
 int main()
 {
-    EG();
+    EL();
     return 0;
 }
