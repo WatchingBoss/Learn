@@ -558,18 +558,33 @@ void EL()
 {
     int p, n, q;
     double r, a;
-    printf("Enter:\n"
-                   "p (the money you start with, your first deposit)\n"
-                   "r (the annual rate of interest as a decimal)\n"
-                   "n (the number of years you leave it on deposit)\n"
-                   "q (times of interest compounds per year)\n");
-    scanf("%d %lf %d %d", &p, &r, &n, &q);
-    a = pow(p * (1 + r / q), (n * q));
-    printf("a equal: %0.2lf", a);
+    for (int i = 0; i < 10; i++)
+    {
+        printf("Enter:\n"
+                       "p (the money you start with, your first deposit)\n"
+                       "r (the annual rate of interest as a decimal)\n"
+                       "n (the number of years you leave it on deposit)\n"
+                       "q (times of interest compounds per year)\n");
+        scanf("%d %lf %d %d", &p, &r, &n, &q);
+        a = p * (pow((1 + r / q), (n * q)));
+        printf("After %d years you\'ll accumulate %.2lf", n, a);
+    }
+}
+
+/* Exercise m
+ * Program to calculate first seven terms of series of natural logarithm*/
+void EM(double x)
+{
+    double sum = (x - 1) / x;
+    for (int i = 2; i <= 7; i++)
+    {
+        sum += (0.5 * (pow(((x - 1) / x), i)));
+    }
+    printf("The sum equal %.2lf\n", sum);
 }
 
 int main()
 {
-    EL();
+    EM(10);
     return 0;
 }
