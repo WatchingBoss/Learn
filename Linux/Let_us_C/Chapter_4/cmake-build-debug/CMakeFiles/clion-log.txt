@@ -1,0 +1,4 @@
+"C:\Program Files\JetBrains\CLion 2017.3.2\bin\cmake\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" F:\Documents\Projects_C\LearningC\Linux\Let_us_C\Chapter_4
+-- Configuring done
+-- Generating done
+-- Build files have been written to: F:/Documents/Projects_C/LearningC/Linux/Let_us_C/Chapter_4/cmake-build-debug

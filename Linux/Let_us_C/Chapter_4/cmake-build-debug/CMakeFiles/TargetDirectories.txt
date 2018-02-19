@@ -1,0 +1,4 @@
+F:/Documents/Projects_C/LearningC/Linux/Let_us_C/Chapter_4/cmake-build-debug/CMakeFiles/Chapter_4.dir
+F:/Documents/Projects_C/LearningC/Linux/Let_us_C/Chapter_4/cmake-build-debug/CMakeFiles/exercise.c.dir
+F:/Documents/Projects_C/LearningC/Linux/Let_us_C/Chapter_4/cmake-build-debug/CMakeFiles/edit_cache.dir
+F:/Documents/Projects_C/LearningC/Linux/Let_us_C/Chapter_4/cmake-build-debug/CMakeFiles/rebuild_cache.dir
