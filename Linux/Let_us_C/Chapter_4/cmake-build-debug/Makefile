@@ -135,6 +135,19 @@ exercise.c/fast:
 	$(MAKE) -f CMakeFiles\exercise.c.dir\build.make CMakeFiles/exercise.c.dir/build
 .PHONY : exercise.c/fast
 
+#=============================================================================
+# Target rules for targets named main.c
+
+# Build rule for target.
+main.c: cmake_check_build_system
+	$(MAKE) -f CMakeFiles\Makefile2 main.c
+.PHONY : main.c
+
+# fast build rule for target.
+main.c/fast:
+	$(MAKE) -f CMakeFiles\main.c.dir\build.make CMakeFiles/main.c.dir/build
+.PHONY : main.c/fast
+
 exercise.obj: exercise.c.obj
 
 .PHONY : exercise.obj
@@ -169,6 +182,7 @@ main.obj: main.c.obj
 # target to build an object file
 main.c.obj:
 	$(MAKE) -f CMakeFiles\Chapter_4.dir\build.make CMakeFiles/Chapter_4.dir/main.c.obj
+	$(MAKE) -f CMakeFiles\main.c.dir\build.make CMakeFiles/main.c.dir/main.c.obj
 .PHONY : main.c.obj
 
 main.i: main.c.i
@@ -178,6 +192,7 @@ main.i: main.c.i
 # target to preprocess a source file
 main.c.i:
 	$(MAKE) -f CMakeFiles\Chapter_4.dir\build.make CMakeFiles/Chapter_4.dir/main.c.i
+	$(MAKE) -f CMakeFiles\main.c.dir\build.make CMakeFiles/main.c.dir/main.c.i
 .PHONY : main.c.i
 
 main.s: main.c.s
@@ -187,6 +202,7 @@ main.s: main.c.s
 # target to generate assembly for a file
 main.c.s:
 	$(MAKE) -f CMakeFiles\Chapter_4.dir\build.make CMakeFiles/Chapter_4.dir/main.c.s
+	$(MAKE) -f CMakeFiles\main.c.dir\build.make CMakeFiles/main.c.dir/main.c.s
 .PHONY : main.c.s
 
 # Help Target
@@ -197,6 +213,7 @@ help:
 	@echo ... depend
 	@echo ... Chapter_4
 	@echo ... exercise.c
+	@echo ... main.c
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... exercise.obj

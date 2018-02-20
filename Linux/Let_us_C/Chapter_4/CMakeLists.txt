@@ -9,5 +9,10 @@ set(BUILD_1 exercise.c)
 set(SOURCE_FILES_1 exercise.c)
 add_executable(${BUILD_1} ${SOURCE_FILES_1})
 
+set(BUILD_2 main.c)
+set(SOURCE_FILES_2 main.c)
+add_executable(${BUILD_2} ${SOURCE_FILES_2})
+
+
 target_link_libraries(Chapter_4 m)
 target_link_libraries(exercise.c m)

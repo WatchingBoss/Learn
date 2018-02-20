@@ -93,6 +93,44 @@
 					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;F:/Documents/Projects_C/LearningC/Linux/Let_us_C/Chapter_4/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
+			<Target title="main.c">
+				<Option output="F:/Documents/Projects_C/LearningC/Linux/Let_us_C/Chapter_4/cmake-build-debug/main.c.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="F:/Documents/Projects_C/LearningC/Linux/Let_us_C/Chapter_4/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/../../../../include"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include-fixed"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/../../../../mingw32/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;F:/Documents/Projects_C/LearningC/Linux/Let_us_C/Chapter_4/cmake-build-debug/Makefile&quot;  VERBOSE=1 main.c"/>
+					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;F:/Documents/Projects_C/LearningC/Linux/Let_us_C/Chapter_4/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;F:/Documents/Projects_C/LearningC/Linux/Let_us_C/Chapter_4/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;F:/Documents/Projects_C/LearningC/Linux/Let_us_C/Chapter_4/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="main.c/fast">
+				<Option output="F:/Documents/Projects_C/LearningC/Linux/Let_us_C/Chapter_4/cmake-build-debug/main.c.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="F:/Documents/Projects_C/LearningC/Linux/Let_us_C/Chapter_4/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/../../../../include"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include-fixed"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/../../../../mingw32/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;F:/Documents/Projects_C/LearningC/Linux/Let_us_C/Chapter_4/cmake-build-debug/Makefile&quot;  VERBOSE=1 main.c/fast"/>
+					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;F:/Documents/Projects_C/LearningC/Linux/Let_us_C/Chapter_4/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;F:/Documents/Projects_C/LearningC/Linux/Let_us_C/Chapter_4/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;F:/Documents/Projects_C/LearningC/Linux/Let_us_C/Chapter_4/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
 			<Target title="edit_cache">
 				<Option working_dir="F:/Documents/Projects_C/LearningC/Linux/Let_us_C/Chapter_4/cmake-build-debug"/>
 				<Option type="4"/>
@@ -119,6 +157,7 @@
 		</Unit>
 		<Unit filename="F:/Documents/Projects_C/LearningC/Linux/Let_us_C/Chapter_4/main.c">
 			<Option target="Chapter_4"/>
+			<Option target="main.c"/>
 		</Unit>
 		<Unit filename="F:/Documents/Projects_C/LearningC/Linux/Let_us_C/Chapter_4/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
