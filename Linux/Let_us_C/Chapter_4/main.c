@@ -22,23 +22,8 @@ void sc(char ch)
 {
   switch(ch)
   {
-    case 'A':
-    case 'a':
-      printf("a as in ashar\n");
-      break;
-    case 'B':
-    case 'b':
-      printf("b as in brain\n");
-      break;
-    case 'C':
-    case 'c':
-      printf("c as in cookie\n");
-      break;
-    default:
-      printf("wish you knew what are alphabets");
   }
 }
-
 int main()
 {
     sw(2);
