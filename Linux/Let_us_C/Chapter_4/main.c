@@ -4,7 +4,7 @@ void sw(int i)
 {
     switch(i)
     {
-        case 1:
+	 case 1:
             printf("I am in case 1\n");
             break;
         case 2:
