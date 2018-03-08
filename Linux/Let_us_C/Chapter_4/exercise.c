@@ -38,11 +38,7 @@ void grace()
 
 int main()
 {
-    grace();
-    grace();
-    grace();
-    grace();
-    grace();
-    grace();	
+    int a = 5;
+    printf("Memory address of a with value %d is %d %u %p\n", a, &a, &a, &a);
     return 0;
 }
