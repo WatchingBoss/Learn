@@ -4,7 +4,7 @@ void sw(int i)
 {
     switch(i)
     {
-	 case 1:
+		case 1:
             printf("I am in case 1\n");
             break;
         case 2:
@@ -20,26 +20,27 @@ void sw(int i)
 
 void sc(char ch)
 {
-  switch(ch)
-  {
-  case 'a':
-  case 'A':
-    printf("a as in ashar");
-    break;
-  case 'b':
-  case 'B':
-    printf("b as in brain");
-    break;
-  case 'c':
-  case 'C':
-    printf("c as in cookie");
-    break;
-  default:
-    printf("wish you knew what are alphabets");
-  }
+	switch(ch)
+	{
+		case 'a':
+		case 'A':
+			printf("a as in ashar");
+			break;
+		case 'b':
+		case 'B':
+			printf("b as in brain");
+			break;
+		case 'c':
+		case 'C':
+			printf("c as in cookie");
+			break;
+		default:
+			printf("wish you knew what are alphabets");
+	}
 }
+
 int main()
 {
-    sw(2);
+
     return 0;
 }

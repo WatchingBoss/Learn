@@ -1,4 +1,4 @@
-# Install script for directory: /home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_4
+# Install script for directory: /home/ubu/Documents/C/LearningC/Linux/Let_us_C/Chapter_4
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/ubu/CLionProjects/LearningC.git/Linux/Let_us_C/Chapter_4/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/ubu/Documents/C/LearningC/Linux/Let_us_C/Chapter_4/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

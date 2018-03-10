@@ -13,6 +13,5 @@ set(BUILD_2 main.c)
 set(SOURCE_FILES_2 main.c)
 add_executable(${BUILD_2} ${SOURCE_FILES_2})
 
-
 target_link_libraries(Chapter_4 m)
 target_link_libraries(exercise.c m)
