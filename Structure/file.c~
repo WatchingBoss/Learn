@@ -1,0 +1,28 @@
+#include <stdio.h>
+
+struct program
+{
+	char name[80];
+
+	struct day
+	{
+	    
+		
+		struct exercise
+		{
+		};
+	};
+};
+
+int main()
+{
+    
+    return 0;
+}
+
+
+/*
+
+program -> day -> exercise
+
+*/
