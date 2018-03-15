@@ -1,0 +1,19 @@
+#include <stdio.h>
+
+void
+first()
+{
+	char name[] = "Anastasia";
+	int i = 0;
+
+	while(i <= 0)
+	{
+		printf("%c", name[i]);
+	}
+}
+
+int main()
+{
+    
+    return 0;
+}
