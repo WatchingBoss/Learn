@@ -1,0 +1,28 @@
+#include <stdio.h>
+
+void
+array()
+{
+	char name[3];
+	float price[3];
+	int pages[3], i;
+
+	printf("Enter names, prices and no. of pages of 3 books\n");
+	for(i = 0; i <= 2; i++)
+	{
+		scanf("%c %f %d", name[i], price[i], pages[i]);
+	}
+
+	prinf("And this is what you entered\n");
+	for(i = 0; i <= 2; i++)
+	{
+		printf("%c %f %d", name[i], price[i], pages[i]);
+	}	
+}
+
+
+int main()
+{
+    
+    return 0;
+}

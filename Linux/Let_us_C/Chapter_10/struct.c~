@@ -1,0 +1,30 @@
+#include <stdio.h>
+
+void
+first()
+{
+	struct name
+	{
+		char first;
+		char second;
+		int integer;
+	} n1, n2, n3;
+	
+	struct book
+	{
+		char name[10];
+		float price;
+		int pages;
+	};
+
+	struct book b1 = {"Basic", 130.00, 550};
+	struct book b2 = {"Physics", 150.80, 800};
+}
+
+int
+main()
+{
+
+	
+	return(0);
+}
