@@ -1,0 +1,28 @@
+#include <stdio.h>
+
+void
+first()
+{
+	FILE *fp;
+	char ch;
+
+	fp = fopen("file.txt", "r");
+
+	while(1)
+	{
+		ch = fgetc(fp);
+
+		if (ch == EOF)
+			break;
+
+		prinf("%c", ch);
+	}
+
+	fclose(fp);
+}
+
+int main()
+{
+    
+    return 0;
+}
