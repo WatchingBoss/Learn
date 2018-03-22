@@ -66,9 +66,77 @@ second()
 	fclose(fp);
 }
 
+// Receives records from keyboard and writes them to a file in binary mode
+void
+third()
+{
+	FILE *fp;
+	char another = 'y';
+	struct emp
+	{
+		char name[40];
+		int age;
+		float bs;
+	};
+
+	struct emp e;
+
+	fp = fopen("newb.dat", "wb");
+
+	if(fp == NULL)
+	{
+		puts("Cannot open file");
+		exit(0);
+	}
+
+	while(another == 'y')
+	{
+		printf("Enter name, age and basic salary  ");
+		scanf("%s %d %f", e.name, &e.age, &e.bs);
+		fwrite(&e, sizeof(e), 1, fp);
+
+		printf("Add another record (y/n)  ");
+		while(getchar() != '\n');
+		another = getchar();
+	}
+
+	fclose(fp);
+}
+
+//
+void
+fourth()
+{
+	FILE *fp;
+	struct emp
+	{
+		char name[40];
+		int age;
+		float bs;
+	};
+
+	struct emp e;
+
+	fp = fopen("newb.dat", "rb");
+
+	if(fp == NULL)
+	{
+		puts("Cannot open file");
+		exit(0);
+	}
+
+	while(fread(&e, sizeof(e), 1, fp) == 1)
+	{
+		printf("%-10s %-3d %-4.1f\n", e.name, e.age, e.bs);
+	}
+	
+	fclose(fp);
+}
+
 int
 main()
 {
-	second();
+	third();
+	fourth();
 	return(0);
 }
