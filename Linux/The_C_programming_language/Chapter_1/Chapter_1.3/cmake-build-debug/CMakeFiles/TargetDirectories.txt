@@ -1,5 +1,0 @@
-/home/ubu/CLionProjects/LearningC/The_C_programming_language/Chapter_1/Chapter_1.3/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/ubu/CLionProjects/LearningC/The_C_programming_language/Chapter_1/Chapter_1.3/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/ubu/CLionProjects/LearningC/The_C_programming_language/Chapter_1/Chapter_1.3/cmake-build-debug/CMakeFiles/my_create.c.dir
-/home/ubu/CLionProjects/LearningC/The_C_programming_language/Chapter_1/Chapter_1.3/cmake-build-debug/CMakeFiles/first.c.dir
-/home/ubu/CLionProjects/LearningC/The_C_programming_language/Chapter_1/Chapter_1.3/cmake-build-debug/CMakeFiles/Chapter_1_3.dir

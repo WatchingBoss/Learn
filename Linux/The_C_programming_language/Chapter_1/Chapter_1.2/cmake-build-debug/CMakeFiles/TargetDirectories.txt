@@ -1,7 +1,0 @@
-/home/ubu/CLionProjects/LearningC/The_C_programming_language/Chapter_1/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/ubu/CLionProjects/LearningC/The_C_programming_language/Chapter_1/cmake-build-debug/CMakeFiles/exercise_1_4.c.dir
-/home/ubu/CLionProjects/LearningC/The_C_programming_language/Chapter_1/cmake-build-debug/CMakeFiles/exercise_1_3.c.dir
-/home/ubu/CLionProjects/LearningC/The_C_programming_language/Chapter_1/cmake-build-debug/CMakeFiles/FahtoCel.c.dir
-/home/ubu/CLionProjects/LearningC/The_C_programming_language/Chapter_1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/ubu/CLionProjects/LearningC/The_C_programming_language/Chapter_1/cmake-build-debug/CMakeFiles/hello.c.dir
-/home/ubu/CLionProjects/LearningC/The_C_programming_language/Chapter_1/cmake-build-debug/CMakeFiles/Chapter_1.dir

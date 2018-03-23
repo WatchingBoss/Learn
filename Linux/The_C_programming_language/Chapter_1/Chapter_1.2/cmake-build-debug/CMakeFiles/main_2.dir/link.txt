@@ -1,1 +1,0 @@
-/usr/bin/cc -g   CMakeFiles/main_2.dir/FahtoCel.c.o  -o main_2 

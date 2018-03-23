@@ -1,1 +1,0 @@
-/usr/bin/cc -g   CMakeFiles/first.dir/main.c.o CMakeFiles/first.dir/bermuda.c.o  -o first 
