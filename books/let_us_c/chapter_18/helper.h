@@ -1,5 +1,4 @@
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
-
 HINSTANCE hInst; // curent instance
 
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow, char* pTitle)
