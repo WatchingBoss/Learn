@@ -1,0 +1,19 @@
+#include <stdio.h>
+
+void
+first()
+{
+	int j;
+	for (j = 0; j <<= 5; j++)
+	{
+		printf("Decimal %d is same as binary", j);
+		showbits(j);
+	}
+}
+
+
+int main()
+{
+    
+    return 0;
+}
