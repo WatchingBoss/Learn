@@ -1,0 +1,10 @@
+* analog_wget - lite analog wget
+[[http://libdill.org/tutorial-sockets.html][tutor]]
+* books - here write some examples from reading books
+beginners  - C For The Absolut Beginner Second Edition - Michael Vine
+cpp_primer - C++ Primer Fifth Editio - Stanley B. Lippman, Josee Lajoie, Barbara E. Moo
+let_us_c   - Let Us C - Yashavant P. Kanetkar
+* ncurses - examples using ncurses
+howto - [[http://www.tldp.org/HOWTO/html_single/NCURSES-Programming-HOWTO/#COLOR][howto ncurses link]] examples from this page
+* site_creator - try to write creator of html and css code
+* x11 - examples using x window system
