@@ -10,9 +10,12 @@
 
 9.c, 9_1.c - 9. Windows
 
-10.c - Colors
+10.c - 10. Colors
 
 11.c - 11. Interfacing with the key board
+
+12.c - 12. Interfacing with the mouse
+
 
 
 
