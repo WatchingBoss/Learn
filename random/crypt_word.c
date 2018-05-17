@@ -1,6 +1,6 @@
-/*****************************************************************************/
-/*         Learn to use crypt() in unistd of X/Open System Interface         */
-/*****************************************************************************/
+/*         
+ * Learn to use crypt() in unistd of X/Open System Interface         
+ */
 
 #define _XOPEN_SOURCE
 
@@ -15,7 +15,7 @@ int main()
 {
 	srand(time(NULL));
 
-	char *simple = "My own plent text";
+	char *simple = "My own plant text";
 	char *after_crypt;
 	char this_salt[NUM];
 
@@ -24,7 +24,7 @@ int main()
 
 	printf("This is salt: %s\n", this_salt);
 
-	after_crypt = (char *)calloc(sizeof(simple) / sizeof(char *), sizeof(char));
+	after_crypt = (char *)calloc((sizeof(simple) / sizeof(char *)), sizeof(char));
 
 	after_crypt = crypt(simple, this_salt);
 
