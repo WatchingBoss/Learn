@@ -62,24 +62,6 @@ const char *intern(const char *start, const char *end)
 	return(new_symbol);
 }
 
-const char *keyword_if;
-const char *keyword_while;
-const char *keyword_for;
-const char *keyword_return;
-
-void initialize()
-{
-	const char string_if[] = "if";
-	const char string_while[] = "while";
-	const char string_for[] = "for";
-	const char string_return[] = "return";
-
-	keyword_if = intern(string_if, string_if + sizeof(string_if) - 1);
-	keyword_while = intern(string_while, string_while + sizeof(string_while) - 1);
-	keyword_for = intern(string_for, string_for + sizeof(string_for) - 1);
-	keyword_return = intern(string_return, string_return + sizeof(string_return) - 1);
-}
-
 typedef enum 
 {
 	LIT,
@@ -185,6 +167,8 @@ typedef enum
 	TOKEN_IDENTIFIER,
 	TOKEN_EQUALS,
 	TOKEN_IF,
+	TOKEN_ELSEIF,
+	TOKEN_ELSE,	
 	TOKEN_WHILE,
 	TOKEN_FOR,
 	TOKEN_RETURN
@@ -214,6 +198,57 @@ const char *token_to_identifier()
 }
 #endif
 
+typedef struct
+{
+	const char *identifier;
+	token_t token;
+} keyword_t;
+
+enum
+{
+	MAX_KEYWORDS = 16
+};
+
+const char *keyword_if;
+const char *keyword_else;
+const char *keyword_elseif;
+const char *keyword_while;
+const char *keyword_for;
+const char *keyword_return;
+
+keyword_t keywords[MAX_KEYWORDS];
+size_t num_keywords;
+
+#define INTERN_KEYWORD(name, tok) \
+	const char string_##name[] = #name; \
+	keyword_##name = intern(string_##name, string_##name + sizeof(string_##name) - 1); \
+	keywords[num_keywords].identifier = keyword_##name; \
+	keywords[num_keywords].token = tok; \
+	++num_keywords;
+
+void initialize_keywords()
+{
+	num_keywords = 0;
+	INTERN_KEYWORD(if, TOKEN_IF);
+	INTERN_KEYWORD(else, TOKEN_ELSE);
+	INTERN_KEYWORD(elseif, TOKEN_ELSEIF);
+	INTERN_KEYWORD(while, TOKEN_WHILE);
+	INTERN_KEYWORD(for, TOKEN_FOR);
+	INTERN_KEYWORD(return, TOKEN_RETURN);
+
+/*
+	const char string_if[] = "if";
+	const char string_while[] = "while";
+	const char string_for[] = "for";
+	const char string_return[] = "return";
+
+	keyword_if = intern(string_if, string_if + sizeof(string_if) - 1);
+	keyword_while = intern(string_while, string_while + sizeof(string_while) - 1);
+	keyword_for = intern(string_for, string_for + sizeof(string_for) - 1);
+	keyword_return = intern(string_return, string_return + sizeof(string_return) - 1);
+*/
+}
+
 void next_token()
 {
 	while(isspace(*code))
@@ -240,8 +275,22 @@ void next_token()
 		const char *end = code;
 		token_identifier = intern(start, end);
 
+		token = TOKEN_IDENTIFIER;
+		for(size_t i = 0; i < num_keywords; ++i)
+		{
+			if(keywords[i].identifier == token_identifier)
+				token = keywords[i].token;
+			break;
+		}
+		if(!token)
+			token = TOKEN_IDENTIFIER;
+/*
 		if(token_identifier == keyword_if)
 			token = TOKEN_IF;
+		else if(token_identifier == keyword_else)
+			token = TOKEN_ELSE;
+		else if(token_identifier == keyword_elseif)
+			token = TOKEN_ELSEIF;
 		else if(token_identifier == keyword_while)
 			token = TOKEN_WHILE;
 		else if(token_identifier == keyword_for)
@@ -250,6 +299,7 @@ void next_token()
 			token = TOKEN_RETURN;
 		else
 			token = TOKEN_IDENTIFIER;
+*/
 	}
 	else
 	{
@@ -426,16 +476,57 @@ void stmt()
 		expr();
 
 		emit(BRZ);
-		char *offset = emit_pointer;
+		char *next_alternative_offset = emit_pointer;
+		emit4(0);
 		stmtBlock();
+		char *end_offset = NULL;
+		while(token == TOKEN_ELSEIF)
+		{
+			next_token();
+			emit(JMP);
+			char *previous_end_offset = end_offset;
+			end_offset = emit_pointer;
+			emit4(previous_end_offset - emit_pointer);
+			*(int32_t *)next_alternative_offset = emit_pointer - next_alternative_offset;
+			expr();
+			emit(BRZ);
+			next_alternative_offset = emit_pointer;
+			emit4(0);
+			stmtBlock();
+		}
 
-		*(int32_t *)offset = emit_pointer - offset;
+		if(token == TOKEN_ELSE)
+		{
+			next_token();
+			emit(JMP);
+			char *previous_offset = emit_pointer;
+			emit4(0);
+			char *previous_end_offset = end_offset;
+			end_offset = emit_pointer;
+			emit4(previous_end_offset - emit_pointer);
+			*(int32_t *)next_alternative_offset = emit_pointer - next_alternative_offset;
+			stmtBlock();
+		}
+
+		while(end_offset != NULL)
+		{
+			int32_t previous_end_offset = *(int32_t *)end_offset;
+			*(int32_t *)end_offset = emit_pointer - end_offset;
+			end_offset += previous_end_offset;
+		}
 	}
 	else if(token == TOKEN_WHILE)
 	{
 		next_token();
+		char *loop_offset = emit_pointer;
 		expr();
+		emit(BRZ);
+		char *done_offset = emit_pointer;
+		emit4(0);
 		stmtBlock();
+		emit(JMP);
+		emit4(loop_offset - emit_pointer);
+		*(int32_t *)done_offset = emit_pointer - done_offset;
 	}
 	else if(token == TOKEN_RETURN)
 	{
@@ -461,8 +552,10 @@ int main()
 	char emit_buffer[1024];
 	emit_pointer = emit_buffer;
 
-	initialize();
-	code = "{x = 42; y = 3 + 2; z = 4 * 3 + 1; return  x + y + z}";
+	initialize_keywords();
+//	code = "{x = 42; y = 3 + 2; z = 4 * 3 + 1; return  x + y + z}";
+//	code = "{ x = 1; if 1 { x + 2; return x+2 }";
+	code = "{ x = 1; n = 3; while n { x = x * 2; n = n - 1; } return x; }";
 
 	next_token();
 
@@ -474,12 +567,14 @@ int main()
 
 	int val = execute();
 
+#if 0
 	for(int i = 0; i < 10; ++i)
 		printf("%d\n", fp[i]);
 	printf("\n");
 	for(int i = 0; i < 10; ++i)
 		printf("%d\n", sp[i]);
 	printf("\nval is %d\n", val);
-		
+#endif
+	
 	return(0);
 }
