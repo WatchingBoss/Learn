@@ -5,12 +5,48 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include <stdbool.h>
+#include <stdarg.h>
 
 /* 
  * Stretcy buffers 
  */
 
 #define MAX(x, y) ((x > y) ? (x) : (y))
+
+void *xrealloc(void *ptr, size_t num_bytes)
+{
+	ptr = realloc(ptr, num_bytes);
+	if(!ptr)
+	{
+		perror("xrealloc failed");
+		exit(1);
+	}
+	return(ptr);
+}
+
+void *xmalloc(size_t num_bytes)
+{
+	void *ptr = malloc(num_bytes);
+	if(!ptr)
+	{
+		perror("xmalloc failed");
+		exit(1);
+	}
+	return(ptr);
+}
+
+void fatal(const char *fmt, ...)
+{
+	char buf[256];
+	va_list args;
+	va_start(args, fmt);
+	printf("FATAL: ");
+	vsprintf(buf, fmt, args);
+	printf("\n");
+	va_end(args);
+	exit(1);
+}
 
 typedef struct BufferHeader
 {
@@ -40,7 +76,7 @@ void *buf__grow(const void *buf, size_t new_len, size_t elem_size)
 		new_header = realloc(buf__hdr(buf), new_size);
 	else
 	{
-		new_header = malloc(new_size);
+		new_header = xmalloc(new_size);
 		new_header->len = 0;
 	}
 
@@ -68,6 +104,9 @@ void buf_test()
 	assert(buf_len(buf) == NULL);
 }
 
+/*
+ * ...
+ */
 typedef struct InternString
 {
 	size_t len;
@@ -84,7 +123,7 @@ const char *str_intern_range(const char *start, const char *end)
 		if(interns[i].len == len && strncmp(interns[i].str, start, len) == 0)
 			return(interns[i].str);
 	}
-	char *str = malloc(len + 1);
+	char *str = xmalloc(len + 1);
 	memcpy(str, start, len);
 	str[len] = 0;
 
@@ -111,13 +150,37 @@ void str_intern_test()
 	assert(px == py);
 }
 
-/* lexing: translating char stream to token stream */
+/* 
+ * Lexing: translating char stream to token stream 
+ */
 
 typedef enum eTokenKind
 {
 	TOKEN_INT = 128,
 	TOKEN_NAME
 } eTokenKind;
+
+// This return a pointer to a static internal buffer, so it will be over
+const char *token_kind_name(eTokenKind kind)
+{
+	static char buf[ 256];
+	switch(kind)
+	{
+		case TOKEN_INT:
+			sprintf(buf, "interger");
+			break;
+		case TOKEN_NAME:
+			sprintf(buf, "name");
+			break;
+		default:
+			if(kind < 128 && isprint(kind))
+				sprintf(buf, "%c", kind);
+			else
+				sprintf(buf, "<ASCII %d>", kind);
+	}
+	
+	return(buf);
+}
 
 typedef struct Token
 {
@@ -226,6 +289,12 @@ void next_token()
 	token.end = stream;
 }
 
+void init_stream(const char *str)
+{
+	stream = str;
+	next_token();
+}
+
 void print_token(Token token)
 {
 	switch(token.kind)
@@ -242,6 +311,41 @@ void print_token(Token token)
 	}
 }
 
+inline bool is_token(eTokenKind kind)
+{
+	return(token.kind == kind);
+}
+
+inline bool is_token_name(const char *name)
+{
+	return(token.kind == TOKEN_NAME && token.name == name);
+}
+
+inline bool match_token(eTokenKind kind)
+{
+	if(is_token(kind))
+	{
+		next_token();
+		return(true);
+	}
+	else
+		return(false);
+}
+
+inline bool expect_token(eTokenKind kind)
+{
+	if(is_token(kind))
+	{
+		next_token();
+		return(true);
+	}
+	else
+	{
+		fatal("expected token %s, got %s", token_kind_name(kind), token_kind_name(token.kind));
+		return(false);
+	}
+}
+
 void lex_test()
 {
 	char *source = "XY+(XY)+()_STRING,123FOO!4+554";
@@ -254,11 +358,64 @@ void lex_test()
 	}
 }
 
+void parse_expr();
+
+void parse_expr3()
+{
+	if(is_token(TOKEN_INT))
+		next_token();
+	else if(match_token('('))
+	{
+		parse_expr();
+		expect_token(')');
+	}
+	else
+		fatal("expected integer of (, got %s", token_kind_name(token.kind));
+}
+
+void parse_expr2()
+{
+	if(match_token('-'))
+		parse_expr3();
+	else
+		parse_expr3();
+}
+
+void parse_expr1()
+{
+	parse_expr2();
+	while(is_token('*') || is_token('/'))
+	{
+		char op = token.kind;
+		next_token();
+		parse_expr2();
+	}
+}
+
+void parse_expr0()
+{
+	parse_expr2();
+	while(is_token('+') || is_token('-'))
+	{
+		char op = token.kind;
+		next_token();
+		parse_expr2();
+	}
+}
+
+void parse_test()
+{
+	const char *expr = "(1)";
+	init_stream(expr);
+	parse_expr();
+}
+
 int main()
 {
 	buf_test();
 	lex_test();
 	str_intern_test();
+	parse_test();
 	
 	return(0);
 }
