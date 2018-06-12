@@ -27,7 +27,10 @@ void *xrealloc(void *ptr, size_t num_bytes)
 
 void *xmalloc(size_t num_bytes)
 {
-	void *ptr = malloc(num_bytes);
+	void *ptr;
+
+	ptr = malloc(num_bytes);
+
 	if(!ptr)
 	{
 		perror("xmalloc failed");
@@ -42,7 +45,7 @@ void fatal(const char *fmt, ...)
 	va_list args;
 	va_start(args, fmt);
 	printf("FATAL: ");
-	vsprintf(buf, fmt, args);
+	vprintf(fmt, args);
 	printf("\n");
 	va_end(args);
 	exit(1);
@@ -55,14 +58,15 @@ typedef struct BufferHeader
 	char buf[0];
 } BufferHeader;
 
-#define buf__hdr(b) ((BufferHeader *)((char *)b - offsetof(BufferHeader, buf)))
+#define buf__hdr(b) ((BufferHeader *)((char *)(b) - offsetof(BufferHeader, buf)))
 #define buf__fits(b, n) (buf_len(b) + (n) <= buf_cap(b))
-#define buf__fit(b, n) (buf__fits(b, n) ? 0 : ((b) = buf__grow((b), buf_len(b) + (n), sizeof(*(b)))))
-#define buf_free(b) ((b) ? free(buf__hdr(b)) : 0)
+#define buf__fit(b, n) (buf__fits((b), (n)) \
+						? 0 : ((b) = buf__grow((b), buf_len(b) + (n), sizeof(*(b)))))
+#define buf_free(b) ((b) ? (free(buf__hdr(b)), (b) = NULL) : 0)
 
 #define buf_len(b) ((b) ? buf__hdr(b)->len : 0)
 #define buf_cap(b) ((b) ? buf__hdr(b)->cap : 0)
-#define buf_push(b, x) (buf__fit(b, 1), (b)[buf_len(b)] = (x), buf__hdr(b)->len++)
+#define buf_push(b, x) (buf__fit((b), 1), (b)[buf__hdr(b)->len++] = (x))
 
 void *buf__grow(const void *buf, size_t new_len, size_t elem_size)
 {
@@ -101,7 +105,7 @@ void buf_test()
 	
 	buf_free(buf);
 	assert(buf == NULL);
-	assert(buf_len(buf) == NULL);
+	assert(buf_len(buf) == 0);
 }
 
 /*
@@ -156,7 +160,8 @@ void str_intern_test()
 
 typedef enum eTokenKind
 {
-	TOKEN_INT = 128,
+	TOKEN_INT = 127,
+	TOKEN_LAST_CHAR,
 	TOKEN_NAME
 } eTokenKind;
 
@@ -190,7 +195,7 @@ typedef struct Token
 
 	union
 	{
-		uint64_t val;
+		int val;
 		const char *name;
 	};
 } Token;
@@ -201,6 +206,8 @@ const char *stream;
 /* 1234 (x+y) -> '1234' '(' 'x' '+' 'y' ')' */
 void next_token()
 {
+	token.start = stream;
+
 	switch(*stream)
 	{
 		case '0':
@@ -214,7 +221,7 @@ void next_token()
 		case '8':
 		case '9':
 		{
-			uint64_t val = 0;
+			int val = 0;
 			while(isdigit(*stream))
 			{
 				val *= 10;
@@ -300,7 +307,7 @@ void print_token(Token token)
 	switch(token.kind)
 	{
 		case TOKEN_INT:
-			printf("TOKEN INT: %lu\n", token.val);
+			printf("TOKEN INT: %d\n", token.val);
 			break;
 		case TOKEN_NAME:
 			printf("TOKEN NAME: %.*s\n", (int)(token.end - token.start), token.start);
@@ -310,6 +317,11 @@ void print_token(Token token)
 			break;
 	}
 }
+
+extern inline bool is_token(eTokenKind);
+extern inline bool is_token_name(const char *);
+extern inline bool match_token(eTokenKind);
+extern inline bool expect_token(eTokenKind);
 
 inline bool is_token(eTokenKind kind)
 {
@@ -353,62 +365,112 @@ void lex_test()
 	next_token();
 	while(token.kind)
 	{
-		print_token(token);
+//		print_token(token);
 		next_token();
 	}
 }
 
-void parse_expr();
+int parse_expr();
 
-void parse_expr3()
+int parse_expr3()
 {
 	if(is_token(TOKEN_INT))
+	{
+		int val = token.val;
 		next_token();
+		return(val);
+	}
 	else if(match_token('('))
 	{
-		parse_expr();
+		int val = parse_expr();
 		expect_token(')');
+		return(val);
 	}
 	else
+	{
 		fatal("expected integer of (, got %s", token_kind_name(token.kind));
+		return(0);
+	}
 }
 
-void parse_expr2()
+int  parse_expr2()
 {
 	if(match_token('-'))
-		parse_expr3();
+		return(-parse_expr2());
+	else if(match_token('+'))
+		return(parse_expr2());
 	else
-		parse_expr3();
+		return(parse_expr3());
 }
 
-void parse_expr1()
+int parse_expr1()
 {
-	parse_expr2();
+	int val = parse_expr2();
 	while(is_token('*') || is_token('/'))
 	{
 		char op = token.kind;
 		next_token();
-		parse_expr2();
+		int rval = parse_expr2();
+		if(op == '*')
+			val *= rval;
+		else
+		{
+			assert(op == '/');
+			assert(rval != 0);
+			val /= rval;
+		}
 	}
+
+	return(val);
 }
 
-void parse_expr0()
+int parse_expr0()
 {
-	parse_expr2();
+	int val = parse_expr1();
 	while(is_token('+') || is_token('-'))
 	{
 		char op = token.kind;
 		next_token();
-		parse_expr2();
+		int rval = parse_expr1();
+		if(op == '+')
+			val += rval;
+		else
+		{
+			assert(op == '-');
+			val -= rval;
+		}
 	}
+
+	return(val);
 }
 
+int parse_expr()
+{
+	return(parse_expr0());
+}
+
+int test_parse_expr(const char *expr)
+{
+	init_stream(expr);
+	return(parse_expr());
+}
+
+#define TEST_EXPR(x) assert(test_parse_expr(#x) == (x))
 void parse_test()
 {
-	const char *expr = "(1)";
-	init_stream(expr);
-	parse_expr();
+	TEST_EXPR(1);
+	TEST_EXPR((1+3));
+	TEST_EXPR(1-2-3);
+	TEST_EXPR((10*2)-(3*4));
+	printf("Should be 12 - %d\n", test_parse_expr("(22/2-5)+2*3"));
+	/*
+	assert(test_parse_expr("1") == 1);
+	assert(test_parse_expr("(1+3)") == 4);
+	assert(test_parse_expr("1-2-3") == -4);
+	assert(test_parse_expr("10*2-3*4") == 8);
+	*/
 }
+#undef TEST_EXPR
 
 int main()
 {
