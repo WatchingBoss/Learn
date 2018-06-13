@@ -1,5 +1,5 @@
 CC="gcc"
-#CCFLAGS=""
+CCFLAGS="-lm"
 VERSION="-std=gnu99"
 
 go: ion.o
