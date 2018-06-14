@@ -16,5 +16,6 @@
 #include "include/common.h"
 #include "include/lex.h"
 #include "include/ion.h"
+#include "include/ast.h"
 
 #endif

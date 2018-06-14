@@ -3,6 +3,7 @@
 
 extern void *xrealloc(void *, size_t);
 extern void *xmalloc(size_t);
+extern void *xcalloc(size_t, size_t);
 
 extern void fatal(const char *, ...);
 extern void syntax_error(const char *, ...);
@@ -13,6 +14,8 @@ typedef struct BufferHeader
 	size_t cap;
 	char buf[];
 } BufferHeader;
+
+#define BUF(x) x
 
 #define buf__hdr(b) ((BufferHeader *)((char *)(b) - offsetof(BufferHeader, buf)))
 

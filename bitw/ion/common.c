@@ -27,6 +27,20 @@ void *xmalloc(size_t num_bytes)
 	return(ptr);
 }
 
+void *xcalloc(size_t num_items, size_t item_size)
+{
+	void *ptr;
+
+	ptr = calloc(num_items, item_size);
+
+	if(!ptr)
+	{
+		perror("xcalloc failed");
+		exit(1);
+	}
+	return(ptr);
+}
+
 void fatal(const char *fmt, ...)
 {
 	char buf[256];
