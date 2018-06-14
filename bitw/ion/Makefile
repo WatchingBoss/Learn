@@ -1,12 +1,14 @@
-CC="gcc"
-CCFLAGS="-lm"
-VERSION="-std=gnu99"
+CC      = gcc
+CLFLAGS = -lm
+VERSION = -std=gnu99
+CFLAGS  = -g
 
-go: ion.o
-	$(CC) $(VERSION) -g -o go ion.o
+TARGET  = go
 
-ion.o: ion.c
-	$(CC) $(VERSION) -g -c ion.c
+OBJECT  = ion.o common.o lex.o
+
+$(TARGET): $(OBJECT)
+	$(CC) $(VERSION) $(CFLAGS) -o $(TARGET) $(OBJECT) $(CLFLAGS)
 
 clean:
-	rm go *.o
+	$(RM) $(TARGET) $(OBJECT)
