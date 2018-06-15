@@ -27,11 +27,11 @@ void *xmalloc(size_t num_bytes)
 	return(ptr);
 }
 
-void *xcalloc(size_t num_items, size_t item_size)
+void *xcalloc(size_t num_elems, size_t elem_size)
 {
 	void *ptr;
 
-	ptr = calloc(num_items, item_size);
+	ptr = calloc(num_elems, elem_size);
 
 	if(!ptr)
 	{

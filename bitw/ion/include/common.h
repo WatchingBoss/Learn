@@ -15,8 +15,6 @@ typedef struct BufferHeader
 	char buf[];
 } BufferHeader;
 
-#define BUF(x) x
-
 #define buf__hdr(b) ((BufferHeader *)((char *)(b) - offsetof(BufferHeader, buf)))
 
 #define buf_len(b) ((b) ? buf__hdr(b)->len : 0)
