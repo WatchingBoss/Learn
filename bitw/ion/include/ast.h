@@ -221,17 +221,22 @@ typedef enum eStmtKind
 	STMT_NONE,
 	STMT_RETURN,
 	STMT_BREAK,
-	STMT_CONRINUE,
+	STMT_CONTINUE,
 	STMT_BLOCK,
 	STMT_IF,
 	STMT_WHILE,
+	STMT_DO_WHILE,
 	STMT_FOR,
-	STMT_DO,
 	STMT_SWITCH,
 	STMT_ASSIGN,
-	STMT_AUTO_ASSIGN,
+	STMT_INIT,
 	STMT_EXPR,
 } eStmtKind;
+
+typedef struct ReturnStmt
+{
+	Expr *expr;
+} ReturnStmt;;
 
 typedef struct StmtBlock
 {
@@ -265,12 +270,14 @@ typedef struct ForStmt
 	StmtBlock init;
 	Expr *cond;
 	StmtBlock next;
+	StmtBlock block;
 } ForStmt;
 
 typedef struct SwitchCase
 {
 	Expr **exprs;
 	size_t num_exprs;
+	bool is_default;
 	StmtBlock block;
 } SwitchCase;
 
@@ -288,23 +295,26 @@ typedef struct AssignStmt
 	Expr *right;
 } AssignStmt;
 
-typedef struct AutoAssignStmt
+typedef struct InitStmt
 {
 	const char *name;
-	Expr *init;
-} AutoAssignStmt;
+	Expr *expr;
+} InitStmt;
 
 struct Stmt
 {
 	eStmtKind kind;
 	union
 	{
+		ReturnStmt return_stmt;
+		StmtBlock block;
 		IfStmt if_stmt;
 		WhileStmt while_stmt;
 		ForStmt for_stmt;
 		SwitchStmt switch_stmt;
 		AssignStmt assign;
-		AutoAssignStmt autoassign;
+		InitStmt init;
+		Expr *expr;
 	};
 };
 
