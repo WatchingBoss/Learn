@@ -6,6 +6,12 @@ typedef struct Stmt Stmt;
 typedef struct Decl Decl;
 typedef struct Typespec Typespec;
 
+typedef struct StmtBlock
+{
+	Stmt **stmts;
+	size_t num_stmts;
+} StmtBlock;
+
 typedef enum eTypespecKind
 {
 	TYPESPEC_NONE,
@@ -68,12 +74,13 @@ typedef struct FuncDecl
 	FuncParam *params;
 	size_t num_params;
 	Typespec *ret_type;
+	StmtBlock block;
 } FuncDecl;
 
-typedef struct ENumItem
+typedef struct EnumItem
 {
 	const char *name;
-	Typespec *type;
+	Expr *expr;
 } EnumItem;
 
 typedef struct EnumDecl
@@ -237,12 +244,6 @@ typedef struct ReturnStmt
 {
 	Expr *expr;
 } ReturnStmt;;
-
-typedef struct StmtBlock
-{
-	Stmt **stmts;
-	size_t num_stmts;
-} StmtBlock;
 
 typedef struct ElseIf
 {
