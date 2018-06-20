@@ -1,4 +1,4 @@
-#include "inc.h"
+#include "include/inc.h"
 
 /* 
  * Lexing: translating char stream to token stream 

@@ -319,6 +319,45 @@ struct Stmt
 	};
 };
 
-extern void ast_test();
+extern Typespec *typespec_new(eTypespecKind);
+extern Typespec *typespec_name(const char *);
+extern Typespec *typespec_ptr(Typespec *);
+extern Typespec *typespec_array(Typespec *, Expr *);
+extern Decl *decl_new(eDeclKind, const char *);
+extern Decl *decl_enum(const char *, EnumItem *, size_t);
+extern Decl *decl_struct(const char *, AggregateItem *, size_t);
+extern Decl *decl_union(const char *, AggregateItem *, size_t);
+extern Decl *decl_var(const char *name, Typespec *type, Expr *);
+extern Decl *decl_func(const char *, FuncParam *, size_t, Typespec *, StmtBlock);
+extern Decl *decl_const(const char *, Expr *);
+extern Decl *decl_typedef(const char *, Typespec *);
+extern Expr *expr_new(eExprKind);
+extern Expr *expr_int(uint64_t);
+extern Expr *expr_float(double);
+extern Expr *expr_str(const char *);
+extern Expr *expr_name(const char *);
+extern Expr *expr_compound(Typespec *, Expr **, size_t);
+extern Expr *expr_cast(Typespec *, Expr *);
+extern Expr *expr_call(Expr *, Expr **, size_t);
+extern Expr *expr_index(Expr *, Expr *);
+extern Expr *expr_field(Expr *, const char *);
+extern Expr *expr_unary(eTokenKind, Expr *);
+extern Expr *expr_binary(eTokenKind, Expr *, Expr *);
+extern Expr *expr_ternary(Expr *, Expr *, Expr *);
+extern Stmt *stmt_new(eStmtKind);
+extern Stmt *stmt_return(Expr *);
+extern Stmt *stmt_break();
+extern Stmt *stmt_continue();
+extern Stmt *stmt_block(StmtBlock);
+extern Stmt *stmt_if(Expr *, StmtBlock , ElseIf *, size_t , StmtBlock);
+extern Stmt *stmt_while(Expr *, StmtBlock);
+extern Stmt *stmt_do_while(Expr *, StmtBlock);
+extern Stmt *stmt_for(StmtBlock, Expr *, StmtBlock , StmtBlock);
+extern Stmt *stmt_switch(Expr *, SwitchCase *, size_t);
+extern Stmt *stmt_assign(eTokenKind, Expr *, Expr *);
+extern Stmt *stmt_init(const char *, Expr *);
+extern Stmt *stmt_expr(Expr *);
+
+extern void print_test();
 
 #endif

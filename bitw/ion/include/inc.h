@@ -13,9 +13,9 @@
 #include <math.h>
 #include <inttypes.h>
 
-#include "include/common.h"
-#include "include/lex.h"
-#include "include/ion.h"
-#include "include/ast.h"
+#include "common.h"
+#include "lex.h"
+#include "ion.h"
+#include "ast.h"
 
 #endif

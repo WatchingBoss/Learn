@@ -1,4 +1,4 @@
-#include "inc.h"
+#include "include/inc.h"
 
 #define MAX(x, y) ((x > y) ? (x) : (y))
 
