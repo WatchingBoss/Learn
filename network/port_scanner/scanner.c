@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 				verbose_mode = TRUE;
 				break;
 			case 'p':
-				check_port(&amp;low_port, &amp;high_port, optarg);
+				check_port(&low_port, &high_port, optarg);
 				break;
 			case 'S':
 				stealth_mode = TRUE;
@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	if(ipArg = NULL)
+	if(ipArg == NULL)
 	{
 		fprintf(stderr, "No host given => se usage()\n");
 		exit(EXIT_FAILURE);
@@ -55,9 +55,9 @@ int main(int argc, char *argv[])
 		connect_scanning();
 	else
 	{
-		if(getuid() &amp;&amp; geteuid())
+		if(getuid() && geteuid())
 		{
-			fprintf(stderr, Need to be root to initiate syn scanning\n);
+			fprintf(stderr, "Need to be root to initiate syn scanning\n");
 			exit(EXIT_FAILURE);
 		}
 		syn_scanning();
@@ -70,13 +70,13 @@ void got_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *pa
 {
 	const Sniff_TCP *tcp;
 	const Sniff_IP *ip;
-	const Sniff_Ethernet *ether;
+//	const Sniff_Ethernet *ether;
 	struct servent *serv;
 
 	int size_ip;
 	int size_tcp;
 
-	ether = (Sniff_Ethernet *) (packet);
+//	ether = (Sniff_Ethernet *) (packet);
 	ip    = (Sniff_IP *) (packet + SIZE_ETHERNET);
 
 	size_ip = IP_HL(ip) * 4;
@@ -99,15 +99,15 @@ void got_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *pa
 		return;
 	}
 
-	if(((tcp->th_flags &amp; 0x02) == TH_SYN)&amp;amp; (tcp->th_flags &amp; 0x10) == TH_ACK)
+	if(((tcp->th_flags & 0x02) == TH_SYN) && ((tcp->th_flags & 0x10) == TH_ACK))
 	{
 		serv = getservbyport(htons((int)args), "tcp");
-		printf("TCP port %d open, possible service: %s\n", args, serv->s_name);
+		printf("TCP port %hhn open, possible service: %s\n", args, serv->s_name);
 	}
-	else if((tcp->th_flags &amp; 0x04) == TH_RST &amp;&amp; verbose_mode)
-		printf("TCP port %d closed\n", args);
+	else if((tcp->th_flags & 0x04) == TH_RST && verbose_mode)
+		printf("TCP port %hhn closed\n", args);
 	else if(verbose_mode)
-		printf("Port %d state unknown/filtered\n", args);
+		printf("Port %hhn state unknown/filtered\n", args);
 }
 
 void print_usage(const char *argv)
@@ -149,6 +149,8 @@ int check_port(long *lport, long *hport, char *optar)
 			*lport ^= *hport;
 		}
 	}
+
+	return(1);
 }
 
 uint16_t checksum_comp(uint16_t *addr, int len)
@@ -168,7 +170,7 @@ uint16_t checksum_comp(uint16_t *addr, int len)
 		sum += *(unsigned char *)addr;
 
 	while(sum >> 16)
-		sum = (sum &amp; 0xffff) + (sum >> 16);
+		sum = (sum & 0xffff) + (sum >> 16);
 	uint16_t checksum = ~sum;
 
 	return(checksum);
@@ -178,8 +180,8 @@ pcap_t* engine_preparing(char *vicIP, struct sockaddr_in **ipP, pcap_t *session)
 {
 	char *dev;
 	char errbuf[PCAP_ERRBUF_SIZE];
-	bpf_u_int31 devip, netmask;
-	struct pcap_pkthdr header;
+//	bpf_u_int32 devip, netmask;
+//	struct pcap_pkthdr header;
 	struct bpf_program filter;
 	char filter_exp[30] = "src host";
 	pcap_if_t *alldev;
@@ -187,9 +189,9 @@ pcap_t* engine_preparing(char *vicIP, struct sockaddr_in **ipP, pcap_t *session)
 	strncpy((char *)filter_exp + 9, vicIP, 16);
 	printf("filter exp: %s\n", filter_exp);
 
-	if((pcap_findalldevs(&amp;alldev, errbuf)) == -1)
+	if((pcap_findalldevs(&alldev, errbuf)) == -1)
 	{
-		fprintf(strderr, "%s\n", errbuf);
+		fprintf(stderr, "%s\n", errbuf);
 		exit(EXIT_FAILURE);
 	}
 
@@ -219,12 +221,12 @@ pcap_t* engine_preparing(char *vicIP, struct sockaddr_in **ipP, pcap_t *session)
 		fprintf(stderr, "Could not open device %s: error: %s\n", dev, errbuf);
 		exit(EXIT_FAILURE);
 	}
-	if(pcap_compile(session, &amp;filter, filter_exp, 0, 0) == -1)
+	if(pcap_compile(session, &filter, filter_exp, 0, 0) == -1)
 	{
 		fprintf(stderr, "Could not parse filter %s: %s\n", filter_exp, pcap_geterr(session));
 		exit(EXIT_FAILURE);
 	}
-	if(pcap_setfilter(session, &amp;filter) == -1)
+	if(pcap_setfilter(session, &filter) == -1)
 	{
 		fprintf(stderr, "Could not install filter %s: %s\n", filter_exp, pcap_geterr(session));
 		exit(EXIT_FAILURE);
@@ -277,9 +279,9 @@ void syn_scanning()
 	char temp_addr[16];
 
 	struct sockaddr_in sin;
-	struct servent *serv;
+//	struct servent *serv;
 	struct hostent *hostname;
-	struct sockaddr_int *ipP;
+	struct sockaddr_in *ipP;
 
 	hostname = (struct hostent *)host_resolve();
 
@@ -289,26 +291,27 @@ void syn_scanning()
 	char datagram[4096];
 	Sniff_IP *iph    = (Sniff_IP *)datagram;
 	Sniff_TCP *tcph  = (Sniff_TCP *)(datagram + sizeof(Sniff_IP));
-	Pseudo_hdr *phdr = (Pseudo_hdr *) (datagram + sizeof(Sniff_IP) + sizeof(Sniff_TCP));
+	Pseudo_hdr *phdr = (Pseudo_hdr *)(datagram + sizeof(Sniff_IP) + sizeof(Sniff_TCP));
 
 	struct sigaction act;
 	act.sa_handler = sigfunc;
-	sigemptyset(&amp;act.sa_mask);
+	sigemptyset(&act.sa_mask);
 	act.sa_flags = 0;
 
-	session = (pcap_t *)engine_preparing(temp_addr, &amp;ipP, session);
+	session = (pcap_t *)engine_preparing(temp_addr, &ipP, session);
 
 	printf("Initiatin syn canning against %s [%ld ports]\n", temp_addr, (high_port - low_port + 1));
-	for(int i = low_port, i <= high_port; ++i)
+
+	for(int i = low_port; i <= high_port; ++i)
 	{
 		if((sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_TCP)) < 0)
 			error("sock:");
 
 		sin.sin_family = AF_INET;
-		inet_pron(AF_INET, temp_addr, &amp;sin.sin_addr);
+		inet_pton(AF_INET, temp_addr, &sin.sin_addr);
 
 		memset(datagram, 0, 4096);
-		iph->ip_vhl         = 0x45
+		iph->ip_vhl         = 0x45;
 		iph->ip_tos         = 0;
 		iph->ip_len         = sizeof(Sniff_IP) + sizeof(Sniff_TCP);
 		iph->ip_id          = htonl(54321);
@@ -330,7 +333,7 @@ void syn_scanning()
 		tcph->th_urp   = 0;
 
 		phdr->src   = iph->ip_src.s_addr;
-		phdr->dst   = iph-.ip_dst.s_addr;
+		phdr->dst   = iph->ip_dest.s_addr;
 		phdr->mbz   = 0;
 		phdr->proto = IPPROTO_TCP;
 		phdr->len   = ntohs(0x14);
@@ -338,25 +341,25 @@ void syn_scanning()
 		tcph->th_sum = htons(checksum_comp((unsigned short *)tcph,
 										   sizeof(Pseudo_hdr) + sizeof(Sniff_TCP)));
 		int one = 1;
-		const int *val = &amp;one;
+		const int *val = &one;
 
 		if(setsockopt(sockfd, IPPROTO_IP, IP_HDRINCL, val, sizeof(one)) < 0)
 			fprintf(stderr, "Warnign: connot set HDRINCL for port %d\n", i);
 
-		if(sendto(sockfd, datagram, iph->ip_len, 0, (struct sockaddr *)&amp;sin, sizeof(sin)) < 0)
+		if(sendto(sockfd, datagram, iph->ip_len, 0, (struct sockaddr *)&sin, sizeof(sin)) < 0)
 		{
 			fprintf(stderr, "Error sending datagram for port %d\n", i);
 			break;
 		}
 
-		sigaction(SIGALRM, &amp;act, 0);
+		sigaction(SIGALRM, &act, 0);
 		alarm(s_timeout);
 
-		timeout = pcap_dispatch(session, -1, got_packet, (u_char *)i);
+		timeout = pcap_dispatch(session, -1, got_packet, (u_char *)&i);
 		alarm(0);
 
-		if(verbose_mode &amp;&amp; timeout == -2)
-			printf(stdout, "timeout for port %d\n", i);
+		if(verbose_mode && timeout == -2)
+			printf("timeout for port %d\n", i);
 	}
 }
 
@@ -365,7 +368,7 @@ void connect_scanning()
 	int sockfd;
 	char temp_addr[7];
 
-	struct sockaddr_in sockadr;
+	struct sockaddr_in sockaddr;
 	struct servent *serv;
 	struct hostent *hostname;
 	hostname = (struct hostent *)host_resolve();
@@ -383,9 +386,9 @@ void connect_scanning()
 			error("Socket error");
 		sockaddr.sin_family = AF_INET;
 		sockaddr.sin_port = htons(i);
-		inet_pton(AF_INET, temp_addr, &amp;sockaddr.sin_addr);
+		inet_pton(AF_INET, temp_addr, &sockaddr.sin_addr);
 
-		if(!connect(sockfd, (struct sockaddr *)&amp; sockaddr, sizeof(sockaddr)))
+		if(!connect(sockfd, (struct sockaddr *)& sockaddr, sizeof(sockaddr)))
 		{
 			serv = getservbyport(htons(i), "tcp");
 			printf("TCP port %d open, possible service: %s\n", i, serv->s_name);

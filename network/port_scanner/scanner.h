@@ -37,7 +37,7 @@ typedef struct sniff_ip
 	struct in_addr ip_src, ip_dest;
 } Sniff_IP;
 
-#define IP_HL(ip) (((ip)->ip_vhl) &amp; 0x0f)
+#define IP_HL(ip) (((ip)->ip_vhl) & 0x0f)
 #define IP_V(ip)  (((ip)->ip_vhl) >> 4)
 
 /* TCP header */
@@ -50,7 +50,7 @@ typedef struct sniff_tcp
 	tcp_seq th_seq;
 	tcp_seq th_ack;
 	u_char  th_offx2;
-#define TH_OFF(th) (((th)->th_offx2 &amp; 0xf0) >> 4)
+#define TH_OFF(th) (((th)->th_offx2 & 0xf0) >> 4)
 	u_char th_flags;
 	#define TH_FIN  0x01
 	#define TH_SYN  0x02
