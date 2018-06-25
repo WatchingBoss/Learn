@@ -50,7 +50,6 @@ void print_typespec(Typespec *type)
 
 void print_stmt_block(StmtBlock block, bool newlines)
 {
-	assert(block.num_stmts != 0);
 	printf("(block ");
 	++indent;
 	for(Stmt **it = block.stmts; it != block.stmts + block.num_stmts; ++it)
@@ -146,17 +145,13 @@ void print_stmt(Stmt *stmt)
 				it != s->switch_stmt.cases + s->switch_stmt.num_cases; ++it)
 			{
 				print_newline();
-				printf("(case (");
-				if(it->is_default)
-					printf("default");
-				else
-					printf("nil");
+				printf("(case (%s", it->is_default ? " default" : "");
 				for(Expr **expr = it->exprs; expr != it->exprs + it->num_exprs; ++it)
 				{
 					printf(" ");
 					print_expr(*expr);
 				}
-				printf(") ");
+				printf(" ) ");
 				++indent;
 				print_newline();
 				print_stmt_block(it->block, true);
@@ -394,11 +389,9 @@ void stmt_test()
 					(Stmt*[]){
 						stmt_return(expr_int(1))},1,},
 				(ElseIf[]){
-					expr_name("flag2"),
+					expr_name("flag2"), (StmtBlock){(Stmt*[]){stmt_return(expr_int(2))}, 1, }}, 1,
 						(StmtBlock){
-							(Stmt*[]){stmt_return(expr_int(2))},1,}},1,
-				(StmtBlock){
-					(Stmt*[]){stmt_return(expr_int(3))},1,}),
+							(Stmt*[]){stmt_return(expr_int(3))},1,}),
         stmt_while(
             expr_name("running"),
             (StmtBlock){

@@ -308,11 +308,11 @@ struct Stmt
 	union
 	{
 		ReturnStmt return_stmt;
-		StmtBlock block;
 		IfStmt if_stmt;
 		WhileStmt while_stmt;
 		ForStmt for_stmt;
 		SwitchStmt switch_stmt;
+		StmtBlock block;
 		AssignStmt assign;
 		InitStmt init;
 		Expr *expr;
