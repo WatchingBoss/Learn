@@ -5,7 +5,7 @@ CFLAGS  = -g
 
 TARGET  = go
 
-OBJECT  = ion.o common.o lex.o ast.o print.o
+OBJECT  = ion.o common.o lex.o ast.o print.o parse.o
 
 $(TARGET): $(OBJECT)
 	$(CC) $(VERSION) $(CFLAGS) -o $(TARGET) $(OBJECT) $(CLFLAGS)

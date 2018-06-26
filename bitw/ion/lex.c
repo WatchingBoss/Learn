@@ -3,6 +3,72 @@
 /* 
  * Lexing: translating char stream to token stream 
  */
+
+const char *typedef_keyword;
+const char *enum_keyword;
+const char *struct_keyword;
+const char *union_keyword;
+const char *var_keyword;
+const char *const_keyword;
+const char *func_keyword;
+const char *sizeof_keyword;
+const char *break_keyword;
+const char *continue_keyword;
+const char *return_keyword;
+const char *if_keyword;
+const char *else_keyword;
+const char *while_keyword;
+const char *do_keyword;
+const char *for_keyword;
+const char *switch_keyword;
+const char *case_keyword;
+const char *default_keyword;
+
+const char *first_keyword;
+const char *last_keyword;
+const char **keywords;
+
+#define KEYWORD(name) name##_keyword = str_intern(#name); buf_push(keyword, name##_keyword)
+
+void init_keywords()
+{
+	static bool inited;
+	if(inited)
+		return;
+	char *arena_end = str_arena.end;
+	KEYWORD(typedef);
+	KEYWORD(enum);
+	KEYWORD(struct);
+	KEYWORD(union);
+	KEYWORD(const);
+	KEYWORD(var);
+	KEYWORD(func);
+	KEYWORD(sizeof);
+	KEYWORD(break);
+	KEYWORD(continue);
+	KEYWORD(return);
+	KEYWORD(if);
+	KEYWORD(else);
+	KEYWORD(while);
+	KEYWORD(do);
+	KEYWORD(for);
+	KEYWORD(switch);
+	KEYWORD(case);
+	KEYWORD(default);
+
+	assert(str_arena.end == arena_end);
+	first_keyword = typedef_keyword;
+	last_keyword = default_keyword;
+	inited = true;
+}
+
+#undef KEYWORD
+
+bool is_keyword_str(const char *str)
+{
+	return(first_keyword <= str && str <= last_keyword);
+}
+
 const char *token_kind_names[] =
 {
 	[TOKEN_EOF] = "EOF",
@@ -33,12 +99,23 @@ const char *token_kind_names[] =
 	[TOKEN_MOD_ASSIGN] = "%=",
 };
 
+const char *token_kind_name(TokenKind kind)
+{
+	if(kind < sizeof(token_kind_names) / sizeof(*token_kind_names))
+		return(token_kind_names[kind]);
+	else
+		return(NULL);
+}
+
 size_t copy_token_kind_str(char *dest, size_t dest_size, eTokenKind kind)
 {
 	size_t n = 0;
 
 	if(kind < sizeof(token_kind_names) / sizeof(*token_kind_names) && token_kind_names[kind])
 		n = snprintf(dest, dest_size, "%s", token_kind_names[kind]);
+	const char *name = token_kind_name(kind);
+	if(name)
+		n = snprintf(dest, dest_size, "%s", name);
 	else if(kind < 128 && isprint(kind))
 		n = snprintf(dest, dest_size, "%c", kind);
 	else
@@ -142,7 +219,6 @@ void scan_float()
 		while(isdigit(*stream))
 			++stream;
 	}
-	const char *end = stream;
 	double val = strtod(start, NULL);
 	if(val == HUGE_VAL || val == -HUGE_VAL)
 		syntax_error("Float literal overflow");
@@ -284,8 +360,8 @@ repeat:
 		case '_':
 			while(isalnum(*stream) || *stream == '_')
 				++stream;
-			token.kind = TOKEN_NAME;
 			token.name = str_intern_range(token.start, stream);
+			token.kind = is_keyword_str(token.name) ? TOKEN_KEYWORD : TOKEN_NAME;
 			break;
 		case '<':
 			token.kind = *stream++;
@@ -322,6 +398,7 @@ repeat:
 				++stream;
 			} break;
 			
+		CASE1('=', '=', TOKEN_EQ)
 	    CASE1('^', '=', TOKEN_XOR_ASSIGN)
 	    CASE1(':', '=', TOKEN_COLON_ASSIGN)
 	    CASE1('*', '=', TOKEN_MUL_ASSIGN)
@@ -348,17 +425,38 @@ void init_stream(const char *str)
 	next_token();
 }
 
-static inline bool is_token(eTokenKind kind)
+bool is_token(eTokenKind kind)
 {
 	return(token.kind == kind);
 }
 
-static inline bool is_token_name(const char *name)
+bool is_token_eof()
+{
+	return(token.kind == TOKEN_EOF);
+}
+
+bool is_token_name(const char *name)
 {
 	return(token.kind == TOKEN_NAME && token.name == name);
 }
 
-static inline bool match_token(eTokenKind kind)
+bool is_keyword(const char *name)
+{
+	return(is_token(TOKEN_KEYWORD) && token.name == name);
+}
+
+bool match_keyword(const char *name)
+{
+	if(is_token(name))
+	{
+		next_token();
+		return(true);
+	}
+	else
+		return(false);
+}
+
+bool match_token(eTokenKind kind)
 {
 	if(is_token(kind))
 	{
@@ -369,7 +467,7 @@ static inline bool match_token(eTokenKind kind)
 		return(false);
 }
 
-static inline bool expect_token(eTokenKind kind)
+bool expect_token(eTokenKind kind)
 {
 	if(is_token(kind))
 	{
@@ -385,6 +483,16 @@ static inline bool expect_token(eTokenKind kind)
 	}
 }
 
+void keyword_test()
+{
+	init_keywords();
+	assert(is_keyword_str(first_keyword));
+	assert(is_keyword_str(last_keyword));
+	for(const char **it = keywords; it != buf_end(keywords); ++it)
+		assert(is_keyword_str(*it));
+	assert(!is_keyword_str(str_intern("foo")));
+}
+
 #define assert_token(x) assert(match_token(x))
 #define assert_token_name(x) assert(token.name == str_intern(x) && match_token(TOKEN_NAME))
 #define assert_token_int(x) assert(token.int_val == (x) && match_token(TOKEN_INT))
@@ -394,6 +502,8 @@ static inline bool expect_token(eTokenKind kind)
 
 void lex_test()
 {
+	keyword_test();
+
 	// Integer literal tests
 	init_stream("18446744073709551614 0xFFFFFFFFFFFFFFFF 042 0b1111");
 	assert_token_int(18446744073709551614ul);
