@@ -22,16 +22,17 @@ Typespec *parse_type_func()
 
 	return(typespec_func(ast_dup(args, buf_sizeof(args)), buf_len(args), ret));
 }
+
 Typespec *parse_type_base()
 {
 	if(is_token(TOKEN_NAME))
 	{
 		const char *name = token.name;
 		next_token();
-		return(typespec_name(name))
+		return(typespec_name(name));
 	}
 	else if(match_keyword(func_keyword))
-		return(parse_type_func);
+		return(parse_type_func());
 	else if(match_token('('))
 		return(parse_type());
 	else
@@ -48,7 +49,7 @@ Typespec *parse_type()
 	{
 		if(match_token('['))
 		{
-			Expr *epxr = NULL;
+			Expr *expr = NULL;
 			if(!is_token(')'))
 				expr = parse_expr();
 			expect_token(']');
@@ -176,10 +177,10 @@ Expr *parse_expr_unary()
 	{
 		eTokenKind op = token.kind;
 		next_token();
-		return(expr_unary(op, parse_expr_unary));
+		return(expr_unary(op, parse_expr_unary()));
 	}
 	else
-		return(parse_expr_base);
+		return(parse_expr_base());
 }
 
 bool is_mul_op()
@@ -195,7 +196,7 @@ Expr *parse_expr_mul()
 	{
 		eTokenKind op = token.kind;
 		next_token();
-		expt = expr_binary(op, expr, parse_expr_unary());
+		expr = expr_binary(op, expr, parse_expr_unary());
 	}
 	return(expr);
 }
@@ -391,24 +392,24 @@ SwitchCase parse_stmt_switch_case()
 		}
 	}
 	StmtBlock block = parse_stmt_block();
-	return( (SwtichCase){ast_dup(exprs, buf_sizeof(exprs)), buf_len(exprs), is_default, block} );
+	return( (SwitchCase){ast_dup(exprs, buf_sizeof(exprs)), buf_len(exprs), is_default, block} );
 }
 
 Stmt *parse_stmt_switch()
 {
 	Expr *expr = parse_paren_expr();
-	SwtichCase *cases = NULL;
+	SwitchCase *cases = NULL;
 	expect_token('{');
 	while(!is_token_eof() && !is_token('}'))
 		buf_push(cases, parse_stmt_switch_case());
-	expect_token();
+	expect_token('}');
 
 	return(stmt_switch(expr, ast_dup(cases, buf_sizeof(cases)), buf_len(cases)));
 }
 
 bool is_assign_op()
 {
-	return(TOKEN_FIRST_ASSIGN <= token.kind && token.kind <= TOKNE_LAST_ASSIGN);
+	return(TOKEN_FIRST_ASSIGN <= token.kind && token.kind <= TOKEN_LAST_ASSIGN);
 }
 
 Stmt *parse_stmt()
@@ -429,7 +430,7 @@ Stmt *parse_stmt()
 	else if(match_keyword(continue_keyword))
 	{
 		expect_token(';');
-		return(stmt_continue);
+		return(stmt_continue());
 	}
 	else if(match_keyword(if_keyword))
 		return(parse_stmt_if());
@@ -477,15 +478,15 @@ AggregateItem parse_decl_aggregate_item()
 	return((AggregateItem){ast_dup(names, buf_sizeof(names)), buf_len(names), type});
 }
 
-Decl *parse_decl_aggregate(DeclKind kind)
+Decl *parse_decl_aggregate(eDeclKind kind)
 {
-	assert(kind == DECL_STRUCT || kind == DECL_UNIION);
+	assert(kind == DECL_STRUCT || kind == DECL_UNION);
 	const char *name = parse_name();
 	expect_token('{');
 	AggregateItem *items = NULL;
 	while(!is_token_eof() && !is_token('}'))
 		buf_push(items, parse_decl_aggregate_item());
-	expect_token();
+	expect_token('}');
 
 	return(decl_aggregate(kind, name, ast_dup(items, buf_sizeof(items)), buf_len(items)));
 }
@@ -543,7 +544,7 @@ Decl *parse_decl_func()
 	{
 		buf_push(params, parse_decl_func_param());
 		while(match_token(','))
-			buf_push(params, parse_decl_func_param);
+			buf_push(params, parse_decl_func_param());
 	}
 	expect_token(')');
 	Typespec *ret_type = NULL;
@@ -581,7 +582,7 @@ void parse_and_print_decl(const char *str)
 {
 	init_stream(str);
 	Decl *decl = parse_decl();
-	print_delc(decl);
+	print_decl(decl);
 	printf("\n");
 }
 

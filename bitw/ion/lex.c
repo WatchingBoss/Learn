@@ -99,6 +99,9 @@ const char *token_kind_names[] =
 	[TOKEN_MOD_ASSIGN] = "%=",
 };
 
+Token token;
+const char *stream;
+
 const char *token_kind_name(eTokenKind kind)
 {
 	if(kind < sizeof(token_kind_names) / sizeof(*token_kind_names))
@@ -134,9 +137,6 @@ const char *temp_token_kind_str(eTokenKind kind)
 	
 	return(buf);
 }
-
-Token token;
-const char *stream;
 
 uint8_t char_to_digit[256] = {['0'] = 0, ['1'] = 1, ['2'] = 2, ['3'] = 3, ['4'] = 4,
 							  ['5'] = 5, ['6'] = 6, ['7'] = 7, ['8'] = 8, ['9'] = 9,

@@ -319,12 +319,15 @@ struct Stmt
 	};
 };
 
+extern void *ast_dup(const void *, size_t);
 extern Typespec *typespec_new(eTypespecKind);
 extern Typespec *typespec_name(const char *);
 extern Typespec *typespec_ptr(Typespec *);
 extern Typespec *typespec_array(Typespec *, Expr *);
+extern Typespec *typespec_func(Typespec **, size_t, Typespec *);
 extern Decl *decl_new(eDeclKind, const char *);
 extern Decl *decl_enum(const char *, EnumItem *, size_t);
+extern Decl *decl_aggregate(eDeclKind, const char *, AggregateItem *, size_t);
 extern Decl *decl_struct(const char *, AggregateItem *, size_t);
 extern Decl *decl_union(const char *, AggregateItem *, size_t);
 extern Decl *decl_var(const char *name, Typespec *type, Expr *);

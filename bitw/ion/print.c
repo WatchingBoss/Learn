@@ -1,8 +1,5 @@
 #include "include/inc.h"
 
-void print_expr(Expr *expr);
-void print_stmt(Stmt *stmt);
-void print_decl(Decl *decl);
 
 int indent;
 
@@ -125,9 +122,9 @@ void print_stmt(Stmt *stmt)
 			break;
 		case STMT_FOR:
 			printf("(for ");
-			print_stmt_block(s->for_stmt.init);
+			print_stmt(s->for_stmt.init);
 			print_expr(s->for_stmt.cond);
-			print_stmt_block(s->for_stmt.next);
+			print_stmt(s->for_stmt.next);
 			++indent;
 			print_newline();
 			print_stmt_block(s->for_stmt.block);

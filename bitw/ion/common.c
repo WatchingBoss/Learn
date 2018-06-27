@@ -153,6 +153,9 @@ void arena_free(Arena *arena)
  * Strign interning
  */
 
+Arena str_arena;
+InternString *interns;
+
 const char *str_intern_range(const char *start, const char *end)
 {
 	size_t len = end - start;

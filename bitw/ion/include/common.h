@@ -48,8 +48,8 @@ typedef struct InternString
 	const char *str;
 } InternString;
 
-Arena str_arena;
-InternString *interns;
+extern Arena str_arena;
+extern InternString *interns;
 
 #define ARENA_ALIGNMENT 8
 #define ARENA_BLOCK_SIZE 1024

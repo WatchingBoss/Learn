@@ -17,6 +17,7 @@
 #include "lex.h"
 #include "ion.h"
 #include "ast.h"
+#include "print.h"
 #include "parse.h"
 
 #endif
