@@ -28,7 +28,7 @@ const char *first_keyword;
 const char *last_keyword;
 const char **keywords;
 
-#define KEYWORD(name) name##_keyword = str_intern(#name); buf_push(keyword, name##_keyword)
+#define KEYWORD(name) name##_keyword = str_intern(#name); buf_push(keywords, name##_keyword)
 
 void init_keywords()
 {
@@ -99,7 +99,7 @@ const char *token_kind_names[] =
 	[TOKEN_MOD_ASSIGN] = "%=",
 };
 
-const char *token_kind_name(TokenKind kind)
+const char *token_kind_name(eTokenKind kind)
 {
 	if(kind < sizeof(token_kind_names) / sizeof(*token_kind_names))
 		return(token_kind_names[kind]);
@@ -447,7 +447,7 @@ bool is_keyword(const char *name)
 
 bool match_keyword(const char *name)
 {
-	if(is_token(name))
+	if(is_keyword(name))
 	{
 		next_token();
 		return(true);

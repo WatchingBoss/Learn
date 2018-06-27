@@ -73,7 +73,7 @@ Decl *decl_enum(const char *name, EnumItem *items, size_t num_items)
 	return(d);
 }
 
-Decl *decl_aggregate(DeclKind kind, const char *name, AggregateItem *items, size_t num_items)
+Decl *decl_aggregate(eDeclKind kind, const char *name, AggregateItem *items, size_t num_items)
 {
 	assert(kind == DECL_STRUCT || kind == DECL_UNION);
 	Decl *d = decl_new(kind, name);

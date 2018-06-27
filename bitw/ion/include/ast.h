@@ -352,7 +352,7 @@ extern Stmt *stmt_block(StmtBlock);
 extern Stmt *stmt_if(Expr *, StmtBlock , ElseIf *, size_t , StmtBlock);
 extern Stmt *stmt_while(Expr *, StmtBlock);
 extern Stmt *stmt_do_while(Expr *, StmtBlock);
-extern Stmt *stmt_for(StmtBlock, Expr *, StmtBlock , StmtBlock);
+extern Stmt *stmt_for(Stmt *, Expr *, Stmt *, StmtBlock);
 extern Stmt *stmt_switch(Expr *, SwitchCase *, size_t);
 extern Stmt *stmt_assign(eTokenKind, Expr *, Expr *);
 extern Stmt *stmt_init(const char *, Expr *);

@@ -41,7 +41,7 @@ void *xcalloc(size_t num_elems, size_t elem_size)
 	return(ptr);
 }
 
-fatal_syntax_error(const char *fmt, ...)
+void fatal_syntax_error(const char *fmt, ...)
 {
 	va_list args;
 	va_start(args, fmt);
@@ -145,21 +145,13 @@ void *arena_alloc(Arena *arena, size_t size)
 
 void arena_free(Arena *arena)
 {
-	for(char **it = arena->blocks; it != buf_end(arens->blocks); ++it)
+	for(char **it = arena->blocks; it != buf_end(arena->blocks); ++it)
 		free(*it);
 }
 
 /*
- * Intern string
+ * Strign interning
  */
-typedef struct InternString
-{
-	size_t len;
-	const char *str;
-} InternString;
-
-Arena str_arena;
-Intern *interns;
 
 const char *str_intern_range(const char *start, const char *end)
 {
@@ -169,7 +161,7 @@ const char *str_intern_range(const char *start, const char *end)
 		if(it->len == len && strncmp(it->str, start, len) == 0)
 			return(it->str);
 	}
-	char *str = arena_alloc(&ast_arena, len + 1);
+	char *str = arena_alloc(&str_arena, len + 1);
 	memcpy(str, start, len);
 	str[len] = 0;
 

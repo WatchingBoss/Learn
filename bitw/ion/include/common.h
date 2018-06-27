@@ -8,7 +8,7 @@ extern void *xcalloc(size_t, size_t);
 extern void fatal(const char *, ...);
 extern void syntax_error(const char *, ...);
 
-extern fatal_syntax_error(const char *, ...);
+extern void fatal_syntax_error(const char *, ...);
 
 typedef struct BufferHeader
 {
@@ -31,7 +31,7 @@ typedef struct BufferHeader
 
 #define ALIGN_DOWN(n, a) ((n) & ~((a) - 1))
 #define ALIGN_UP(n, a) ALIGN_DOWN((n) + (a) - 1, (a))
-#define ALIGN_DOWN_PRT(p, a) ((void *)ALIGN_DOWN((uintptr_t)(p), (a)))
+#define ALIGN_DOWN_PTR(p, a) ((void *)ALIGN_DOWN((uintptr_t)(p), (a)))
 #define ALIGN_UP_PTR(p, a) ((void *)ALIGN_UP((uintptr_t)(p), (a)))
 
 
@@ -41,6 +41,15 @@ typedef struct Arens
 	char *end;
 	char **blocks;
 } Arena;
+
+typedef struct InternString
+{
+	size_t len;
+	const char *str;
+} InternString;
+
+Arena str_arena;
+InternString *interns;
 
 #define ARENA_ALIGNMENT 8
 #define ARENA_BLOCK_SIZE 1024
