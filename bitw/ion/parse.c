@@ -75,6 +75,8 @@ Expr *parse_expr_compound(Typespec *type)
 		while(match_token(','))
 			buf_push(args, parse_expr());
 	}
+	expect_token('}');
+
 	return(expr_compound(type, ast_dup(args, buf_sizeof(args)), buf_len(args)));
 }
 
@@ -240,7 +242,7 @@ Expr *parse_expr_and()
 {
 	Expr *expr = parse_expr_cmp();
 	while(match_token(TOKEN_AND))
-		expr = expr_binary(TOKEN_AND, expr, parse_expr_and());
+		expr = expr_binary(TOKEN_AND, expr, parse_expr_cmp());
 	return(expr);
 }
 
@@ -270,6 +272,23 @@ Expr *parse_expr()
 	return(parse_expr_ternary());
 }
 
+Expr *parse_paren_expr()
+{
+	expect_token('(');
+	Expr *expr = parse_expr();
+	expect_token(')');
+
+	return(expr);
+}
+
+const char *parse_name()
+{
+	const char *name = token.name;
+	expect_token(TOKEN_NAME);
+
+	return(name);
+}
+
 Decl *parse_decl_enum()
 {
 	const char *name = token.name;
@@ -286,22 +305,8 @@ Decl *parse_decl_enum()
 		buf_push(items, (EnumItem){name, expr});
 	}
 	expect_token('}');
+
 	return(decl_enum(name, ast_dup(items, buf_sizeof(items)), buf_len(items)));
-}
-
-const char *parse_name()
-{
-	const char *name = token.name;
-	expect_token(TOKEN_NAME);
-	return(name);
-}
-
-Expr *parse_paren_expr()
-{
-	expect_token('(');
-	Expr *expr = parse_expr();
-	expect_token(')');
-	return(expr);
 }
 
 StmtBlock parse_stmt_block()
@@ -311,6 +316,7 @@ StmtBlock parse_stmt_block()
 	while(is_token_eof() && !is_token('}'))
 		buf_push(stmts, parse_stmt());
 	expect_token('}');
+
 	return((StmtBlock){ast_dup(stmts, buf_sizeof(stmts)), buf_len(stmts)});
 }
 
@@ -331,6 +337,7 @@ Stmt *parse_stmt_if()
 		StmtBlock elseif_block = parse_stmt_block();
 		buf_push(elseifs, (ElseIf){elseif_cond, elseif_block});
 	}
+
 	return(stmt_if(cond, then_block, ast_dup(elseifs, buf_sizeof(elseifs)),
 				   buf_len(elseifs), else_block));
 }
@@ -352,6 +359,7 @@ Stmt *parse_stmt_do_while()
 	Expr *cond = parse_paren_expr();
 	Stmt *stmt = stmt_do_while(parse_paren_expr(), block);
 	expect_token(';');
+
 	return(stmt);
 }
 
@@ -392,6 +400,7 @@ SwitchCase parse_stmt_switch_case()
 		}
 	}
 	StmtBlock block = parse_stmt_block();
+
 	return( (SwitchCase){ast_dup(exprs, buf_sizeof(exprs)), buf_len(exprs), is_default, block} );
 }
 
@@ -516,6 +525,7 @@ Decl *parse_decl_const()
 {
 	const char *name = parse_name();
 	expect_token('=');
+
 	return(decl_const(name, parse_expr()));
 }
 
@@ -523,6 +533,7 @@ Decl *parse_decl_typedef()
 {
 	const char *name = parse_name();
 	expect_token('=');
+
 	return(decl_typedef(name, parse_type()));
 }
 
@@ -588,11 +599,11 @@ void parse_and_print_decl(const char *str)
 
 void parse_test()
 {
-	parse_and_print_decl("func fact(n: int): int { trace(\"fact\"); if (n == 0) { return 1; } "
-						 "else { return n * fact(n-1); } }");
+//	parse_and_print_decl("func fact(n: int): int { trace(\"fact\"); if (n == 0) { return 1; } "
+//						 "else { return n * fact(n-1); } }");
 	parse_and_print_decl("var x = b == 1 ? 1+2 : 3-4");
 	parse_and_print_decl("const pi = 3.14");
-	parse_and_print_decl("struct Vector { x, y: float; }");
-	parse_and_print_decl("union IntOrFloat { i: int; f: float; }");
+//	parse_and_print_decl("struct Vector { x, y: float; }");
+//	parse_and_print_decl("union IntOrFloat { i: int; f: float; }");
 	parse_and_print_decl("typedef Vectors = Vector[1+2]");
 }
