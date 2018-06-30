@@ -297,8 +297,7 @@ Decl *parse_decl_enum()
 	EnumItem *items = NULL;
 	while(!is_token_eof() && !is_token('}'))
 	{
-		const char *item_name = token.name;
-		expect_token(TOKEN_NAME);
+		const char *item_name = parse_name();
 		Expr *expr = NULL;
 		if(match_token('='))
 			expr = parse_expr();
@@ -367,7 +366,7 @@ Stmt *parse_stmt_for()
 {
 	expect_token('(');
 	Stmt *init = NULL;
-	if(!is_token(';'))
+	if(!match_token(';'))
 		init = parse_stmt();
 	Expr *cond = NULL;
 	if(!is_token(';'))
