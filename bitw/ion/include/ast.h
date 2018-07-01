@@ -80,7 +80,7 @@ typedef struct FuncDecl
 typedef struct EnumItem
 {
 	const char *name;
-	Expr *expr;
+	Expr *init;
 } EnumItem;
 
 typedef struct EnumDecl
@@ -148,7 +148,24 @@ typedef enum eExprKind
 	EXPR_UNARY,
 	EXPR_BINARY,
 	EXPR_TERNARY,
+	EXPR_SIZEOF,
 } eExprKind;
+
+typedef enum eSizeofKind
+{
+	SIZEOF_EXPR,
+	SIZEOF_TYPE,
+} eSizeofKind;
+
+typedef struct eSizeofExpr
+{
+	eSizeofKind kind;
+	union
+	{
+		Expr *expr;
+		Typespec *type;
+	};
+} eSizeofExpr;
 
 typedef struct CompoundExpr
 {
@@ -220,6 +237,7 @@ struct Expr
 		CallExpr call;
 		IndexExpr index;
 		FieldExpr field;
+		eSizeofExpr sizeof_expr;
 	};
 };
 
