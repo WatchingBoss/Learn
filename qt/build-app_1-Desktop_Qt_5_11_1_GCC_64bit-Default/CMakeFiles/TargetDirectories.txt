@@ -1,0 +1,4 @@
+/home/ubu/Documents/C/LearnC/qt/build-app_1-Desktop_Qt_5_11_1_GCC_64bit-Default/CMakeFiles/rebuild_cache.dir
+/home/ubu/Documents/C/LearnC/qt/build-app_1-Desktop_Qt_5_11_1_GCC_64bit-Default/CMakeFiles/app_1.dir
+/home/ubu/Documents/C/LearnC/qt/build-app_1-Desktop_Qt_5_11_1_GCC_64bit-Default/CMakeFiles/edit_cache.dir
+/home/ubu/Documents/C/LearnC/qt/build-app_1-Desktop_Qt_5_11_1_GCC_64bit-Default/CMakeFiles/app_1_autogen.dir
