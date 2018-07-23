@@ -20,6 +20,7 @@ int main()
 	struct sockaddr_in server_st, client_st;
 	char buf[40] = {0};
 	time_t current_time;
+	pid_t pid;
 
 	if( (my_socket = socket(AF_INET, SOCK_STREAM, 0)) < 0)
 		sys_error("socket error");
@@ -32,7 +33,7 @@ int main()
 	if(bind(my_socket, (struct sockaddr *)&server_st, sizeof(server_st)) < 0)
 		sys_error("bind error");
 
-	if(listen(my_socket, 1) < 0)
+	if(listen(my_socket, 4) < 0)
 		sys_error("listen error");
 
 	for( ; ; )
@@ -40,17 +41,31 @@ int main()
 		len = sizeof(client_st);
 		if( (from_accept = accept(my_socket, (struct sockaddr *)&client_st, &len)) < 0)
 			sys_error("accept error");
-		memset(buf, 0, sizeof(buf));
-		printf("Address: %s Port: %d\n",
-			   inet_ntop(AF_INET, &client_st.sin_addr, buf, sizeof(buf)),
-			   ntohs(client_st.sin_port));
+		if( !(pid = fork()) )
+		{
+			close(my_socket);
+			memset(buf, 0, sizeof(buf));
+			printf("Address: %s Port: %d\n",
+				   inet_ntop(AF_INET, &client_st.sin_addr, buf, sizeof(buf)),
+				   ntohs(client_st.sin_port));
 
-		memset(buf, 0, sizeof(buf));
-		current_time = time(NULL);
-		strftime(buf, sizeof(buf), "%A %F %T", localtime(&current_time));
+			memset(buf, 0, sizeof(buf));
+			current_time = time(NULL);
+			strftime(buf, sizeof(buf), "%A %F %T", localtime(&current_time));
 
-		write(from_accept, buf, strlen(buf));
+			write(from_accept, buf, strlen(buf));
+
+			memset(buf, 0, sizeof(buf));
+			read(from_accept, buf, sizeof(buf));
+			printf("%s", buf);
+
+			close(from_accept);
+			exit(EXIT_SUCCESS);
+		}
+		close(from_accept);
 	}
+
+	close(my_socket);
 
 	return 0;
 }

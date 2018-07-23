@@ -30,8 +30,13 @@ int main()
 		sys_error("listen error");
 
 	read(my_socket, buf, sizeof(buf));
-
 	printf("%s\n", buf);
+
+	memset(buf, 0, sizeof(buf));
+	printf("Send any response to server\n");
+	fgets(buf, sizeof(buf), stdin);
+
+	write(my_socket, buf, sizeof(buf));
 
 	return 0;
 }
