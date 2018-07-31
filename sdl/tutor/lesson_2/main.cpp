@@ -8,7 +8,7 @@
 
 using std::cout; using std::cin; using std::endl; using std::string;
 
-int cleanup(SDL_Texture *back = NULL, SDL_Texture *front = NULL,
+void cleanup(SDL_Texture *back = NULL, SDL_Texture *front = NULL,
 			SDL_Window *w = NULL, SDL_Renderer *r = NULL, bool terminate = false)
 {
 	SDL_DestroyTexture(back);
@@ -18,8 +18,9 @@ int cleanup(SDL_Texture *back = NULL, SDL_Texture *front = NULL,
 
 	if(terminate)
 	{
+		cout << SDL_GetError() << endl;
 		SDL_Quit();
-		return 1;
+		exit(EXIT_FAILURE);
 	}
 }
 
