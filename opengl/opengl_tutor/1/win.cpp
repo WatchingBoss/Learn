@@ -3,7 +3,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include "../common.cpp"
+#include "../common/common.cpp"
 
 int main()
 {
