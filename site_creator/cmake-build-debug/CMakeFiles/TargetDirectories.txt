@@ -1,4 +1,0 @@
-/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/CMakeFiles/example.c.dir
-/home/ubu/CLionProjects/LearningC/site_creator/cmake-build-debug/CMakeFiles/site_creator.dir
