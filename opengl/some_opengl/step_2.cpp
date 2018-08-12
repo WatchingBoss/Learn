@@ -35,10 +35,11 @@ void mainWin()
 
 	glfwMakeContextCurrent(win);
 
+	glewExperimental = GL_TRUE;
 	if(glewInit() != GLEW_OK)
 		sys_error("mainWin: glewInit error");
 
-	std::cout << glGetString(GL_VERSION) << std::endl;
+	std::cout << glGetString(GL_VERSION) << ' ' << glGetString(GL_RENDERER) << std::endl;
 
 	float vertex_position[] = { -0.5f, -0.5f,
 								 0.0f,  0.5f,
