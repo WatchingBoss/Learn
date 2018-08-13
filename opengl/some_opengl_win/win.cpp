@@ -1,6 +1,9 @@
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -13,6 +16,42 @@ void sys_error(const char *e)
 
 	perror(e);
 	exit(EXIT_FAILURE);
+}
+
+typedef struct ShaderSource
+{
+	std::string vs;
+	std::string fs;
+} ShaderSource;
+
+static ShaderSource parse_shader(const char *filepath)
+{
+	std::ifstream stream(filepath);
+	std::string line;
+	std::stringstream ss[2];
+
+	enum class ShaderType
+	{
+		NONE = -1, VERTEX = 0, FRAGMENT = 1
+	};
+	ShaderType type = ShaderType::NONE;
+
+	while(getline(stream, line))
+	{
+		if(line.find("#shader") != std::string::npos)
+		{
+			if(line.find("vertex") != std::string::npos)
+				type = ShaderType::VERTEX;
+			else if(line.find("fragment") != std::string::npos)
+				type = ShaderType::FRAGMENT;
+		}
+		else
+			ss[static_cast<int>(type)] << line << '\n';
+	}
+
+	ShaderSource shader_source{ ss[0].str(), ss[1].str() };
+
+	return shader_source;
 }
 
 GLFWwindow * create_new_window(const char *title = "Default",
@@ -28,19 +67,6 @@ GLFWwindow * create_new_window(const char *title = "Default",
 	}
 	return new_win;
 }
-
-static const char *vertex_shader =
-	"#version 330 core\n\n"
-	"layout(location = 0) in vec4 position;\n\n"
-	"void main()\n" "{\n"
-	"    gl_Position = position;\n"
-	"}\n";
-static const char *fragment_shader =
-	"#version 330 core\n\n"
-	"layout(location = 0) out vec4 color;\n"
-	"void main()\n" "{\n"
-	"    color = vec4(1.0, 0.2, 0.5, 1.0);\n"
-	"}\n";
 
 static uint32 CompileShader(uint32 type, const char *source)
 {
@@ -66,11 +92,11 @@ static uint32 CompileShader(uint32 type, const char *source)
 	return id;
 }
 
-static uint32 CreateShader(const char *v_shader, const char *f_shader)
+static uint32 CreateShader(const std::string &v_shader, const std::string &f_shader)
 {
 	uint32 program = glCreateProgram();
-	uint32 vs = CompileShader(GL_VERTEX_SHADER, v_shader);
-	uint32 fs = CompileShader(GL_FRAGMENT_SHADER, f_shader);
+	uint32 vs = CompileShader(GL_VERTEX_SHADER, v_shader.c_str());
+	uint32 fs = CompileShader(GL_FRAGMENT_SHADER, f_shader.c_str());
 
 	if (!vs || !fs)
 		sys_error("CreateShader: CompileShader error");
@@ -118,7 +144,9 @@ void mainWin()
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof *vertex_position * 2, 0);
 
-	uint32 shader = CreateShader(vertex_shader, fragment_shader);
+	ShaderSource shader_source = parse_shader("shader/Shader.shader");
+
+	uint32 shader = CreateShader(shader_source.vs, shader_source.fs);
 	glUseProgram(shader);
 
 	while (glfwGetKey(win, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
@@ -132,6 +160,8 @@ void mainWin()
 
 		glfwPollEvents();
 	}
+
+	glDeleteProgram(shader);
 
 	glfwTerminate();
 }
