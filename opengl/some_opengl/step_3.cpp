@@ -30,13 +30,13 @@ GLFWwindow * create_new_window(const char *title = "Default", int w = 1024, int 
 
 static const char *vertex_shader =
 	"#version 330 core\n\n"
-	"lyout(location = 0) in vec4 postion;\n\n"
+	"layout(location = 0) in vec4 position;\n\n"
 	"void main()\n" "{\n"
 	"    gl_Position = position;\n"
 	"}\n";
 static const char *fragment_shader =
 	"#version 330 core\n\n"
-	"lyout(location = 0) out vec4 color;\n"
+	"layout(location = 0) out vec4 color;\n"
 	"void main()\n" "{\n"
 	"    color = vec4(1.0, 0.2, 0.5, 1.0);\n"
 	"}\n";
