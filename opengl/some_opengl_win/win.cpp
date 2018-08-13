@@ -80,12 +80,13 @@ static uint32 CompileShader(uint32 type, const char *source)
 	{
 		int length;
 		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
-		char *message = (char *)alloca(length * sizeof(char) + 1);
+		char *message = (char *)malloc(length * sizeof(char) + 1);
 		glGetShaderInfoLog(id, length, &length, message);
 		std::cout << "Faliled to compile "
 				  << (type == GL_VERTEX_SHADER ? "vertex" : "fragment")
 				  << " shader" << '\n' << message << std::endl;
 		glDeleteShader(id);
+		free(message);
 		return 0;
 	}
 
@@ -133,8 +134,12 @@ void mainWin()
 			  << std::endl;
 
 	float vertex_position[] = { -0.5f, -0.5f,
-								0.0f,  0.5f,
-								0.5f, -0.5f };
+								 0.5f, -0.5f,
+								 0.5f,  0.5f,
+								-0.5f,  0.5f };
+	uint32 indices[] = { 0, 1, 2,
+						 2, 3, 0 };
+
 	uint32 buffer;
 	glGenBuffers(1, &buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, buffer);
@@ -143,6 +148,13 @@ void mainWin()
 
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof *vertex_position * 2, 0);
+
+	uint32 numberIndices = sizeof indices / sizeof(uint32);
+	uint32 ibo;
+	glGenBuffers(1, &ibo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof indices,
+				 indices, GL_STATIC_DRAW);
 
 	ShaderSource shader_source = parse_shader("shader/Shader.shader");
 
@@ -154,7 +166,7 @@ void mainWin()
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawElements(GL_TRIANGLES, numberIndices, GL_UNSIGNED_INT, nullptr);
 
 		glfwSwapBuffers(win);
 
