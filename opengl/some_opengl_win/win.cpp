@@ -161,14 +161,19 @@ void mainWin()
 	uint32 indices[] = { 0, 1, 2,
 						 2, 3, 0 };
 
+	uint32 vao;
+	GLCALL( glGenVertexArrays(1, &vao) );
+	GLCALL( glBindVertexArray(vao) );
+
 	uint32 buffer;
 	GLCALL( glGenBuffers(1, &buffer) );
 	GLCALL( glBindBuffer(GL_ARRAY_BUFFER, buffer) );
 	GLCALL( glBufferData(GL_ARRAY_BUFFER, sizeof vertex_position,
 						 vertex_position, GL_STATIC_DRAW) );
 
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof *vertex_position * 2, 0);
+	GLCALL( glEnableVertexAttribArray(0) );
+	GLCALL( glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE,
+								  sizeof *vertex_position * 2, 0) );
 
 	uint32 numberIndices = sizeof indices / sizeof(uint32);
 	uint32 ibo;
@@ -186,13 +191,23 @@ void mainWin()
 	ASSERT(location != -1);
 	GLCALL( glUniform4f(location, 0.2235f, 1.0f, 0.8f, 1.0f) );
 
+	GLCALL( glBindVertexArray(0) );
+	GLCALL( glUseProgram(0) );
+	GLCALL( glBindBuffer(GL_ARRAY_BUFFER, 0) );
+	GLCALL( glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0) );
+
 	float colors[] = {0.0f, 0.0f, 0.0f}, interval[] = {0.2f, 0.4f, 0.6f};
 	while (glfwGetKey(win, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
 		   !glfwWindowShouldClose(win))
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		GLCALL( glUseProgram(shader) );
 		GLCALL( glUniform4f(location, colors[0], colors[1], colors[2], 1.0f) );
+
+		GLCALL( glBindVertexArray(vao) );
+		GLCALL( glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo) );
+
 		GLCALL( glDrawElements(GL_TRIANGLES, numberIndices,
 							   GL_UNSIGNED_INT, nullptr) );
 
