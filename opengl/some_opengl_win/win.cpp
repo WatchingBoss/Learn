@@ -1,5 +1,7 @@
 #include <cstdio>
 #include <cstdlib>
+#include <ctime>
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -8,8 +10,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#define ASSERT(x) if(!(x)) __debugbreak();
-#define GLCALL(x) gl_clear_error(); x; ASSERT(gl_log_call(#x, __FILE__, __LINE__))
+#include "renderer.hpp"
+#include "buffer.hpp"
 
 typedef unsigned int uint32;
 
@@ -19,22 +21,6 @@ void sys_error(const char *e)
 
 	perror(e);
 	exit(EXIT_FAILURE);
-}
-
-static void gl_clear_error()
-{
-	while(glGetError() != GL_NO_ERROR);
-}
-
-static bool gl_log_call(const char *func, const char *file, int line)
-{
-	while(GLenum error = glGetError())
-	{
-		std::cout << "[OpenGL Error] (" << error <<  "): " << func << " "
-				  << file << ": " << line << std::endl;
-		return false;
-	}
-	return true;
 }
 
 typedef struct ShaderSource
@@ -132,6 +118,11 @@ static uint32 CreateShader(const std::string &v_shader, const std::string &f_sha
 	return program;
 }
 
+static inline float rand_color(int min, int max)
+{
+	return (float)(rand() % (max + 1 - min) + min) / 10.0f;
+}
+
 void mainWin()
 {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -145,7 +136,7 @@ void mainWin()
 
 	glfwMakeContextCurrent(win);
 
-	glfwSwapInterval(4);
+	glfwSwapInterval(5);
 
 	glewExperimental = GL_TRUE;
 	if (glewInit() != GLEW_OK)
@@ -154,91 +145,85 @@ void mainWin()
 	std::cout << glGetString(GL_VERSION) << ' ' << glGetString(GL_RENDERER)
 			  << std::endl;
 
-	float vertex_position[] = { -0.5f, -0.5f,
-								 0.5f, -0.5f,
-								 0.5f,  0.5f,
-								-0.5f,  0.5f };
-	uint32 indices[] = { 0, 1, 2,
-						 2, 3, 0 };
-
-	uint32 vao;
-	GLCALL( glGenVertexArrays(1, &vao) );
-	GLCALL( glBindVertexArray(vao) );
-
-	uint32 buffer;
-	GLCALL( glGenBuffers(1, &buffer) );
-	GLCALL( glBindBuffer(GL_ARRAY_BUFFER, buffer) );
-	GLCALL( glBufferData(GL_ARRAY_BUFFER, sizeof vertex_position,
-						 vertex_position, GL_STATIC_DRAW) );
-
-	GLCALL( glEnableVertexAttribArray(0) );
-	GLCALL( glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE,
-								  sizeof *vertex_position * 2, 0) );
-
-	uint32 numberIndices = sizeof indices / sizeof(uint32);
-	uint32 ibo;
-	GLCALL( glGenBuffers(1, &ibo) );
-	GLCALL( glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo) );
-	GLCALL( glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof indices,
-						 indices, GL_STATIC_DRAW) );
-
-	ShaderSource shader_source = parse_shader("shader/Shader.shader");
-
-	uint32 shader = CreateShader(shader_source.vs, shader_source.fs);
-	GLCALL( glUseProgram(shader) );
-
-	GLCALL( int location = glGetUniformLocation(shader, "u_color") );
-	ASSERT(location != -1);
-	GLCALL( glUniform4f(location, 0.2235f, 1.0f, 0.8f, 1.0f) );
-
-	GLCALL( glBindVertexArray(0) );
-	GLCALL( glUseProgram(0) );
-	GLCALL( glBindBuffer(GL_ARRAY_BUFFER, 0) );
-	GLCALL( glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0) );
-
-	float colors[] = {0.0f, 0.0f, 0.0f}, interval[] = {0.2f, 0.4f, 0.6f};
-	while (glfwGetKey(win, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
-		   !glfwWindowShouldClose(win))
 	{
-		glClear(GL_COLOR_BUFFER_BIT);
+		float vertex_position[] = { -0.5f, -0.5f,
+									0.5f, -0.5f,
+									0.5f,  0.5f,
+									-0.5f,  0.5f };
+		uint32 indices[] = { 0, 1, 2,
+							 2, 3, 0 };
 
-		GLCALL( glUseProgram(shader) );
-		GLCALL( glUniform4f(location, colors[0], colors[1], colors[2], 1.0f) );
-
+		uint32 vao;
+		GLCALL( glGenVertexArrays(1, &vao) );
 		GLCALL( glBindVertexArray(vao) );
-		GLCALL( glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo) );
 
-		GLCALL( glDrawElements(GL_TRIANGLES, numberIndices,
-							   GL_UNSIGNED_INT, nullptr) );
+		VertexBuffer vb(vertex_position, sizeof vertex_position);
 
-		if(colors[0] > 1.0f)
-			interval[0] = -0.02f;
-		else if(colors[0] < 0.0f)
-			interval[0] = 0.02f;
-		if(colors[1] > 1.0f)
-			interval[1] = -0.04f;
-		else if(colors[1] < 0.0f)
-			interval[1] = 0.04f;
-		if(colors[2] > 1.0f)
-			interval[2] = -0.06f;
-		else if(colors[2] < 0.0f)
-			interval[2] = 0.06f;
-		colors[0] += interval[0];
-		colors[1] += interval[1];
-		colors[2] += interval[2];
+		GLCALL( glEnableVertexAttribArray(0) );
+		GLCALL( glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE,
+									  sizeof *vertex_position * 2, 0) );
 
-		glfwSwapBuffers(win);
+		uint32 numberIndices = sizeof indices / sizeof(float);
+		IndexBuffer ib(indices, numberIndices);
 
-		glfwPollEvents();
+		ShaderSource shader_source = parse_shader("shader/Shader.shader");
+
+		uint32 shader = CreateShader(shader_source.vs, shader_source.fs);
+		GLCALL( glUseProgram(shader) );
+
+		GLCALL( int location = glGetUniformLocation(shader, "u_color") );
+		ASSERT(location != -1);
+		GLCALL( glUniform4f(location, 0.2235f, 1.0f, 0.8f, 1.0f) );
+
+		GLCALL( glBindVertexArray(0) );
+		GLCALL( glUseProgram(0) );
+		GLCALL( glBindBuffer(GL_ARRAY_BUFFER, 0) );
+		GLCALL( glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0) );
+
+		float colors[] = {0.0f, 0.0f, 0.0f}, interval[] = {0.2f, 0.4f, 0.6f};
+		while (glfwGetKey(win, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
+			   !glfwWindowShouldClose(win))
+		{
+			glClear(GL_COLOR_BUFFER_BIT);
+
+			GLCALL( glUseProgram(shader) );
+			GLCALL( glUniform4f(location, colors[0], colors[1], colors[2], 1.0f) );
+
+			GLCALL( glBindVertexArray(vao) );
+			ib.bind();
+
+			GLCALL( glDrawElements(GL_TRIANGLES, numberIndices,
+								   GL_UNSIGNED_INT, nullptr) );
+
+			if(colors[0] > 1.0f)
+				interval[0] = -rand_color(1, 5);
+			else if(colors[0] < 0.0f)
+				interval[0] = rand_color(1, 5);
+			if(colors[1] > 1.0f)
+				interval[1] = -rand_color(1, 5);
+			else if(colors[1] < 0.0f)
+				interval[1] = rand_color(1, 5);
+			if(colors[2] > 1.0f)
+				interval[2] = -rand_color(1, 5);
+			else if(colors[2] < 0.0f)
+				interval[2] = rand_color(1, 5);
+			colors[0] += interval[0];
+			colors[1] += interval[1];
+			colors[2] += interval[2];
+
+			glfwSwapBuffers(win);
+
+			glfwPollEvents();
+		}
+
+		glDeleteProgram(shader);
 	}
-
-	glDeleteProgram(shader);
-
 	glfwTerminate();
 }
 
 int main()
 {
+	srand(time(NULL));
 	mainWin();
 
 	return 1;
