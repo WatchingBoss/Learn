@@ -145,6 +145,8 @@ void mainWin()
 
 	glfwMakeContextCurrent(win);
 
+	glfwSwapInterval(4);
+
 	glewExperimental = GL_TRUE;
 	if (glewInit() != GLEW_OK)
 		sys_error("mainWin: glewInit error");
@@ -178,14 +180,37 @@ void mainWin()
 	ShaderSource shader_source = parse_shader("shader/Shader.shader");
 
 	uint32 shader = CreateShader(shader_source.vs, shader_source.fs);
-	glUseProgram(shader);
+	GLCALL( glUseProgram(shader) );
 
+	GLCALL( int location = glGetUniformLocation(shader, "u_color") );
+	ASSERT(location != -1);
+	GLCALL( glUniform4f(location, 0.2235f, 1.0f, 0.8f, 1.0f) );
+
+	float colors[] = {0.0f, 0.0f, 0.0f}, interval[] = {0.2f, 0.4f, 0.6f};
 	while (glfwGetKey(win, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
 		   !glfwWindowShouldClose(win))
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		GLCALL( glDrawElements(GL_TRIANGLES, numberIndices, GL_INT, nullptr) );
+		GLCALL( glUniform4f(location, colors[0], colors[1], colors[2], 1.0f) );
+		GLCALL( glDrawElements(GL_TRIANGLES, numberIndices,
+							   GL_UNSIGNED_INT, nullptr) );
+
+		if(colors[0] > 1.0f)
+			interval[0] = -0.02f;
+		else if(colors[0] < 0.0f)
+			interval[0] = 0.02f;
+		if(colors[1] > 1.0f)
+			interval[1] = -0.04f;
+		else if(colors[1] < 0.0f)
+			interval[1] = 0.04f;
+		if(colors[2] > 1.0f)
+			interval[2] = -0.06f;
+		else if(colors[2] < 0.0f)
+			interval[2] = 0.06f;
+		colors[0] += interval[0];
+		colors[1] += interval[1];
+		colors[2] += interval[2];
 
 		glfwSwapBuffers(win);
 
