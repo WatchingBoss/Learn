@@ -14,12 +14,12 @@ VertexBuffer::~VertexBuffer()
 	GLCALL( glDeleteBuffers(1, &m_RendererID) );
 }
 
-void VertexBuffer::bind() const
+void VertexBuffer::Bind() const
 {
 	GLCALL( glBindBuffer(GL_ARRAY_BUFFER, m_RendererID) );
 }
 
-void VertexBuffer::unbind() const
+void VertexBuffer::Unbind() const
 {
 	GLCALL( glBindBuffer(GL_ARRAY_BUFFER, 0) );
 }
@@ -40,15 +40,69 @@ IndexBuffer::~IndexBuffer()
 	GLCALL( glDeleteBuffers(1, &m_RendererID) );
 }
 
-void IndexBuffer::bind() const
+void IndexBuffer::Bind() const
 {
 	GLCALL( glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID) );
 }
 
-void IndexBuffer::unbind() const
+void IndexBuffer::Unbind() const
 {
 	GLCALL( glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0) );
 }
 
 /* END Index buffer */
 
+/* Vertex buffer layout */
+/* VertexBufferLayout::VertexBufferLayout() */
+/* //	: m_Stride */
+/* { */
+
+/* } */
+
+VertexBufferLayout::~VertexBufferLayout()
+{
+
+}
+
+/* END Vertex buffer layout */
+
+/* Vertex array */
+VertexArray::VertexArray()
+{
+	GLCALL( glGenVertexArrays(1, &m_RendererID) );
+}
+
+VertexArray::~VertexArray()
+{
+	GLCALL( glDeleteVertexArrays(1, &m_RendererID) );
+}
+
+void VertexArray::AddBuffer(const VertexBuffer &vb, const VertexBufferLayout &layout)
+{
+	Bind();
+	vb.Bind();
+	const auto & elements = layout.GetElements();
+	uint32 offset = 0;
+
+	for(uint32 i = 0; i < elements.size(); ++i)
+	{
+		const auto &element = elements[i];
+
+		GLCALL( glEnableVertexAttribArray(i) );
+		GLCALL( glVertexAttribPointer(i, element.count, element.type, GL_FALSE,
+ 									  layout.GetStride(), (const void*)offset) );
+		offset += element.count * VertexBufferElements::GetSizeOfType(element.type);
+	}
+}
+
+void VertexArray::Bind() const
+{
+	GLCALL( glBindVertexArray(m_RendererID) );
+}
+
+void VertexArray::Unbind() const
+{
+	GLCALL( glBindVertexArray(0) );
+}
+
+/* END Vertex array */
