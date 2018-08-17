@@ -4,6 +4,9 @@
 #include <signal.h>
 #include <GL/glew.h>
 
+typedef unsigned int uint32;
+typedef unsigned char uchar;
+
 #ifdef _MSC_VER
 #define DEBUG_BREAK __debugbreak()
 #else

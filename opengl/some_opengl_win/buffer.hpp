@@ -6,9 +6,6 @@
 
 #include "renderer.hpp"
 
-typedef unsigned int uint32;
-typedef unsigned char uchar;
-
 /* Vertex buffer */
 class VertexBuffer
 {
