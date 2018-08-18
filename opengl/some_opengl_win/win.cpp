@@ -10,6 +10,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include "rend_sup.hpp"
 #include "renderer.hpp"
 #include "buffer.hpp"
 #include "shader.hpp"
@@ -65,8 +66,8 @@ void mainWin()
 
     {
 		float vertex_position[] = { -0.5f, -0.5f,
-									0.5f, -0.5f,
-									0.5f,  0.5f,
+									 0.5f, -0.5f,
+									 0.5f,  0.5f,
 									-0.5f,  0.5f };
 		uint32 indices[] = { 0, 1, 2,
 							 2, 3, 0 };
@@ -82,8 +83,7 @@ void mainWin()
 		layout.Push<float>(2);
 		va.AddBuffer(vb, layout);
 
-		uint32 numberIndices = sizeof indices / sizeof(float);
-		IndexBuffer ib(indices, numberIndices);
+		IndexBuffer ib(indices, sizeof indices / sizeof(float));
 		
 		Shader shader("shader/Shader.shader");
 		shader.Bind();
@@ -94,20 +94,18 @@ void mainWin()
 		ib.Unbind();
 		shader.Unbind();
 
+		Renderer rend;
+
 		float colors[] = {0.0f, 0.0f, 0.0f}, interval[] = {0.2f, 0.4f, 0.6f};
 		while (glfwGetKey(win, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
 			   !glfwWindowShouldClose(win))
 		{
-			glClear(GL_COLOR_BUFFER_BIT);
+			rend.Clear();
 
 			shader.Bind();
 			shader.SetUniform4f("u_color", colors[0], colors[1], colors[2], 1.0f);
 
-			va.Bind();
-			ib.Bind();
-
-			GLCALL( glDrawElements(GL_TRIANGLES, numberIndices,
-								   GL_UNSIGNED_INT, nullptr) );
+			rend.Draw(va, ib, shader);
 
 			if(colors[0] > 1.0f)
 				interval[0] = -rand_color(1, 5);

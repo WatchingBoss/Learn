@@ -111,7 +111,6 @@ int Shader::GetUniformLocation(const std::string &name)
 {
 	if (m_UniformLocationCashe.find(name) != m_UniformLocationCashe.end())
 		return m_UniformLocationCashe[name];
-		
 
 	GLCALL( int location = glGetUniformLocation(m_RendererID, name.c_str()) );
 	if (location == -1)

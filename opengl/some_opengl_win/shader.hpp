@@ -1,7 +1,7 @@
 #ifndef SHADER_H
 #define SHADER_H
 
-#include "renderer.hpp"
+#include "rend_sup.hpp"
 #include <string>
 #include <unordered_map>
 

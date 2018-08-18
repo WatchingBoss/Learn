@@ -4,7 +4,7 @@
 #include <vector>
 #include <GL/glew.h>
 
-#include "renderer.hpp"
+#include "rend_sup.hpp"
 
 /* Vertex buffer */
 class VertexBuffer
@@ -33,7 +33,7 @@ public:
     void Bind() const;
     void Unbind() const;
 
-    inline uint32 Get_Count() const {return m_Count;}
+    inline uint32 GetCount() const {return m_Count;}
 };
 /* END Index buffer */
 
