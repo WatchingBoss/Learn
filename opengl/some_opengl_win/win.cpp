@@ -14,6 +14,7 @@
 #include "renderer.hpp"
 #include "buffer.hpp"
 #include "shader.hpp"
+#include "texture.hpp"
 
 void sys_error(const char *e)
 {
@@ -65,12 +66,15 @@ void mainWin()
 			  << std::endl;
 
     {
-		float vertex_position[] = { -0.5f, -0.5f,
-									 0.5f, -0.5f,
-									 0.5f,  0.5f,
-									-0.5f,  0.5f };
+		float vertex_position[] = { -0.5f, -0.5f, 0.0f, 0.0f,
+									 0.5f, -0.5f, 1.0f, 0.0f,
+									 0.5f,  0.5f, 1.0f, 1.0f,
+									-0.5f,  0.5f, 0.0f, 1.0f };
 		uint32 indices[] = { 0, 1, 2,
 							 2, 3, 0 };
+
+		GLCALL( glEnable(GL_BLEND) );
+		GLCALL( glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA) );
 
 		uint32 vao;
 		GLCALL( glGenVertexArrays(1, &vao) );
@@ -81,13 +85,18 @@ void mainWin()
 
 		VertexBufferLayout layout;
 		layout.Push<float>(2);
+		layout.Push<float>(2);
 		va.AddBuffer(vb, layout);
 
 		IndexBuffer ib(indices, sizeof indices / sizeof(float));
 		
 		Shader shader("shader/Shader.shader");
 		shader.Bind();
-		shader.SetUniform4f("u_color", 0.2235f, 1.0f, 0.8f, 1.0f);
+//		shader.SetUniform4f("u_color", 0.2235f, 1.0f, 0.8f, 1.0f);
+
+		Texture tex("img/tree.png");
+		tex.Bind();
+		shader.SetUniformi("u_texture", 0);
 
 		va.Unbind();
 		vb.Unbind();
