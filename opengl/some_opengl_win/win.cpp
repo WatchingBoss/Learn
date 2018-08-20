@@ -16,6 +16,9 @@
 #include "shader.hpp"
 #include "texture.hpp"
 
+#include "vendor/glm/glm.hpp"
+#include "vendor/glm/gtc/matrix_transform.hpp"
+
 void sys_error(const char *e)
 {
     glfwTerminate();
@@ -66,10 +69,10 @@ void mainWin()
 			  << std::endl;
 
     {
-		float vertex_position[] = { -0.5f, -0.5f, 0.0f, 0.0f,
-									 0.5f, -0.5f, 1.0f, 0.0f,
-									 0.5f,  0.5f, 1.0f, 1.0f,
-									-0.5f,  0.5f, 0.0f, 1.0f };
+		float vertex_position[] = { -1.5f, -1.5f, 0.0f, 0.0f,
+									 1.5f, -1.5f, 1.0f, 0.0f,
+									 1.5f,  1.5f, 1.0f, 1.0f,
+									-1.5f,  1.5f, 0.0f, 1.0f };
 		uint32 indices[] = { 0, 1, 2,
 							 2, 3, 0 };
 
@@ -89,10 +92,13 @@ void mainWin()
 		va.AddBuffer(vb, layout);
 
 		IndexBuffer ib(indices, sizeof indices / sizeof(float));
-		
+
+		glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
+
 		Shader shader("shader/Shader.shader");
 		shader.Bind();
-//		shader.SetUniform4f("u_color", 0.2235f, 1.0f, 0.8f, 1.0f);
+		shader.SetUniform4f("u_color", 0.2235f, 1.0f, 0.8f, 1.0f);
+		shader.SetUniformMat4f("u_MVP", proj);
 
 		Texture tex("img/tree.png");
 		tex.Bind();

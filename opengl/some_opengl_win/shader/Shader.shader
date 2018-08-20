@@ -6,9 +6,11 @@ layout(location = 1) in vec2 texCoor;
 
 out vec2 v_texCoor;
 
+uniform mat4 u_MVP;
+
 void main()
 {
-    gl_Position = position;
+    gl_Position = u_MVP * position;
 	v_texCoor = texCoor;
 };
 
