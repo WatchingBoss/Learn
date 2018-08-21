@@ -18,6 +18,9 @@
 
 #include "vendor/glm/glm.hpp"
 #include "vendor/glm/gtc/matrix_transform.hpp"
+#include "vendor/imgui/imgui.h"
+#include "vendor/imgui/imgui_impl_opengl3.h"
+#include "vendor/imgui/imgui_impl_glfw.h"
 
 void sys_error(const char *e)
 {
@@ -50,22 +53,34 @@ static float move_x = 0, move_y = 0;
 static void key_callback(GLFWwindow *win,
 						 int key, int scancode, int action, int mods)
 {
-	if(key == GLFW_KEY_UP && action == GLFW_PRESS)
-		move_y = 0.1f;
-	else if(key == GLFW_KEY_UP && action == GLFW_RELEASE)
-		move_y = 0;
-	if(key == GLFW_KEY_DOWN && action == GLFW_PRESS)
-		move_y = -0.1f;
-	else if(key == GLFW_KEY_DOWN && action == GLFW_RELEASE)
-		move_y = 0;
-	if(key == GLFW_KEY_RIGHT && action == GLFW_PRESS)
-		move_x = 0.1f;
-	else if(key == GLFW_KEY_RIGHT && action == GLFW_RELEASE)
-		move_x = 0;
-	if(key == GLFW_KEY_LEFT && action == GLFW_PRESS)
-		move_x = -0.1f;
-	else if(key == GLFW_KEY_LEFT && action == GLFW_RELEASE)
-		move_x = 0;
+
+	switch(key)
+	{
+		case GLFW_KEY_UP:
+			if(action == GLFW_PRESS)
+				move_y = 0.1f;
+			else if(action == GLFW_RELEASE)
+				move_y = 0;
+			break;
+		case GLFW_KEY_DOWN:
+			if(action == GLFW_PRESS)
+				move_y = -0.1f;
+			else if(action == GLFW_RELEASE)
+				move_y = 0;
+			break;
+		case GLFW_KEY_RIGHT:
+			if(action == GLFW_PRESS)
+				move_x = 0.1f;
+			else if(action == GLFW_RELEASE)
+				move_x = 0;
+			break;
+		case GLFW_KEY_LEFT:
+			if(action == GLFW_PRESS)
+				move_x = -0.1f;
+			else if(action == GLFW_RELEASE)
+				move_x = 0;
+			break;
+	}
 }
 
 void mainWin()
@@ -81,7 +96,7 @@ void mainWin()
 
     glfwMakeContextCurrent(win);
 
-    glfwSwapInterval(5);
+    glfwSwapInterval(3);
 
     glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK)
@@ -137,6 +152,15 @@ void mainWin()
 
 		Renderer rend;
 
+		ImGui::CreateContext();
+		ImGui_ImplGlfw_InitForOpenGL(win, true);
+		ImGui_ImplOpenGL3_Init();
+		ImGui::StyleColorsDark();
+
+		bool show_demo_window = true;
+		bool show_another_window = false;
+		ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
 		float colors[] = {0.0f, 0.0f, 0.0f}, interval[] = {0.2f, 0.4f, 0.6f};
 		float move_model[] = {0, 0};
 		int x_move = 10, y_move = 10; bool toRight = false, toUp = true;
@@ -144,6 +168,10 @@ void mainWin()
 			   !glfwWindowShouldClose(win))
 		{
 			rend.Clear();
+
+			ImGui_ImplOpenGL3_NewFrame();
+			ImGui_ImplGlfw_NewFrame();
+			ImGui::NewFrame();
 
 			shader.Bind();
 			shader.SetUniform4f("u_color", colors[0], colors[1], colors[2], 1.0f);
@@ -166,35 +194,6 @@ void mainWin()
 			colors[1] += interval[1];
 			colors[2] += interval[2];
 
-			/* if(toUp) */
-			/* { */
-			/* 	move_model[1] -= 0.1f; */
-			/* 	--y_move; */
-			/* 	if(y_move == 0) */
-			/* 		toUp = false; */
-			/* } */
-			/* else */
-			/* { */
-			/* 	move_model[1] += 0.1f; */
-			/* 	++y_move; */
-			/* 	if(y_move == 10) */
-			/* 		toUp = true; */
-			/* } */
-			/* if(toRight) */
-			/* { */
-			/* 	move_model[0] += 0.1f; */
-			/* 	++x_move; */
-			/* 	if(x_move == 20) */
-			/* 		toRight = false; */
-			/* } */
-			/* else */
-			/* { */
-			/* 	move_model[0] -= 0.1f; */
-			/* 	--x_move; */
-			/* 	if(x_move == 0) */
-			/* 		toRight = true; */
-			/* } */
-
 			glfwSetKeyCallback(win, key_callback);
 
 			move_model[0] += move_x;
@@ -206,11 +205,41 @@ void mainWin()
 			glm::mat4 mvp = proj * model;
 			shader.SetUniformMat4f("u_MVP", mvp);
 
+			{
+				int counter = 0;
+				ImGui::Text("Hello, world!");
+				ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
+// Edit 3 floats representing a color
+				ImGui::ColorEdit3("clear color", (float*)&clear_color);
+// Edit bools storing our windows open/close state
+				ImGui::Checkbox("Demo Window", &show_demo_window);
+				ImGui::Checkbox("Another Window", &show_another_window);
+// Buttons return true when clicked (NB: most widgets return true when
+// edited/activated)
+				if (ImGui::Button("Button"))
+					counter++;
+				ImGui::SameLine();
+				ImGui::Text("counter = %d", counter);
+
+				ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
+							1000.0f / ImGui::GetIO().Framerate,
+							ImGui::GetIO().Framerate);
+			}
+
+			ImGui::Render();
+			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 			glfwSwapBuffers(win);
 
 			glfwPollEvents();
 		}
     }
+
+	ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+
+	glfwDestroyWindow(win);
     glfwTerminate();
 }
 
