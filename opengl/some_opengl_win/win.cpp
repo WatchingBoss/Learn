@@ -46,6 +46,28 @@ static inline float rand_color(int min, int max)
     return (float)(rand() % (max + 1 - min) + min) / 10.0f;
 }
 
+static float move_x = 0, move_y = 0;
+static void key_callback(GLFWwindow *win,
+						 int key, int scancode, int action, int mods)
+{
+	if(key == GLFW_KEY_UP && action == GLFW_PRESS)
+		move_y = 0.1f;
+	else if(key == GLFW_KEY_UP && action == GLFW_RELEASE)
+		move_y = 0;
+	if(key == GLFW_KEY_DOWN && action == GLFW_PRESS)
+		move_y = -0.1f;
+	else if(key == GLFW_KEY_DOWN && action == GLFW_RELEASE)
+		move_y = 0;
+	if(key == GLFW_KEY_RIGHT && action == GLFW_PRESS)
+		move_x = 0.1f;
+	else if(key == GLFW_KEY_RIGHT && action == GLFW_RELEASE)
+		move_x = 0;
+	if(key == GLFW_KEY_LEFT && action == GLFW_PRESS)
+		move_x = -0.1f;
+	else if(key == GLFW_KEY_LEFT && action == GLFW_RELEASE)
+		move_x = 0;
+}
+
 void mainWin()
 {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -69,10 +91,10 @@ void mainWin()
 			  << std::endl;
 
     {
-		float vertex_position[] = { -1.5f, -1.5f, 0.0f, 0.0f,
-									 1.5f, -1.5f, 1.0f, 0.0f,
-									 1.5f,  1.5f, 1.0f, 1.0f,
-									-1.5f,  1.5f, 0.0f, 1.0f };
+		float vertex_position[] = { -0.5f, -0.5f, 0.0f, 0.0f,
+									 0.5f, -0.5f, 1.0f, 0.0f,
+									 0.5f,  0.5f, 1.0f, 1.0f,
+									-0.5f,  0.5f, 0.0f, 1.0f };
 		uint32 indices[] = { 0, 1, 2,
 							 2, 3, 0 };
 
@@ -94,11 +116,15 @@ void mainWin()
 		IndexBuffer ib(indices, sizeof indices / sizeof(float));
 
 		glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
+		glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
+
+		glm::mat4 mvp = proj * view * model;
 
 		Shader shader("shader/Shader.shader");
 		shader.Bind();
 		shader.SetUniform4f("u_color", 0.2235f, 1.0f, 0.8f, 1.0f);
-		shader.SetUniformMat4f("u_MVP", proj);
+		shader.SetUniformMat4f("u_MVP", mvp);
 
 		Texture tex("img/tree.png");
 		tex.Bind();
@@ -112,6 +138,8 @@ void mainWin()
 		Renderer rend;
 
 		float colors[] = {0.0f, 0.0f, 0.0f}, interval[] = {0.2f, 0.4f, 0.6f};
+		float move_model[] = {0, 0};
+		int x_move = 10, y_move = 10; bool toRight = false, toUp = true;
 		while (glfwGetKey(win, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
 			   !glfwWindowShouldClose(win))
 		{
@@ -137,6 +165,46 @@ void mainWin()
 			colors[0] += interval[0];
 			colors[1] += interval[1];
 			colors[2] += interval[2];
+
+			/* if(toUp) */
+			/* { */
+			/* 	move_model[1] -= 0.1f; */
+			/* 	--y_move; */
+			/* 	if(y_move == 0) */
+			/* 		toUp = false; */
+			/* } */
+			/* else */
+			/* { */
+			/* 	move_model[1] += 0.1f; */
+			/* 	++y_move; */
+			/* 	if(y_move == 10) */
+			/* 		toUp = true; */
+			/* } */
+			/* if(toRight) */
+			/* { */
+			/* 	move_model[0] += 0.1f; */
+			/* 	++x_move; */
+			/* 	if(x_move == 20) */
+			/* 		toRight = false; */
+			/* } */
+			/* else */
+			/* { */
+			/* 	move_model[0] -= 0.1f; */
+			/* 	--x_move; */
+			/* 	if(x_move == 0) */
+			/* 		toRight = true; */
+			/* } */
+
+			glfwSetKeyCallback(win, key_callback);
+
+			move_model[0] += move_x;
+			move_model[1] += move_y;
+
+			glm::mat4 model = glm::translate(glm::mat4(1.0f),
+											 glm::vec3(move_model[0],
+													   move_model[1], 0));
+			glm::mat4 mvp = proj * model;
+			shader.SetUniformMat4f("u_MVP", mvp);
 
 			glfwSwapBuffers(win);
 
