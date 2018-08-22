@@ -1,0 +1,43 @@
+cmake_minimum_required (VERSION 3.6)
+
+set (PROGECT_NAME "go")
+project (${PROGECT_NAME})
+
+if(MSVC)
+  add_compile_options(/W3 /Wall /WX)
+else()
+  add_compile_options(-W -Werror -Wall -g)
+endif()
+if(WIN32)
+  set (THIRD_PART_LIBS "D:/Documents/libs/third_part_libs/")
+elseif(UNIX AND NOT APPLE)
+  set (THIRD_PART_LIBS "/media/ubu/data/Documents/libs/third_part_libs/")
+  
+endif()
+
+# Third part libraries
+add_library(ForOpenGL
+  ${THIRD_PART_LIBS}imgui/imgui.cpp
+  ${THIRD_PART_LIBS}imgui/imgui_demo.cpp
+  ${THIRD_PART_LIBS}imgui/imgui_draw.cpp
+  ${THIRD_PART_LIBS}imgui/imgui_impl_glfw.cpp
+  ${THIRD_PART_LIBS}imgui/imgui_impl_opengl3.cpp)
+include_directories (${THIRD_PART_LIBS})
+##add_subdirectory(${THIRD_PART_LIBS}/imgui)
+# END Third part libraries
+
+# Required for OpenGL
+if(MSVC)
+  set (FOR_OPEN_GL "D:/Documents/libs/open_gl/")
+  include_directories(${FOR_OPEN_GL}include)
+  target_link_libraries(ForOpenGL
+	${FOR_OPEN_GL}lib/glew32s.lib
+	${FOR_OPEN_GL}lib/glfw3.lib)
+else()
+  target_link_libraries(ForOpenGL glfw GL GLEW)
+endif()
+# END Required for OpenGL
+
+add_executable (${PROGECT_NAME} main.cpp)
+target_link_libraries (${PROGECT_NAME} ForOpenGL)
+

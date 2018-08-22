@@ -206,8 +206,13 @@ void mainWin()
 			shader.SetUniformMat4f("u_MVP", mvp);
 
 			{
-				int counter = 0;
+				static flaot f = 0.0f;
+				static int counter = 0;
+
 				ImGui::Text("Hello, world!");
+				ImGui::Checkbox("Demo Window", &show_demo_window);
+				ImGui::Checkbox("Another Window", &show_another_window);
+
 				ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
 // Edit 3 floats representing a color
 				ImGui::ColorEdit3("clear color", (float*)&clear_color);
@@ -224,6 +229,7 @@ void mainWin()
 				ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
 							1000.0f / ImGui::GetIO().Framerate,
 							ImGui::GetIO().Framerate);
+				ImGui::End();
 			}
 
 			ImGui::Render();
