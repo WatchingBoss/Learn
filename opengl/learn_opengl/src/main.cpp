@@ -56,13 +56,39 @@ static void mainWin()
 	std::cout << glGetString(GL_VERSION) << "  " << glGetString(GL_RENDERER) << std::endl;
 
 	{
-		float vertex[] = { -0.5f, -0.5f, 0.0f,
-						    0.5f, -0.5f, 0.0f,
-						   -0.5f,  0.5f, 0.0f,
-						    0.5f,  0.5f, 0.0f };
+		/* float vertex[] = { -0.5f, -0.5f, 0.0f, */
+		/* 				    0.5f, -0.5f, 0.0f, */
+		/* 				   -0.5f,  0.5f, 0.0f, */
+		/* 				    0.5f,  0.5f, 0.0f }; */
 
-		uint32 index[] = { 0, 1, 3,
-						   0, 2, 3 };
+		float vertex[] = {
+			-0.5f, -0.5f, 0.0f,
+			-0.4f,  0.5f, 0.0f,
+			-0.4f, -0.5f, 0.0f,
+			-0.5f,  0.5f, 0.0f,
+
+			 0.4f, -0.5f, 0.0f,
+			 0.5f,  0.5f, 0.0f,
+			 0.4f,  0.5f, 0.0f,
+			 0.5f, -0.5f, 0.0f,
+
+			-0.4f,  0.1f, 0.0f,
+			 0.4f, -0.1f, 0.0f,
+			-0.4f, -0.1f, 0.0f,
+			 0.4f,  0.1f, 0.0f
+		};
+
+		/* uint32 index[] = { 0, 1, 3, */
+		/* 				   0, 2, 3 }; */
+
+		uint32 index[] = {
+			0, 1, 2,
+			0, 1, 3,
+			4, 5, 6,
+			4, 5, 7,
+			8, 9, 10,
+			8, 9, 11
+		};
 
 		uint32 vao;
 		GLCALL( glGenVertexArrays(1, &vao) );
