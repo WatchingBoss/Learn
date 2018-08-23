@@ -69,7 +69,7 @@ static void mainWin()
 		GLCALL( glBindBuffer(GL_ARRAY_BUFFER, vbo) );
 		GLCALL( glBufferData(GL_ARRAY_BUFFER, sizeof(vertex), vertex, GL_STATIC_DRAW) );
 
-		Shader program("./shader/shader.glsl");
+		Shader program("../shader/shader.glsl");
 
 		GLCALL( glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
 									  3 * sizeof(float), (void *)0) );

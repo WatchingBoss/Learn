@@ -1,14 +1,16 @@
 cmake_minimum_required (VERSION 3.6)
 
-set (PROGECT_NAME "go")
-project (${PROGECT_NAME})
+project (go)
+
+find_package(OpenGL REQUIRED)
 
 if(MSVC)
-#  add_compile_options(/W3 /Wall /WX)
-  add_compile_options(/W3)
+  #  add_compile_options(/W3 /Wall /WX)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
 else()
-  add_compile_options(-W -Werror -Wall -g)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Werror -Wall -Wpedantic -g")
 endif()
+
 if(WIN32)
   set (THIRD_PART_LIBS "D:/Documents/libs/third_part_libs/")
 elseif(UNIX AND NOT APPLE)
@@ -40,6 +42,14 @@ else()
   target_link_libraries(ForOpenGL INTERFACE glfw GL GLEW)
 endif()
 
-add_executable (${PROGECT_NAME} main.cpp)
-target_link_libraries (${PROGECT_NAME} PUBLIC ForOpenGL ThirdPartLib)
+##add_executable (${PROJECT_NAME} ${PROJECT_SOURCE_DIR}example/ex1.cpp)
+
+file(GLOB PROJECT_SOURCES ${PROJECT_SOURCE_DIR}/src/*.cpp)
+file(GLOB PROJECT_HEADERS ${PROJECT_SOURCE_DIR}/inc/*.hpp)
+
+source_group("Headers" FILES ${PROJECT_HEADERS})
+source_group("Sources" FILES ${PROJECT_SOURCES})
+
+add_executable (${PROJECT_NAME} ${PROJECT_HEADERS} ${PROJECT_SOURCES})
+target_link_libraries (${PROJECT_NAME} PUBLIC ForOpenGL ThirdPartLib)
 
