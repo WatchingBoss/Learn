@@ -16,7 +16,7 @@ elseif(UNIX AND NOT APPLE)
 endif()
 
 # Third part libraries
-add_library(ForOpenGL
+add_library(ThirdPartLib
   ${THIRD_PART_LIBS}imgui/imgui.cpp
   ${THIRD_PART_LIBS}imgui/imgui_demo.cpp
   ${THIRD_PART_LIBS}imgui/imgui_draw.cpp
@@ -27,17 +27,18 @@ include_directories (${THIRD_PART_LIBS})
 # END Third part libraries
 
 # Required for OpenGL
+add_library(ForOpenGL INTERFACE)
 if(MSVC)
   set (FOR_OPEN_GL "D:/Documents/libs/open_gl/")
   include_directories(${FOR_OPEN_GL}include)
-  target_link_libraries(ForOpenGL
+  target_link_libraries(ForOpenGL INTERFACE
 	${FOR_OPEN_GL}lib/glew32s.lib
 	${FOR_OPEN_GL}lib/glfw3.lib)
 else()
-  target_link_libraries(ForOpenGL glfw GL GLEW)
+  target_link_libraries(ForOpenGL INTERFACE glfw GL GLEW)
 endif()
 # END Required for OpenGL
 
 add_executable (${PROGECT_NAME} main.cpp)
-target_link_libraries (${PROGECT_NAME} ForOpenGL)
+target_link_libraries (${PROGECT_NAME} PUBLIC ForOpenGL ThirdPartLib)
 
