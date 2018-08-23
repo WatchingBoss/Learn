@@ -1,3 +1,5 @@
+#define GLEW_STATIC
+
 #include <cstdlib>
 #include <csignal>
 
