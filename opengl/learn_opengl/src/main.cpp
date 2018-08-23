@@ -45,7 +45,7 @@ static void mainWin()
 	GLFWwindow *win = create_new_window(MW_Width, MW_Height, "Main window", nullptr, nullptr);
 
 	glfwMakeContextCurrent(win);
-	glfwSwapInterval(2);
+	glfwSwapInterval(5);
 
 	glewExperimental = GLEW_OK;
 	if(glewInit() != GLEW_OK)
@@ -58,7 +58,11 @@ static void mainWin()
 	{
 		float vertex[] = { -0.5f, -0.5f, 0.0f,
 						    0.5f, -0.5f, 0.0f,
-						    0.0f,  0.5f, 0.0f  };
+						   -0.5f,  0.5f, 0.0f,
+						    0.5f,  0.5f, 0.0f };
+
+		uint32 index[] = { 0, 1, 3,
+						   0, 2, 3 };
 
 		uint32 vao;
 		GLCALL( glGenVertexArrays(1, &vao) );
@@ -68,6 +72,12 @@ static void mainWin()
 		GLCALL( glGenBuffers(1, &vbo) );
 		GLCALL( glBindBuffer(GL_ARRAY_BUFFER, vbo) );
 		GLCALL( glBufferData(GL_ARRAY_BUFFER, sizeof(vertex), vertex, GL_STATIC_DRAW) );
+
+		uint32 index_count = sizeof index / sizeof(uint32);
+		uint32 ebo;
+		GLCALL( glGenBuffers(1, &ebo) );
+		GLCALL( glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo) );
+		GLCALL( glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof index, index, GL_STATIC_DRAW) );
 
 		Shader program("../shader/shader.glsl");
 
@@ -82,7 +92,10 @@ static void mainWin()
 
 			program.Bind();
 			GLCALL( glBindVertexArray(vao) );
-			GLCALL( glDrawArrays(GL_TRIANGLES, 0, 3) );
+
+			GLCALL( glDrawElements(GL_TRIANGLES, index_count, GL_UNSIGNED_INT, 0) );
+
+			GLCALL( glBindVertexArray(0) );
 
 			glfwSetKeyCallback(win, key_callback);
 
