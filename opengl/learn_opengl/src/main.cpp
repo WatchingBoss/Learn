@@ -21,7 +21,8 @@ static void framebuffer_size_callback(GLFWwindow *win, int width, int height)
 	(void)win;
 }
 
-static void key_callback(GLFWwindow *win, int key, int scancode, int action, int mods)
+static void key_callback(GLFWwindow *win, int key, int scancode, int action,
+						 int mods)
 {
 	if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 	{		
@@ -42,7 +43,8 @@ static void mainWin()
 	if(!glfwInit())
 		sys_error("mainWin: glfwInit error");
 
-	GLFWwindow *win = create_new_window(MW_Width, MW_Height, "Main window", nullptr, nullptr);
+	GLFWwindow *win = create_new_window(MW_Width, MW_Height, "Main window",
+										nullptr, nullptr);
 
 	glfwMakeContextCurrent(win);
 	glfwSwapInterval(3);
@@ -53,7 +55,11 @@ static void mainWin()
 
 	GLCALL( glViewport(0, 0, MW_Width, MW_Height) );
 
-	std::cout << glGetString(GL_VERSION) << "  " << glGetString(GL_RENDERER) << std::endl;
+	std::cout << glGetString(GL_VERSION) << "  "
+			  << glGetString(GL_RENDERER) << std::endl;
+	int maxVerAttrib;
+	GLCALL( glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &maxVerAttrib) );
+	std::cout << "Max nr of vertex attributes: " << maxVerAttrib << std::endl;
 
 	{
 		/* float vertex[] = { -0.5f, -0.5f, 0.0f, */
@@ -97,16 +103,18 @@ static void mainWin()
 		uint32 vbo;
 		GLCALL( glGenBuffers(1, &vbo) );
 		GLCALL( glBindBuffer(GL_ARRAY_BUFFER, vbo) );
-		GLCALL( glBufferData(GL_ARRAY_BUFFER, sizeof(vertex), vertex, GL_STATIC_DRAW) );
+		GLCALL( glBufferData(GL_ARRAY_BUFFER, sizeof(vertex), vertex,
+							 GL_STATIC_DRAW) );
 
 		uint32 index_count = sizeof index / sizeof(uint32);
 		uint32 ebo;
 		GLCALL( glGenBuffers(1, &ebo) );
 		GLCALL( glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo) );
-		GLCALL( glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof index, index, GL_STATIC_DRAW) );
+		GLCALL( glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof index, index,
+							 GL_STATIC_DRAW) );
 
 #ifdef _WIN32
-		Shader program("../../shader/shader.glsl");
+		Shader program("../shader/shader.glsl");
 #else
 		Shader program("../shader/shader.glsl");
 #endif
@@ -115,25 +123,23 @@ static void mainWin()
 									  3 * sizeof(float), (void *)0) );
 		GLCALL( glEnableVertexAttribArray(0) );
 
-		float red = 0.41f; float change = 0.05f;
+		float timeValue, redValue, greenValue;
 		while(!glfwWindowShouldClose(win))
 		{
-			GLCALL( glClearColor(red, 0.4f, 0.5f, 1.0f) );
+			GLCALL( glClearColor(0.15f, 0.2f, 0.18f, 1.0f) );
 			GLCALL( glClear(GL_COLOR_BUFFER_BIT) );
 
-			program.Bind();
+			timeValue = static_cast<double>(glfwGetTime());
+			redValue = sin(timeValue) / 1.5f + 0.3f;
+			greenValue = sin(timeValue) / 2.0f + 0.7f;
+
+			program.SetUniform4f("UniformColor", redValue, greenValue, 0.5f, 1.0f);
+
 			GLCALL( glBindVertexArray(vao) );
 
 			GLCALL( glDrawElements(GL_TRIANGLES, index_count, GL_UNSIGNED_INT, 0) );
 
-			GLCALL( glBindVertexArray(0) );
-
-			if(red > 0.9f)
-				change = -0.05f;
-			else if(red < 0.1f)
-				change = 0.05f;
-
-			red += change;
+			GLCALL( glBindVertexArray(0) )
 
 			glfwSetKeyCallback(win, key_callback);
 

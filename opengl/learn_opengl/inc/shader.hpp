@@ -23,6 +23,8 @@ class Shader
 	void Bind() const;
 	void Unbind() const;
 
+	void SetUniform4f(const char *shaderVar, float f1, float f2,
+		float f3, float f4) const;
   private:
 	SourceGLSL ParseSource();
 	uint32 CompileShader(uint32 type, const char *source);

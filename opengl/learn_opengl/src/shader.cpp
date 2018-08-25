@@ -29,6 +29,14 @@ void Shader::Unbind() const
 	GLCALL( glUseProgram(0) );
 }
 
+void Shader::SetUniform4f(const char *shaderVar, float f1, float f2,
+						  float f3, float f4) const
+{
+	Bind();
+	GLCALL( int vertColorLocation = glGetUniformLocation(m_RendererID, shaderVar));
+	GLCALL( glUniform4f(vertColorLocation, f1, f2, f3, f4) );
+}
+
 SourceGLSL Shader::ParseSource()
 {
 	std::ifstream stream(m_FilePath.c_str());

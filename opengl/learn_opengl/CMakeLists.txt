@@ -35,9 +35,9 @@ if(MSVC)
   set (FOR_OPEN_GL "D:/Documents/libs/open_gl/")
   include_directories(${FOR_OPEN_GL}include)
   target_link_libraries(ForOpenGL INTERFACE
+    opengl32.lib
 	${FOR_OPEN_GL}lib/glew32s.lib
-	${FOR_OPEN_GL}lib/glfw3.lib
-	opengl32.lib)
+	${FOR_OPEN_GL}lib/glfw3.lib)
 else()
   target_link_libraries(ForOpenGL INTERFACE glfw GL GLEW)
 endif()
@@ -51,5 +51,4 @@ source_group("Sources" FILES ${PROJECT_SOURCES})
 source_group("Shaders" FILES ${PROJECT_SHADERS})
 
 add_executable (${PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS} ${PROJECT_SHADERS})
-target_link_libraries (${PROJECT_NAME} PUBLIC ForOpenGL ThirdPartLib)
-
+target_link_libraries (${PROJECT_NAME} PUBLIC ThirdPartLib ForOpenGL)
