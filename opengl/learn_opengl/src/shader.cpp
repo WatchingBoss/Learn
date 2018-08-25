@@ -33,8 +33,16 @@ void Shader::SetUniform4f(const char *shaderVar, float f1, float f2,
 						  float f3, float f4) const
 {
 	Bind();
-	GLCALL( int vertColorLocation = glGetUniformLocation(m_RendererID, shaderVar));
-	GLCALL( glUniform4f(vertColorLocation, f1, f2, f3, f4) );
+	GLCALL( int location = glGetUniformLocation(m_RendererID, shaderVar));
+	GLCALL( glUniform4f(location, f1, f2, f3, f4) );
+}
+
+void Shader::SetUniform3f(const char *shaderVar, float f1, float f2,
+						  float f3) const
+{
+	Bind();
+	GLCALL( int location = glGetUniformLocation(m_RendererID, shaderVar));
+	GLCALL( glUniform3f(location, f1, f2, f3) );
 }
 
 SourceGLSL Shader::ParseSource()

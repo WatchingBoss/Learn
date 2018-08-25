@@ -21,6 +21,7 @@ static void framebuffer_size_callback(GLFWwindow *win, int width, int height)
 	(void)win;
 }
 
+float x_change = 0.0f, y_change = 0.0f;
 static void key_callback(GLFWwindow *win, int key, int scancode, int action,
 						 int mods)
 {
@@ -28,6 +29,35 @@ static void key_callback(GLFWwindow *win, int key, int scancode, int action,
 	{		
 		glfwSetWindowShouldClose(win, true);
 		return;
+	}
+
+	float changing = 0.02f;
+	switch(key)
+	{
+	  case GLFW_KEY_UP:
+		  if(action == GLFW_PRESS)
+			  y_change += changing;
+		  else if(action == GLFW_RELEASE)
+			  y_change = 0.0f;
+		  break;
+	  case GLFW_KEY_DOWN:
+		  if(action == GLFW_PRESS)
+			  y_change -= changing;
+		  else if(action == GLFW_RELEASE)
+			  y_change = 0.0f;
+		  break;
+	  case GLFW_KEY_RIGHT:
+		  if(action == GLFW_PRESS)
+			  x_change += changing;
+		  else if(action == GLFW_RELEASE)
+			  x_change = 0.0f;
+		  break;
+	  case GLFW_KEY_LEFT:
+		  if(action == GLFW_PRESS)
+			  x_change -= changing;
+		  else if(action == GLFW_RELEASE)
+			  x_change = 0.0f;
+		  break;
 	}
 
 	(void)scancode;
@@ -62,30 +92,34 @@ static void mainWin()
 	std::cout << "Max nr of vertex attributes: " << maxVerAttrib << std::endl;
 
 	{
-		/* float vertex[] = { -0.5f, -0.5f, 0.0f, */
-		/* 				    0.5f, -0.5f, 0.0f, */
-		/* 				   -0.5f,  0.5f, 0.0f, */
-		/* 				    0.5f,  0.5f, 0.0f }; */
+		/* float vertex[] = { */
+		/* 	-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, */
+		/* 	 0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, */
+		/* 	 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, */
+		/* 	-0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f */
+		/* }; */
 
 		float vertex[] = {
-			-0.5f, -0.5f, 0.0f,
-			-0.4f,  0.5f, 0.0f,
-			-0.4f, -0.5f, 0.0f,
-			-0.5f,  0.5f, 0.0f,
+			-0.6f, -0.8f, 0.0f,  0.0f, 0.0f, 1.0f,
+			-0.3f,  0.8f, 0.0f,  0.7f, 0.0f, 0.0f,
+			-0.3f, -0.8f, 0.0f,  0.0f, 0.6f, 0.0f,
+			-0.6f,  0.8f, 0.0f,  0.0f, 0.7f, 0.0f,
 
-			 0.4f, -0.5f, 0.0f,
-			 0.5f,  0.5f, 0.0f,
-			 0.4f,  0.5f, 0.0f,
-			 0.5f, -0.5f, 0.0f,
+			 0.3f, -0.8f, 0.0f,  0.6f, 0.0f, 0.0f,
+			 0.6f,  0.8f, 0.0f,  0.0f, 1.0f, 0.0f,
+			 0.3f,  0.8f, 0.0f,  0.5f, 0.0f, 0.0f,
+			 0.6f, -0.8f, 0.0f,  0.0f, 0.0f, 0.8f,
 
-			-0.4f,  0.1f, 0.0f,
-			 0.4f, -0.1f, 0.0f,
-			-0.4f, -0.1f, 0.0f,
-			 0.4f,  0.1f, 0.0f
+			-0.3f,  0.15f, 0.0f,  0.0f, 0.0f, 1.0f,
+			 0.3f, -0.15f, 0.0f,  1.0f, 0.0f, 0.0f,
+			-0.3f, -0.15f, 0.0f,  0.0f, 0.7f, 0.0f,
+			 0.3f,  0.15f, 0.0f,  0.0f, 0.8f, 0.0f
 		};
 
-		/* uint32 index[] = { 0, 1, 3, */
-		/* 				   0, 2, 3 }; */
+		/* uint32 index[] = { */
+		/* 	0, 1, 2, */
+		/* 	0, 1, 3, */
+		/* }; */
 
 		uint32 index[] = {
 			0, 1, 2,
@@ -119,22 +153,30 @@ static void mainWin()
 		Shader program("../shader/shader.glsl");
 #endif
 
-		GLCALL( glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
-									  3 * sizeof(float), (void *)0) );
+		GLCALL( glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
+									  (void *)0) );
 		GLCALL( glEnableVertexAttribArray(0) );
 
-		float timeValue, redValue, greenValue;
+		GLCALL( glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
+									  (void *)(3 * sizeof(float))) );
+		GLCALL( glEnableVertexAttribArray(1) );
+
+		/* float timeValue, redValue, greenValue; */
+		float x = 1.0f, y = 1.0f, z = 0.0f;
 		while(!glfwWindowShouldClose(win))
 		{
 			GLCALL( glClearColor(0.15f, 0.2f, 0.18f, 1.0f) );
 			GLCALL( glClear(GL_COLOR_BUFFER_BIT) );
 
-			timeValue = static_cast<double>(glfwGetTime());
-			redValue = sin(timeValue) / 1.5f + 0.3f;
-			greenValue = sin(timeValue) / 2.0f + 0.7f;
+			/* timeValue = static_cast<double>(glfwGetTime()); */
+			/* redValue = sin(timeValue) / 1.5f + 0.3f; */
+			/* greenValue = sin(timeValue) / 2.0f + 0.7f; */
 
-			program.SetUniform4f("UniformColor", redValue, greenValue, 0.5f, 1.0f);
+			/* program.SetUniform4f("UniformColor", redValue, greenValue, 0.5f, 1.0f); */
+			x += x_change; y += y_change;
+			program.SetUniform3f("newSize", x, y, z);
 
+			/* program.Bind(); */
 			GLCALL( glBindVertexArray(vao) );
 
 			GLCALL( glDrawElements(GL_TRIANGLES, index_count, GL_UNSIGNED_INT, 0) );
