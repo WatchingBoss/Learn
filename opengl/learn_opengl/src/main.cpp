@@ -45,7 +45,7 @@ static void mainWin()
 	GLFWwindow *win = create_new_window(MW_Width, MW_Height, "Main window", nullptr, nullptr);
 
 	glfwMakeContextCurrent(win);
-	glfwSwapInterval(5);
+	glfwSwapInterval(3);
 
 	glewExperimental = GLEW_OK;
 	if(glewInit() != GLEW_OK)
@@ -111,9 +111,10 @@ static void mainWin()
 									  3 * sizeof(float), (void *)0) );
 		GLCALL( glEnableVertexAttribArray(0) );
 
+		float red = 0.41f; float change = 0.05f;
 		while(!glfwWindowShouldClose(win))
 		{
-			GLCALL( glClearColor(0.41f, 0.4f, 0.5f, 1.0f) );
+			GLCALL( glClearColor(red, 0.4f, 0.5f, 1.0f) );
 			GLCALL( glClear(GL_COLOR_BUFFER_BIT) );
 
 			program.Bind();
@@ -122,6 +123,13 @@ static void mainWin()
 			GLCALL( glDrawElements(GL_TRIANGLES, index_count, GL_UNSIGNED_INT, 0) );
 
 			GLCALL( glBindVertexArray(0) );
+
+			if(red > 0.9f)
+				change = -0.05f;
+			else if(red < 0.1f)
+				change = 0.05f;
+
+			red += change;
 
 			glfwSetKeyCallback(win, key_callback);
 
