@@ -42,14 +42,14 @@ else()
   target_link_libraries(ForOpenGL INTERFACE glfw GL GLEW)
 endif()
 
-##add_executable (${PROJECT_NAME} ${PROJECT_SOURCE_DIR}example/ex1.cpp)
-
 file(GLOB PROJECT_SOURCES ${PROJECT_SOURCE_DIR}/src/*.cpp)
 file(GLOB PROJECT_HEADERS ${PROJECT_SOURCE_DIR}/inc/*.hpp)
+file(GLOB PROJECT_SHADERS ${PROJECT_SOURCE_DIR}/shader/*.glsl)
 
 source_group("Headers" FILES ${PROJECT_HEADERS})
 source_group("Sources" FILES ${PROJECT_SOURCES})
+source_group("Shaders" FILES ${PROJECT_SHADERS})
 
-add_executable (${PROJECT_NAME} ${PROJECT_HEADERS} ${PROJECT_SOURCES})
+add_executable (${PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS} ${PROJECT_SHADERS})
 target_link_libraries (${PROJECT_NAME} PUBLIC ForOpenGL ThirdPartLib)
 

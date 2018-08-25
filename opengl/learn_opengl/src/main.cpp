@@ -105,7 +105,11 @@ static void mainWin()
 		GLCALL( glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo) );
 		GLCALL( glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof index, index, GL_STATIC_DRAW) );
 
+#ifdef _WIN32
+		Shader program("../../shader/shader.glsl");
+#else
 		Shader program("../shader/shader.glsl");
+#endif
 
 		GLCALL( glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
 									  3 * sizeof(float), (void *)0) );
