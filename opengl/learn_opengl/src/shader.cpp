@@ -45,6 +45,13 @@ void Shader::SetUniform3f(const char *shaderVar, float f1, float f2,
 	GLCALL( glUniform3f(location, f1, f2, f3) );
 }
 
+void Shader::SetUniform1i(const char *texture, int i1)
+{
+	Bind();
+	GLCALL( int location = glGetUniformLocation(m_RendererID, texture) );
+	GLCALL( glUniform1i(location, i1) );
+}
+
 SourceGLSL Shader::ParseSource()
 {
 	std::ifstream vertStream(m_VertPath.c_str());

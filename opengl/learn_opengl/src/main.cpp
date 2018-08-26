@@ -9,7 +9,6 @@
 
 #include "../inc/sup.hpp"
 #include "../inc/glfw.hpp"
-
 #include "../inc/shader.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -103,12 +102,15 @@ static void mainWin()
 								GL_LINEAR) );
 		GLCALL( glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR) );
 
+		/* Load texture */
+		stbi_set_flip_vertically_on_load(true);
 		int t_width, t_height, nrChannels;
+		/* First texture */
 		uchar *t_data = stbi_load("../media/wood.jpg",
 								  &t_width, &t_height, &nrChannels, 0);
-		uint32 texture;
-		GLCALL( glGenTextures(1, &texture) );
-		GLCALL( glBindTexture(GL_TEXTURE_2D, texture) );
+		uint32 texture1;
+		GLCALL( glGenTextures(1, &texture1) );
+		GLCALL( glBindTexture(GL_TEXTURE_2D, texture1) );
 		if(t_data)
 		{			
 			GLCALL( glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, t_width, t_height, 0,
@@ -118,6 +120,22 @@ static void mainWin()
 		else
 			sys_error("Failed to load texture");
 		stbi_image_free(t_data);
+		/* Second texture */
+		t_data = stbi_load("../media/diamond.png",
+								  &t_width, &t_height, &nrChannels, 0);
+		uint32 texture2;
+		GLCALL( glGenTextures(1, &texture2) );
+		GLCALL( glBindTexture(GL_TEXTURE_2D, texture2) );
+		if(t_data)
+		{			
+			GLCALL( glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, t_width, t_height, 0,
+								 GL_RGBA, GL_UNSIGNED_BYTE, t_data) );
+			GLCALL( glGenerateMipmap(GL_TEXTURE_2D) );
+		}
+		else
+			sys_error("Failed to load texture");
+		stbi_image_free(t_data);
+		
 
 		float vertex[] = {
 			-0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f,  0.0f, 0.0f,
@@ -187,6 +205,9 @@ static void mainWin()
 									  (void *)(6 * sizeof(float))) );
 		GLCALL( glEnableVertexAttribArray(2) );
 
+		program.SetUniform1i("ourTexture1", 0);
+		program.SetUniform1i("ourTexture2", 1);
+
 		float x = 1.0f, y = 1.0f, z = 0.0f;
 		while(!glfwWindowShouldClose(win))
 		{
@@ -195,7 +216,11 @@ static void mainWin()
 
 			x += x_change; y += y_change;
 			program.SetUniform3f("newSize", x, y, z);
-			GLCALL( glBindTexture(GL_TEXTURE_2D, texture) );
+
+			GLCALL( glActiveTexture(GL_TEXTURE0) );
+			GLCALL( glBindTexture(GL_TEXTURE_2D, texture1) );
+			GLCALL( glActiveTexture(GL_TEXTURE1) );
+			GLCALL( glBindTexture(GL_TEXTURE_2D, texture2) );
 
 			GLCALL( glBindVertexArray(vao) );
 
