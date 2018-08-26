@@ -7,8 +7,8 @@
 
 #include <GL/glew.h>
 
-Shader::Shader(const std::string &filepath)
-	: m_RendererID(0), m_FilePath(filepath)
+Shader::Shader(const std::string &vertpath, const std::string &fragpath)
+	: m_RendererID(0), m_VertPath(vertpath), m_FragPath(fragpath)
 {
 	SourceGLSL glsl_source = ParseSource();
 	m_RendererID = CreateShader(glsl_source.vs, glsl_source.fs);
@@ -47,27 +47,16 @@ void Shader::SetUniform3f(const char *shaderVar, float f1, float f2,
 
 SourceGLSL Shader::ParseSource()
 {
-	std::ifstream stream(m_FilePath.c_str());
+	std::ifstream vertStream(m_VertPath.c_str());
+	std::ifstream fragStream(m_FragPath.c_str());
 	std::string line;
 	std::stringstream ss[2];
 
-	enum eShaderType
-	{
-		NONE = -1, VERTEX = 0, FRAGMENT = 1
-	} type = NONE;
+	while(getline(vertStream, line))
+		ss[0] << line << '\n';
 
-	while(getline(stream, line))
-	{
-		if(line.find("#shader") != std::string::npos)
-		{
-			if(line.find("vertex") != std::string::npos)
-				type = VERTEX;
-			if(line.find("fragment") != std::string::npos)
-				type = FRAGMENT;
-		}
-		else
-			ss[static_cast<int>(type)] << line << '\n';
-	}
+	while (getline(fragStream, line))
+		ss[1] << line << '\n';
 
 	SourceGLSL glsl_source{ ss[0].str(), ss[1].str() };
 	return glsl_source;

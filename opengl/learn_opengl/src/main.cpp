@@ -12,6 +12,9 @@
 
 #include "../inc/shader.hpp"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb/stb_image.h"
+
 #define MW_Width 1024
 #define MW_Height 720
 
@@ -92,43 +95,67 @@ static void mainWin()
 	std::cout << "Max nr of vertex attributes: " << maxVerAttrib << std::endl;
 
 	{
-		/* float vertex[] = { */
-		/* 	-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, */
-		/* 	 0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, */
-		/* 	 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, */
-		/* 	-0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f */
-		/* }; */
+		GLCALL( glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
+								GL_MIRRORED_REPEAT) );
+		GLCALL( glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,
+								GL_MIRRORED_REPEAT) );
+		GLCALL( glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+								GL_LINEAR) );
+		GLCALL( glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR) );
+
+		int t_width, t_height, nrChannels;
+		uchar *t_data = stbi_load("../media/wood.jpg",
+								  &t_width, &t_height, &nrChannels, 0);
+		uint32 texture;
+		GLCALL( glGenTextures(1, &texture) );
+		GLCALL( glBindTexture(GL_TEXTURE_2D, texture) );
+		if(t_data)
+		{			
+			GLCALL( glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, t_width, t_height, 0,
+								 GL_RGB, GL_UNSIGNED_BYTE, t_data) );
+			GLCALL( glGenerateMipmap(GL_TEXTURE_2D) );
+		}
+		else
+			sys_error("Failed to load texture");
+		stbi_image_free(t_data);
 
 		float vertex[] = {
-			-0.6f, -0.8f, 0.0f,  0.0f, 0.0f, 1.0f,
-			-0.3f,  0.8f, 0.0f,  0.7f, 0.0f, 0.0f,
-			-0.3f, -0.8f, 0.0f,  0.0f, 0.6f, 0.0f,
-			-0.6f,  0.8f, 0.0f,  0.0f, 0.7f, 0.0f,
+			-0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f,  0.0f, 0.0f,
+			 0.5f,  0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  1.0f, 1.0f,
+			 0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  1.0f, 0.0f,
+			-0.5f,  0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  0.0f, 1.0f
+		};
 
-			 0.3f, -0.8f, 0.0f,  0.6f, 0.0f, 0.0f,
-			 0.6f,  0.8f, 0.0f,  0.0f, 1.0f, 0.0f,
-			 0.3f,  0.8f, 0.0f,  0.5f, 0.0f, 0.0f,
-			 0.6f, -0.8f, 0.0f,  0.0f, 0.0f, 0.8f,
+		/* float vertex[] = { */
+		/* 	-0.6f, -0.8f, 0.0f,  0.0f, 0.0f, 1.0f, */
+		/* 	-0.3f,  0.8f, 0.0f,  0.7f, 0.0f, 0.0f, */
+		/* 	-0.3f, -0.8f, 0.0f,  0.0f, 0.6f, 0.0f, */
+		/* 	-0.6f,  0.8f, 0.0f,  0.0f, 0.7f, 0.0f, */
 
-			-0.3f,  0.15f, 0.0f,  0.0f, 0.0f, 1.0f,
-			 0.3f, -0.15f, 0.0f,  1.0f, 0.0f, 0.0f,
-			-0.3f, -0.15f, 0.0f,  0.0f, 0.7f, 0.0f,
-			 0.3f,  0.15f, 0.0f,  0.0f, 0.8f, 0.0f
+		/* 	 0.3f, -0.8f, 0.0f,  0.6f, 0.0f, 0.0f, */
+		/* 	 0.6f,  0.8f, 0.0f,  0.0f, 1.0f, 0.0f, */
+		/* 	 0.3f,  0.8f, 0.0f,  0.5f, 0.0f, 0.0f, */
+		/* 	 0.6f, -0.8f, 0.0f,  0.0f, 0.0f, 0.8f, */
+
+		/* 	-0.3f,  0.15f, 0.0f,  0.0f, 0.0f, 1.0f, */
+		/* 	 0.3f, -0.15f, 0.0f,  1.0f, 0.0f, 0.0f, */
+		/* 	-0.3f, -0.15f, 0.0f,  0.0f, 0.7f, 0.0f, */
+		/* 	 0.3f,  0.15f, 0.0f,  0.0f, 0.8f, 0.0f */
+		/* }; */
+
+		uint32 index[] = {
+			0, 1, 2,
+			0, 1, 3
 		};
 
 		/* uint32 index[] = { */
 		/* 	0, 1, 2, */
 		/* 	0, 1, 3, */
+		/* 	4, 5, 6, */
+		/* 	4, 5, 7, */
+		/* 	8, 9, 10, */
+		/* 	8, 9, 11 */
 		/* }; */
-
-		uint32 index[] = {
-			0, 1, 2,
-			0, 1, 3,
-			4, 5, 6,
-			4, 5, 7,
-			8, 9, 10,
-			8, 9, 11
-		};
 
 		uint32 vao;
 		GLCALL( glGenVertexArrays(1, &vao) );
@@ -147,36 +174,29 @@ static void mainWin()
 		GLCALL( glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof index, index,
 							 GL_STATIC_DRAW) );
 
-#ifdef _WIN32
-		Shader program("../shader/shader.glsl");
-#else
-		Shader program("../shader/shader.glsl");
-#endif
+		Shader program("../shader/vertex.vert", "../shader/fragment.frag");
 
-		GLCALL( glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
+		GLCALL( glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
 									  (void *)0) );
 		GLCALL( glEnableVertexAttribArray(0) );
 
-		GLCALL( glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
+		GLCALL( glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
 									  (void *)(3 * sizeof(float))) );
 		GLCALL( glEnableVertexAttribArray(1) );
+		GLCALL( glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
+									  (void *)(6 * sizeof(float))) );
+		GLCALL( glEnableVertexAttribArray(2) );
 
-		/* float timeValue, redValue, greenValue; */
 		float x = 1.0f, y = 1.0f, z = 0.0f;
 		while(!glfwWindowShouldClose(win))
 		{
 			GLCALL( glClearColor(0.15f, 0.2f, 0.18f, 1.0f) );
 			GLCALL( glClear(GL_COLOR_BUFFER_BIT) );
 
-			/* timeValue = static_cast<double>(glfwGetTime()); */
-			/* redValue = sin(timeValue) / 1.5f + 0.3f; */
-			/* greenValue = sin(timeValue) / 2.0f + 0.7f; */
-
-			/* program.SetUniform4f("UniformColor", redValue, greenValue, 0.5f, 1.0f); */
 			x += x_change; y += y_change;
 			program.SetUniform3f("newSize", x, y, z);
+			GLCALL( glBindTexture(GL_TEXTURE_2D, texture) );
 
-			/* program.Bind(); */
 			GLCALL( glBindVertexArray(vao) );
 
 			GLCALL( glDrawElements(GL_TRIANGLES, index_count, GL_UNSIGNED_INT, 0) );

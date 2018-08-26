@@ -15,9 +15,9 @@ class Shader
 {
   private:
 	uint32 m_RendererID;
-	std::string m_FilePath;
+	std::string m_VertPath, m_FragPath;
   public:
-	Shader(const std::string &filepath);
+	Shader(const std::string &vertpath, const std::string &fragpath);
 	~Shader();
 
 	void Bind() const;

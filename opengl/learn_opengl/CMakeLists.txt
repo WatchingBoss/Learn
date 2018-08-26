@@ -6,7 +6,7 @@ find_package(OpenGL REQUIRED)
 
 if(MSVC)
   #  add_compile_options(/W3 /Wall /WX)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3")
 else()
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Werror -Wall -Wpedantic -g")
 endif()
@@ -44,7 +44,7 @@ endif()
 
 file(GLOB PROJECT_SOURCES ${PROJECT_SOURCE_DIR}/src/*.cpp)
 file(GLOB PROJECT_HEADERS ${PROJECT_SOURCE_DIR}/inc/*.hpp)
-file(GLOB PROJECT_SHADERS ${PROJECT_SOURCE_DIR}/shader/*.glsl)
+file(GLOB PROJECT_SHADERS ${PROJECT_SOURCE_DIR}/shader/*.vert ${PROJECT_SOURCE_DIR}/shader/*.frag)
 
 source_group("Headers" FILES ${PROJECT_HEADERS})
 source_group("Sources" FILES ${PROJECT_SOURCES})
