@@ -14,6 +14,10 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
 
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
+
 #define MW_Width 1024
 #define MW_Height 720
 
@@ -23,7 +27,8 @@ static void framebuffer_size_callback(GLFWwindow *win, int width, int height)
 	(void)win;
 }
 
-float x_change = 0.0f, y_change = 0.0f;
+float x_change = 0.0f, y_change = 0.0f, r_change = 0.0f,
+	x_pos_change = 0.0f, y_pos_change = 0.0f;
 static void key_callback(GLFWwindow *win, int key, int scancode, int action,
 						 int mods)
 {
@@ -33,7 +38,7 @@ static void key_callback(GLFWwindow *win, int key, int scancode, int action,
 		return;
 	}
 
-	float changing = 0.02f;
+	float changing = 0.02f, r_changing = 5.0f, pos_changing = 0.03f;
 	switch(key)
 	{
 	  case GLFW_KEY_UP:
@@ -59,6 +64,44 @@ static void key_callback(GLFWwindow *win, int key, int scancode, int action,
 			  x_change -= changing;
 		  else if(action == GLFW_RELEASE)
 			  x_change = 0.0f;
+		  break;
+
+	  case GLFW_KEY_W:
+		  if(action == GLFW_PRESS)
+			  y_pos_change += pos_changing;
+		  else if(action == GLFW_RELEASE)
+			  y_pos_change = 0.0f;
+		  break;
+	  case GLFW_KEY_S:
+		  if(action == GLFW_PRESS)
+			  y_pos_change -= pos_changing;
+		  else if(action == GLFW_RELEASE)
+			  y_pos_change = 0.0f;
+		  break;
+	  case GLFW_KEY_D:
+		  if(action == GLFW_PRESS)
+			  x_pos_change += pos_changing;
+		  else if(action == GLFW_RELEASE)
+			  x_pos_change = 0.0f;
+		  break;
+	  case GLFW_KEY_A:
+		  if(action == GLFW_PRESS)
+			  x_pos_change -= pos_changing;
+		  else if(action == GLFW_RELEASE)
+			  x_pos_change = 0.0f;
+		  break;
+
+	  case GLFW_KEY_Q:
+		  if(action == GLFW_PRESS)
+			  r_change -= r_changing;
+		  else if(action == GLFW_RELEASE)
+			  r_change = 0.0f;
+		  break;
+	  case GLFW_KEY_E:
+		  if(action == GLFW_PRESS)
+			  r_change += r_changing;
+		  else if(action == GLFW_RELEASE)
+			  r_change = 0.0f;
 		  break;
 	}
 
@@ -144,36 +187,10 @@ static void mainWin()
 			-0.5f,  0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  0.0f, 1.0f
 		};
 
-		/* float vertex[] = { */
-		/* 	-0.6f, -0.8f, 0.0f,  0.0f, 0.0f, 1.0f, */
-		/* 	-0.3f,  0.8f, 0.0f,  0.7f, 0.0f, 0.0f, */
-		/* 	-0.3f, -0.8f, 0.0f,  0.0f, 0.6f, 0.0f, */
-		/* 	-0.6f,  0.8f, 0.0f,  0.0f, 0.7f, 0.0f, */
-
-		/* 	 0.3f, -0.8f, 0.0f,  0.6f, 0.0f, 0.0f, */
-		/* 	 0.6f,  0.8f, 0.0f,  0.0f, 1.0f, 0.0f, */
-		/* 	 0.3f,  0.8f, 0.0f,  0.5f, 0.0f, 0.0f, */
-		/* 	 0.6f, -0.8f, 0.0f,  0.0f, 0.0f, 0.8f, */
-
-		/* 	-0.3f,  0.15f, 0.0f,  0.0f, 0.0f, 1.0f, */
-		/* 	 0.3f, -0.15f, 0.0f,  1.0f, 0.0f, 0.0f, */
-		/* 	-0.3f, -0.15f, 0.0f,  0.0f, 0.7f, 0.0f, */
-		/* 	 0.3f,  0.15f, 0.0f,  0.0f, 0.8f, 0.0f */
-		/* }; */
-
 		uint32 index[] = {
 			0, 1, 2,
 			0, 1, 3
 		};
-
-		/* uint32 index[] = { */
-		/* 	0, 1, 2, */
-		/* 	0, 1, 3, */
-		/* 	4, 5, 6, */
-		/* 	4, 5, 7, */
-		/* 	8, 9, 10, */
-		/* 	8, 9, 11 */
-		/* }; */
 
 		uint32 vao;
 		GLCALL( glGenVertexArrays(1, &vao) );
@@ -208,14 +225,23 @@ static void mainWin()
 		program.SetUniform1i("ourTexture1", 0);
 		program.SetUniform1i("ourTexture2", 1);
 
-		float x = 1.0f, y = 1.0f, z = 0.0f;
+		float x = 1.0f, y = 1.0f, z = 1.0f, rotation = 0.0f, pos[3] = {0.0f};
+
 		while(!glfwWindowShouldClose(win))
 		{
 			GLCALL( glClearColor(0.15f, 0.2f, 0.18f, 1.0f) );
 			GLCALL( glClear(GL_COLOR_BUFFER_BIT) );
 
-			x += x_change; y += y_change;
-			program.SetUniform3f("newSize", x, y, z);
+			x += x_change; y += y_change; rotation -= r_change;
+			pos[0] += x_pos_change; pos[1] += y_pos_change;
+
+			glm::mat4 trans(1.0f);
+			trans = glm::rotate(trans, glm::radians(rotation),
+								glm::vec3(0, 0, 1.0f));
+			trans = glm::scale(trans, glm::vec3(x, y, z));
+			trans = glm::translate(trans, glm::vec3(pos[0], pos[1], pos[2]));
+			program.SetUniformMatrix4fv("transform", 1, GL_FALSE,
+										glm::value_ptr(trans));
 
 			GLCALL( glActiveTexture(GL_TEXTURE0) );
 			GLCALL( glBindTexture(GL_TEXTURE_2D, texture1) );

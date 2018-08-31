@@ -5,8 +5,6 @@
 #include <sstream>
 #include <string>
 
-#include <GL/glew.h>
-
 Shader::Shader(const std::string &vertpath, const std::string &fragpath)
 	: m_RendererID(0), m_VertPath(vertpath), m_FragPath(fragpath)
 {
@@ -50,6 +48,14 @@ void Shader::SetUniform1i(const char *texture, int i1)
 	Bind();
 	GLCALL( int location = glGetUniformLocation(m_RendererID, texture) );
 	GLCALL( glUniform1i(location, i1) );
+}
+
+void Shader::SetUniformMatrix4fv(const char *texture, GLsizei count,
+								 GLboolean transpose, const GLfloat *fv)
+{
+	Bind();
+	GLCALL( int location = glGetUniformLocation(m_RendererID, texture) );
+	GLCALL( glUniformMatrix4fv(location, count, transpose, fv) );
 }
 
 SourceGLSL Shader::ParseSource()

@@ -4,6 +4,7 @@
 #include "sup.hpp"
 
 #include <string>
+#include <GL/glew.h>
 
 typedef struct SourceGLSL
 {
@@ -28,6 +29,8 @@ class Shader
 	void SetUniform3f(const char *shaderVar, float f1, float f2,
 		float f3) const;
 	void SetUniform1i(const char *texture, int i1);
+	void SetUniformMatrix4fv(const char *texture, GLsizei size, GLboolean transpose,
+							 const GLfloat *fv);
   private:
 	SourceGLSL ParseSource();
 	uint32 CompileShader(uint32 type, const char *source);
