@@ -18,8 +18,8 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
-#define MW_Width 1024
-#define MW_Height 720
+static const uint32 MW_Width = 1024;
+static const uint32 MW_Height = 720;
 
 void set_texture_parameters()
 {
@@ -115,17 +115,6 @@ static void key_callback(GLFWwindow *win, int key, int scancode, int action,
 	(void)mods;
 }
 
-void set_transformations(glm::mat4 &trans,
-						 float size[], float pos[], float rotation[])
-{
-	trans =
-		glm::rotate(trans, glm::radians(rotation[0]), glm::vec3(1.0f, 0, 0)) *
-		glm::rotate(trans, glm::radians(rotation[1]), glm::vec3(0, 1.0f, 0)) *
-		glm::rotate(trans, glm::radians(rotation[2]), glm::vec3(0, 0, 1.0f));
-	trans = glm::scale(trans, glm::vec3(size[0], size[1], size[2]));
-	trans = glm::translate(trans, glm::vec3(pos[0], pos[1], pos[2]));
-}
-
 static void mainWin()
 {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -144,6 +133,8 @@ static void mainWin()
 	glewExperimental = GLEW_OK;
 	if(glewInit() != GLEW_OK)
 		sys_error("mainWin: glewInit error");
+
+	GLCALL( glEnable(GL_DEPTH_TEST) );
 
 	GLCALL( glViewport(0, 0, MW_Width, MW_Height) );
 
@@ -191,17 +182,61 @@ static void mainWin()
 		stbi_image_free(t_data);
 		/* END Load textures */
 
+		/* float vertex[] = { */
+		/* 	-0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f,  0.0f, 0.0f, */
+		/* 	 0.5f,  0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  1.0f, 1.0f, */
+		/* 	 0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  1.0f, 0.0f, */
+		/* 	-0.5f,  0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  0.0f, 1.0f */
+		/* }; */
+
 		float vertex[] = {
-			-0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f,  0.0f, 0.0f,
-			 0.5f,  0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  1.0f, 1.0f,
-			 0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  1.0f, 0.0f,
-			-0.5f,  0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  0.0f, 1.0f
+			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+			0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+			0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+			0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+			-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+			-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+			0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+			0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+			0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+			-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+			-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+			-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+			-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+			-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+			-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+			-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+			-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+			0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+			0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+			0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+			0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+			0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+			0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+			-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+			0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+			0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+			0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+			-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+			-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+			-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+			0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+			0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+			0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+			-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+			-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 		};
 
-		uint32 index[] = {
-			0, 1, 2,
-			0, 1, 3
-		};
+		/* uint32 index[] = { */
+		/* 	0, 1, 2, */
+		/* 	0, 1, 3 */
+		/* }; */
 
 		uint32 vao;
 		GLCALL( glGenVertexArrays(1, &vao) );
@@ -213,60 +248,107 @@ static void mainWin()
 		GLCALL( glBufferData(GL_ARRAY_BUFFER, sizeof(vertex), vertex,
 							 GL_STATIC_DRAW) );
 
-		uint32 index_count = sizeof index / sizeof(uint32);
-		uint32 ebo;
-		GLCALL( glGenBuffers(1, &ebo) );
-		GLCALL( glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo) );
-		GLCALL( glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof index, index,
-							 GL_STATIC_DRAW) );
+		/* uint32 index_count = sizeof index / sizeof(uint32); */
+		/* uint32 ebo; */
+		/* GLCALL( glGenBuffers(1, &ebo) ); */
+		/* GLCALL( glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo) ); */
+		/* GLCALL( glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof index, index, */
+		/* 					 GL_STATIC_DRAW) ); */
 
 		Shader program("../shader/vertex.vert", "../shader/fragment.frag");
 
-		GLCALL( glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
+		/* GLCALL( glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), */
+		/* 							  (void *)0) ); */
+		/* GLCALL( glEnableVertexAttribArray(0) ); */
+
+		/* GLCALL( glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), */
+		/* 							  (void *)(3 * sizeof(float))) ); */
+		/* GLCALL( glEnableVertexAttribArray(1) ); */
+		/* GLCALL( glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), */
+		/* 							  (void *)(6 * sizeof(float))) ); */
+		/* GLCALL( glEnableVertexAttribArray(2) ); */
+
+		GLCALL( glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
 									  (void *)0) );
 		GLCALL( glEnableVertexAttribArray(0) );
-
-		GLCALL( glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
+		GLCALL( glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
 									  (void *)(3 * sizeof(float))) );
 		GLCALL( glEnableVertexAttribArray(1) );
-		GLCALL( glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
-									  (void *)(6 * sizeof(float))) );
-		GLCALL( glEnableVertexAttribArray(2) );
 
+		program.Bind();
 		program.SetUniform1i("ourTexture1", 0);
 		program.SetUniform1i("ourTexture2", 1);
 
-		float size[3] = {1.0f, 1.0f, 1.0f}, pos[3] = {0}, rotation[3] = {0};
+		glm::ortho(0.0f, (float)MW_Width, 0.0f, (float)MW_Height, 0.1f, 100.0f);
+
+		glm::vec3 cubePos[5] = {
+			glm::vec3(-2.0f, -1.0f, 0),
+			glm::vec3(-1.0f, -0.5f, 1.0f),
+			glm::vec3(0, 1.0f, 0.5f),
+			glm::vec3(1.0f, 1.7f, 0),
+			glm::vec3(1.5f, 2.1f, 1.1f),
+		};
+
+		float
+			rotation[3] = {30.0f, 30.0f, 0},
+			size[3] = {1.0f, 1.0f, 1.0f},
+			pos[3] = {0, 0, -10.0f};
 
 		while(!glfwWindowShouldClose(win))
 		{
+			glfwSetKeyCallback(win, key_callback);
+			glfwSetFramebufferSizeCallback(win, framebuffer_size_callback);
+
 			GLCALL( glClearColor(0.15f, 0.2f, 0.18f, 1.0f) );
-			GLCALL( glClear(GL_COLOR_BUFFER_BIT) );
-
-			size[0] += x_size_change; size[1] += y_size_change;
-			pos[0] += x_pos_change; pos[1] += y_pos_change;
-			rotation[0] += x_r_change; rotation[1] += y_r_change;
-			rotation[2] += z_r_change;
-
-			glm::mat4 trans(1.0f);
-			set_transformations(trans, size, pos, rotation);
-			program.SetUniformMatrix4fv("transform", 1, GL_FALSE,
-										glm::value_ptr(trans));
+			GLCALL( glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) );
 
 			GLCALL( glActiveTexture(GL_TEXTURE0) );
 			GLCALL( glBindTexture(GL_TEXTURE_2D, texture1) );
 			GLCALL( glActiveTexture(GL_TEXTURE1) );
 			GLCALL( glBindTexture(GL_TEXTURE_2D, texture2) );
 
+			size[0] += x_size_change; size[1] += y_size_change;
+			pos[0] += x_pos_change; pos[1] += y_pos_change;
+			rotation[0] += x_r_change; rotation[1] += y_r_change;
+			rotation[2] += z_r_change;
+
+			program.Bind();
+
+			glm::mat4 view(1.0f);
+			view = glm::translate(view, glm::vec3(pos[0], pos[1], pos[2]));
+
+			glm::mat4 projection(1.0f);
+			projection = glm::perspective(glm::radians(45.0f),
+										  (float)MW_Width / (float)MW_Height,
+										  0.1f, 100.0f);
+
+			program.SetUniformMatrix4fv("view", 1, GL_FALSE, glm::value_ptr(view));
+			program.SetUniformMatrix4fv("projection", 1, GL_FALSE,
+										glm::value_ptr(projection));
+
 			GLCALL( glBindVertexArray(vao) );
+			for(size_t i = 0; i < 5; ++i)
+			{
+				glm::mat4 model(1.0f);
+				/* model = */
+				/* 	glm::rotate(model, glm::radians(rotation[0]), */
+				/* 				glm::vec3(1.0f, 0, 0)) * */
+				/* 	glm::rotate(model, glm::radians(rotation[1]), */
+				/* 				glm::vec3(0, 1.0f, 0)) * */
+				/* 	glm::rotate(model, glm::radians(rotation[2]), */
+				/* 				glm::vec3(0, 0, 1.0f)); */
+				model = glm::scale(model, glm::vec3(size[0], size[1], size[2]));
+				model = glm::translate(model, cubePos[i]);
+				model = glm::rotate(model, glm::radians((float)glfwGetTime() * 15),
+									glm::vec3(0.4f, 1.0f, 0.6f));
 
-			GLCALL( glDrawElements(GL_TRIANGLES, index_count, GL_UNSIGNED_INT, 0) );
+				program.SetUniformMatrix4fv("model", 1, GL_FALSE,
+											glm::value_ptr(model));
+				GLCALL( glDrawArrays(GL_TRIANGLES, 0, 36) );
+			}
 
+			/* GLCALL( glDrawElements(GL_TRIANGLES, index_count, GL_UNSIGNED_INT, 0) ); */
 			GLCALL( glBindVertexArray(0) )
-
-			glfwSetKeyCallback(win, key_callback);
-
-			glfwSetFramebufferSizeCallback(win, framebuffer_size_callback);
 
 			glfwSwapBuffers(win);
 			glfwPollEvents();

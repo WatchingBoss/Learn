@@ -30,7 +30,6 @@ void Shader::Unbind() const
 void Shader::SetUniform4f(const char *shaderVar, float f1, float f2,
 						  float f3, float f4) const
 {
-	Bind();
 	GLCALL( int location = glGetUniformLocation(m_RendererID, shaderVar));
 	GLCALL( glUniform4f(location, f1, f2, f3, f4) );
 }
@@ -38,22 +37,19 @@ void Shader::SetUniform4f(const char *shaderVar, float f1, float f2,
 void Shader::SetUniform3f(const char *shaderVar, float f1, float f2,
 						  float f3) const
 {
-	Bind();
 	GLCALL( int location = glGetUniformLocation(m_RendererID, shaderVar));
 	GLCALL( glUniform3f(location, f1, f2, f3) );
 }
 
 void Shader::SetUniform1i(const char *texture, int i1)
 {
-	Bind();
 	GLCALL( int location = glGetUniformLocation(m_RendererID, texture) );
 	GLCALL( glUniform1i(location, i1) );
 }
 
-void Shader::SetUniformMatrix4fv(const char *texture, GLsizei count,
-								 GLboolean transpose, const GLfloat *fv)
+void Shader::SetUniformMatrix4fv
+(const char *texture, GLsizei count, GLboolean transpose, const GLfloat *fv)
 {
-	Bind();
 	GLCALL( int location = glGetUniformLocation(m_RendererID, texture) );
 	GLCALL( glUniformMatrix4fv(location, count, transpose, fv) );
 }
