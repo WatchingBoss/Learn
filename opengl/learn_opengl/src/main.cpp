@@ -21,14 +21,27 @@
 #define MW_Width 1024
 #define MW_Height 720
 
+void set_texture_parameters()
+{
+	GLCALL( glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
+							GL_MIRRORED_REPEAT) );
+	GLCALL( glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,
+							GL_MIRRORED_REPEAT) );
+	GLCALL( glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+							GL_LINEAR) );
+	GLCALL( glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR) );
+}
+
 static void framebuffer_size_callback(GLFWwindow *win, int width, int height)
 {
 	glViewport(0, 0, width, height);
 	(void)win;
 }
 
-float x_change = 0.0f, y_change = 0.0f, r_change = 0.0f,
-	x_pos_change = 0.0f, y_pos_change = 0.0f;
+static float x_size_change = 0.0f, y_size_change = 0.0f,
+	x_pos_change = 0.0f, y_pos_change = 0.0f,
+	x_r_change = 0, y_r_change = 0, z_r_change = 0;
+
 static void key_callback(GLFWwindow *win, int key, int scancode, int action,
 						 int mods)
 {
@@ -43,70 +56,74 @@ static void key_callback(GLFWwindow *win, int key, int scancode, int action,
 	{
 	  case GLFW_KEY_UP:
 		  if(action == GLFW_PRESS)
-			  y_change += changing;
-		  else if(action == GLFW_RELEASE)
-			  y_change = 0.0f;
+			  if(glfwGetKey(win, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+				  y_pos_change += pos_changing;
+			  else if(glfwGetKey(win, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+				  x_r_change += r_changing;
+			  else
+				  y_size_change += changing;
 		  break;
 	  case GLFW_KEY_DOWN:
 		  if(action == GLFW_PRESS)
-			  y_change -= changing;
-		  else if(action == GLFW_RELEASE)
-			  y_change = 0.0f;
+			  if(glfwGetKey(win, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+				  y_pos_change -= pos_changing;
+			  else if(glfwGetKey(win, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+				  x_r_change -= r_changing;
+			  else
+				  y_size_change -= changing;
 		  break;
 	  case GLFW_KEY_RIGHT:
 		  if(action == GLFW_PRESS)
-			  x_change += changing;
-		  else if(action == GLFW_RELEASE)
-			  x_change = 0.0f;
+			  if(glfwGetKey(win, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+				  x_pos_change += pos_changing;
+			  else if(glfwGetKey(win, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+				  y_r_change -= r_changing;
+			  else
+				  x_size_change += changing;
 		  break;
 	  case GLFW_KEY_LEFT:
 		  if(action == GLFW_PRESS)
-			  x_change -= changing;
-		  else if(action == GLFW_RELEASE)
-			  x_change = 0.0f;
-		  break;
-
-	  case GLFW_KEY_W:
-		  if(action == GLFW_PRESS)
-			  y_pos_change += pos_changing;
-		  else if(action == GLFW_RELEASE)
-			  y_pos_change = 0.0f;
-		  break;
-	  case GLFW_KEY_S:
-		  if(action == GLFW_PRESS)
-			  y_pos_change -= pos_changing;
-		  else if(action == GLFW_RELEASE)
-			  y_pos_change = 0.0f;
-		  break;
-	  case GLFW_KEY_D:
-		  if(action == GLFW_PRESS)
-			  x_pos_change += pos_changing;
-		  else if(action == GLFW_RELEASE)
-			  x_pos_change = 0.0f;
-		  break;
-	  case GLFW_KEY_A:
-		  if(action == GLFW_PRESS)
-			  x_pos_change -= pos_changing;
-		  else if(action == GLFW_RELEASE)
-			  x_pos_change = 0.0f;
+			  if(glfwGetKey(win, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+				  x_pos_change -= pos_changing;
+			  else if(glfwGetKey(win, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+				  y_r_change += r_changing;
+			  else
+				  x_size_change -= changing;
 		  break;
 
 	  case GLFW_KEY_Q:
 		  if(action == GLFW_PRESS)
-			  r_change -= r_changing;
-		  else if(action == GLFW_RELEASE)
-			  r_change = 0.0f;
+			  z_r_change -= r_changing;
 		  break;
 	  case GLFW_KEY_E:
 		  if(action == GLFW_PRESS)
-			  r_change += r_changing;
-		  else if(action == GLFW_RELEASE)
-			  r_change = 0.0f;
+			  z_r_change += r_changing;
 		  break;
+	}
+
+	if( (key == GLFW_KEY_UP || key == GLFW_KEY_DOWN    ||
+		 key == GLFW_KEY_RIGHT || key == GLFW_KEY_LEFT ||
+		 key == GLFW_KEY_Q || key == GLFW_KEY_E)       &&
+		action == GLFW_RELEASE )
+	{
+		x_size_change = 0; y_size_change = 0;
+		x_pos_change = 0; y_pos_change = 0;
+		x_r_change = 0; y_r_change = 0; z_r_change = 0;
 	}
 
 	(void)scancode;
 	(void)mods;
+}
+
+void set_transformations(glm::mat4 &trans,
+						 float size[], float pos[], float rotation[])
+{
+	trans =
+		glm::rotate(trans, glm::radians(rotation[0]), glm::vec3(1.0f, 0, 0)) *
+		glm::rotate(trans, glm::radians(rotation[1]), glm::vec3(0, 1.0f, 0)) *
+		glm::rotate(trans, glm::radians(rotation[2]), glm::vec3(0, 0, 1.0f));
+	trans = glm::scale(trans, glm::vec3(size[0], size[1], size[2]));
+	trans = glm::translate(trans, glm::vec3(pos[0], pos[1], pos[2]));
 }
 
 static void mainWin()
@@ -137,15 +154,9 @@ static void mainWin()
 	std::cout << "Max nr of vertex attributes: " << maxVerAttrib << std::endl;
 
 	{
-		GLCALL( glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
-								GL_MIRRORED_REPEAT) );
-		GLCALL( glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,
-								GL_MIRRORED_REPEAT) );
-		GLCALL( glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-								GL_LINEAR) );
-		GLCALL( glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR) );
+		set_texture_parameters();
 
-		/* Load texture */
+		/* Load textures */
 		stbi_set_flip_vertically_on_load(true);
 		int t_width, t_height, nrChannels;
 		/* First texture */
@@ -178,7 +189,7 @@ static void mainWin()
 		else
 			sys_error("Failed to load texture");
 		stbi_image_free(t_data);
-		
+		/* END Load textures */
 
 		float vertex[] = {
 			-0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f,  0.0f, 0.0f,
@@ -225,21 +236,20 @@ static void mainWin()
 		program.SetUniform1i("ourTexture1", 0);
 		program.SetUniform1i("ourTexture2", 1);
 
-		float x = 1.0f, y = 1.0f, z = 1.0f, rotation = 0.0f, pos[3] = {0.0f};
+		float size[3] = {1.0f, 1.0f, 1.0f}, pos[3] = {0}, rotation[3] = {0};
 
 		while(!glfwWindowShouldClose(win))
 		{
 			GLCALL( glClearColor(0.15f, 0.2f, 0.18f, 1.0f) );
 			GLCALL( glClear(GL_COLOR_BUFFER_BIT) );
 
-			x += x_change; y += y_change; rotation -= r_change;
+			size[0] += x_size_change; size[1] += y_size_change;
 			pos[0] += x_pos_change; pos[1] += y_pos_change;
+			rotation[0] += x_r_change; rotation[1] += y_r_change;
+			rotation[2] += z_r_change;
 
 			glm::mat4 trans(1.0f);
-			trans = glm::rotate(trans, glm::radians(rotation),
-								glm::vec3(0, 0, 1.0f));
-			trans = glm::scale(trans, glm::vec3(x, y, z));
-			trans = glm::translate(trans, glm::vec3(pos[0], pos[1], pos[2]));
+			set_transformations(trans, size, pos, rotation);
 			program.SetUniformMatrix4fv("transform", 1, GL_FALSE,
 										glm::value_ptr(trans));
 
