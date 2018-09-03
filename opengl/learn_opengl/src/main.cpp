@@ -306,10 +306,8 @@ static void mainWin()
 			glm::vec3(1.5f, 2.1f, 1.1f),
 		};
 
-		float
-			rotation[3] = {30.0f, 30.0f, 0},
-			size[3] = {1.0f, 1.0f, 1.0f},
-			pos[3] = {0, 0, -10.0f};
+		glm::vec3 size(1.f), pos(0, 0, -10.f);
+		float rotation[3] = {30.f, 30.f, 0};
 
 		while(!glfwWindowShouldClose(win))
 		{
@@ -333,7 +331,7 @@ static void mainWin()
 			program.Bind();
 
 			glm::mat4 view(1.0f);
-			view = glm::translate(view, glm::vec3(pos[0], pos[1], pos[2]));
+			view = glm::translate(view, pos);
 			program.SetUniformMatrix4fv("view", 1, GL_FALSE, glm::value_ptr(view));
 			GLCALL( glBindVertexArray(vao) );
 
@@ -348,7 +346,7 @@ static void mainWin()
 									glm::vec3(0, 1.0f, 0));
 				model = glm::rotate(model, glm::radians(rotation[2]),
 									glm::vec3(0, 0, 1.0f));
-				model = glm::scale(model, glm::vec3(size[0], size[1], size[2]));
+				model = glm::scale(model, size);
 
 				program.SetUniformMatrix4fv("model", 1, GL_FALSE,
 											glm::value_ptr(model));
