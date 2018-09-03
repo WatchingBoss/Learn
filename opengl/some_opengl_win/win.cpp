@@ -46,7 +46,7 @@ GLFWwindow * create_new_window(const char *title = "Default",
 
 static inline float rand_color(int min, int max)
 {
-    return (float)(rand() % (max + 1 - min) + min) / 10.0f;
+    return rand() % (max + 1 - min) + min;
 }
 
 static float move_x = 0, move_y = 0;
@@ -96,7 +96,7 @@ void mainWin()
 
     glfwMakeContextCurrent(win);
 
-    glfwSwapInterval(3);
+    glfwSwapInterval(2);
 
     glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK)
@@ -130,19 +130,14 @@ void mainWin()
 
 		IndexBuffer ib(indices, sizeof indices / sizeof(float));
 
-		glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
-		glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
-		glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
-
-		glm::mat4 mvp = proj * view * model;
+		glm::mat4 proj(1.f);
+		proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
 
 		Shader shader("shader/Shader.shader");
 		shader.Bind();
 		shader.SetUniform4f("u_color", 0.2235f, 1.0f, 0.8f, 1.0f);
-		shader.SetUniformMat4f("u_MVP", mvp);
 
 		Texture tex("img/tree.png");
-		tex.Bind();
 		shader.SetUniformi("u_texture", 0);
 
 		va.Unbind();
@@ -161,58 +156,56 @@ void mainWin()
 		bool show_another_window = false;
 		ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
-		float colors[] = {0.0f, 0.0f, 0.0f}, interval[] = {0.2f, 0.4f, 0.6f};
-		float move_model[] = {0, 0};
+		float colors[3] = {0}, interval[] = {0.02f, 0.04f, 0.06f};
+		float move_model[2] = {0};
 		int x_move = 10, y_move = 10; bool toRight = false, toUp = true;
 		while (glfwGetKey(win, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
 			   !glfwWindowShouldClose(win))
 		{
+			glfwSetKeyCallback(win, key_callback);
+
 			rend.Clear();
+
+			tex.Bind();
 
 			ImGui_ImplOpenGL3_NewFrame();
 			ImGui_ImplGlfw_NewFrame();
 			ImGui::NewFrame();
 
-			shader.Bind();
-			shader.SetUniform4f("u_color", colors[0], colors[1], colors[2], 1.0f);
-
-			rend.Draw(va, ib, shader);
-
 			if(colors[0] > 1.0f)
-				interval[0] = -rand_color(1, 5);
+				interval[0] = -(rand_color(1, 5) / 100.f);
 			else if(colors[0] < 0.0f)
-				interval[0] = rand_color(1, 5);
+				interval[0] = rand_color(1, 5) / 100.f;
 			if(colors[1] > 1.0f)
-				interval[1] = -rand_color(1, 5);
+				interval[1] = -(rand_color(1, 5) / 100.f);
 			else if(colors[1] < 0.0f)
-				interval[1] = rand_color(1, 5);
+				interval[1] = rand_color(1, 5) / 100.f;
 			if(colors[2] > 1.0f)
-				interval[2] = -rand_color(1, 5);
+				interval[2] = -(rand_color(1, 5) / 100.f);
 			else if(colors[2] < 0.0f)
-				interval[2] = rand_color(1, 5);
+				interval[2] = rand_color(1, 5) / 100.f;
 			colors[0] += interval[0];
 			colors[1] += interval[1];
 			colors[2] += interval[2];
 
-			glfwSetKeyCallback(win, key_callback);
+			shader.Bind();
+			shader.SetUniform4f("u_color", colors[0], colors[1], colors[2], 1.0f);
 
 			move_model[0] += move_x;
 			move_model[1] += move_y;
 
-			glm::mat4 model = glm::translate(glm::mat4(1.0f),
-											 glm::vec3(move_model[0],
-													   move_model[1], 0));
-			glm::mat4 mvp = proj * model;
+			glm::mat4 mvp(1.f), model(1.f);
+			model = glm::translate(model, glm::vec3(move_model[0], move_model[1], 0));
+			mvp = proj * model;
 			shader.SetUniformMat4f("u_MVP", mvp);
 
+			rend.Draw(va, ib, shader);
+
 			{
-				static flaot f = 0.0f;
+				static float f = 0.0f;
 				static int counter = 0;
 
 				ImGui::Text("Hello, world!");
-				ImGui::Checkbox("Demo Window", &show_demo_window);
-				ImGui::Checkbox("Another Window", &show_another_window);
-
 				ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
 // Edit 3 floats representing a color
 				ImGui::ColorEdit3("clear color", (float*)&clear_color);
@@ -229,7 +222,6 @@ void mainWin()
 				ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
 							1000.0f / ImGui::GetIO().Framerate,
 							ImGui::GetIO().Framerate);
-				ImGui::End();
 			}
 
 			ImGui::Render();

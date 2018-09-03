@@ -86,13 +86,13 @@ uint32 Shader::CreateShader(const std::string &v_shader, const std::string &f_sh
 		exit(EXIT_FAILURE);
 	}
 
-	GLCALL( glAttachShader(program, vs) );
-	GLCALL( glAttachShader(program, fs) );
-	GLCALL( glLinkProgram(program) );
-	GLCALL( glValidateProgram(program) );
+	GLCALL(glAttachShader(program, vs));
+	GLCALL(glAttachShader(program, fs));
+	GLCALL(glLinkProgram(program));
+	GLCALL(glValidateProgram(program));
 
-	GLCALL( glDeleteShader(vs) );
-	GLCALL( glDeleteShader(fs) );
+	GLCALL(glDeleteShader(vs));
+	GLCALL(glDeleteShader(fs));
 
 	return program;
 }

@@ -38,8 +38,8 @@ static void framebuffer_size_callback(GLFWwindow *win, int width, int height)
 	(void)win;
 }
 
-static float x_size_change = 0.0f, y_size_change = 0.0f,
-	x_pos_change = 0.0f, y_pos_change = 0.0f,
+static float x_size_change = 0, y_size_change = 0, z_size_change = 0,
+	x_pos_change = 0, y_pos_change = 0, z_pos_change = 0,
 	x_r_change = 0, y_r_change = 0, z_r_change = 0;
 
 static void key_callback(GLFWwindow *win, int key, int scancode, int action,
@@ -51,26 +51,38 @@ static void key_callback(GLFWwindow *win, int key, int scancode, int action,
 		return;
 	}
 
-	float changing = 0.02f, r_changing = 5.0f, pos_changing = 0.03f;
+	float changing = 0.04f, r_changing = 5.0f, pos_changing = 0.5f;
 	switch(key)
 	{
 	  case GLFW_KEY_UP:
 		  if(action == GLFW_PRESS)
 			  if(glfwGetKey(win, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-				  y_pos_change += pos_changing;
+				  if(glfwGetKey(win, GLFW_KEY_Z) == GLFW_PRESS)
+					  z_pos_change += pos_changing;
+				  else
+					  y_pos_change += pos_changing;
 			  else if(glfwGetKey(win, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
 				  x_r_change += r_changing;
 			  else
-				  y_size_change += changing;
+				  if(glfwGetKey(win, GLFW_KEY_S) == GLFW_PRESS)
+					  z_size_change += changing;
+				  else
+					  y_size_change += changing;
 		  break;
 	  case GLFW_KEY_DOWN:
 		  if(action == GLFW_PRESS)
 			  if(glfwGetKey(win, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-				  y_pos_change -= pos_changing;
+				  if(glfwGetKey(win, GLFW_KEY_Z) == GLFW_PRESS)
+					  z_pos_change -= pos_changing;
+				  else
+					  y_pos_change -= pos_changing;
 			  else if(glfwGetKey(win, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
 				  x_r_change -= r_changing;
 			  else
-				  y_size_change -= changing;
+				  if(glfwGetKey(win, GLFW_KEY_S) == GLFW_PRESS)
+					  z_size_change -= changing;
+				  else
+					  y_size_change -= changing;
 		  break;
 	  case GLFW_KEY_RIGHT:
 		  if(action == GLFW_PRESS)
@@ -106,8 +118,8 @@ static void key_callback(GLFWwindow *win, int key, int scancode, int action,
 		 key == GLFW_KEY_Q || key == GLFW_KEY_E)       &&
 		action == GLFW_RELEASE )
 	{
-		x_size_change = 0; y_size_change = 0;
-		x_pos_change = 0; y_pos_change = 0;
+		x_size_change = 0; y_size_change = 0; z_size_change = 0;
+		x_pos_change = 0; y_pos_change = 0; z_pos_change = 0;
 		x_r_change = 0; y_r_change = 0; z_r_change = 0;
 	}
 
@@ -145,8 +157,6 @@ static void mainWin()
 	std::cout << "Max nr of vertex attributes: " << maxVerAttrib << std::endl;
 
 	{
-		set_texture_parameters();
-
 		/* Load textures */
 		stbi_set_flip_vertically_on_load(true);
 		int t_width, t_height, nrChannels;
@@ -156,6 +166,7 @@ static void mainWin()
 		uint32 texture1;
 		GLCALL( glGenTextures(1, &texture1) );
 		GLCALL( glBindTexture(GL_TEXTURE_2D, texture1) );
+		set_texture_parameters();
 		if(t_data)
 		{			
 			GLCALL( glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, t_width, t_height, 0,
@@ -171,6 +182,7 @@ static void mainWin()
 		uint32 texture2;
 		GLCALL( glGenTextures(1, &texture2) );
 		GLCALL( glBindTexture(GL_TEXTURE_2D, texture2) );
+		set_texture_parameters();
 		if(t_data)
 		{			
 			GLCALL( glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, t_width, t_height, 0,
@@ -278,8 +290,13 @@ static void mainWin()
 		program.Bind();
 		program.SetUniform1i("ourTexture1", 0);
 		program.SetUniform1i("ourTexture2", 1);
-
-		glm::ortho(0.0f, (float)MW_Width, 0.0f, (float)MW_Height, 0.1f, 100.0f);
+		glm::mat4 projection(1.0f);
+		projection = glm::perspective(glm::radians(45.0f),
+									  (float)MW_Width / (float)MW_Height,
+									  0.1f, 100.0f);
+		program.SetUniformMatrix4fv("projection", 1, GL_FALSE,
+									glm::value_ptr(projection));
+		program.Unbind();
 
 		glm::vec3 cubePos[5] = {
 			glm::vec3(-2.0f, -1.0f, 0),
@@ -308,7 +325,8 @@ static void mainWin()
 			GLCALL( glBindTexture(GL_TEXTURE_2D, texture2) );
 
 			size[0] += x_size_change; size[1] += y_size_change;
-			pos[0] += x_pos_change; pos[1] += y_pos_change;
+			size[2] += z_size_change;
+			pos[0] += x_pos_change; pos[1] += y_pos_change; pos[2] += z_pos_change;
 			rotation[0] += x_r_change; rotation[1] += y_r_change;
 			rotation[2] += z_r_change;
 
@@ -316,36 +334,27 @@ static void mainWin()
 
 			glm::mat4 view(1.0f);
 			view = glm::translate(view, glm::vec3(pos[0], pos[1], pos[2]));
-
-			glm::mat4 projection(1.0f);
-			projection = glm::perspective(glm::radians(45.0f),
-										  (float)MW_Width / (float)MW_Height,
-										  0.1f, 100.0f);
-
 			program.SetUniformMatrix4fv("view", 1, GL_FALSE, glm::value_ptr(view));
-			program.SetUniformMatrix4fv("projection", 1, GL_FALSE,
-										glm::value_ptr(projection));
-
 			GLCALL( glBindVertexArray(vao) );
+
 			for(size_t i = 0; i < 5; ++i)
 			{
 				glm::mat4 model(1.0f);
-				/* model = */
-				/* 	glm::rotate(model, glm::radians(rotation[0]), */
-				/* 				glm::vec3(1.0f, 0, 0)) * */
-				/* 	glm::rotate(model, glm::radians(rotation[1]), */
-				/* 				glm::vec3(0, 1.0f, 0)) * */
-				/* 	glm::rotate(model, glm::radians(rotation[2]), */
-				/* 				glm::vec3(0, 0, 1.0f)); */
-				model = glm::scale(model, glm::vec3(size[0], size[1], size[2]));
+				float c_t = static_cast<float>(glfwGetTime());
 				model = glm::translate(model, cubePos[i]);
-				model = glm::rotate(model, glm::radians((float)glfwGetTime() * 15),
-									glm::vec3(0.4f, 1.0f, 0.6f));
+				model = glm::rotate(model, glm::radians(rotation[0]),
+									glm::vec3(1.0f, 0, 0));
+				model = glm::rotate(model, glm::radians(rotation[1]),
+									glm::vec3(0, 1.0f, 0));
+				model = glm::rotate(model, glm::radians(rotation[2]),
+									glm::vec3(0, 0, 1.0f));
+				model = glm::scale(model, glm::vec3(size[0], size[1], size[2]));
 
 				program.SetUniformMatrix4fv("model", 1, GL_FALSE,
 											glm::value_ptr(model));
 				GLCALL( glDrawArrays(GL_TRIANGLES, 0, 36) );
 			}
+			program.Unbind();
 
 			/* GLCALL( glDrawElements(GL_TRIANGLES, index_count, GL_UNSIGNED_INT, 0) ); */
 			GLCALL( glBindVertexArray(0) )
