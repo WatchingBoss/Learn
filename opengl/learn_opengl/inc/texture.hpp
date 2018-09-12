@@ -3,9 +3,18 @@
 
 #include "sup.hpp"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb/stb_image.h"
+typedef enum {PNG, JPEG} eIMG_TYPE;
 
+class Texture
+{
+  private:
+	uint32 m_Renderer;
+  public:
+	Texture(const char *, eIMG_TYPE);
+	~Texture();
 
+	void Bind(uint32) const;
+	void Unbind() const;
+};
 
 #endif
