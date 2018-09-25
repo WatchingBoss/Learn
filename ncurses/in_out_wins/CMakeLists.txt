@@ -8,7 +8,7 @@ if(!MSVC)
 endif()
 
 add_library( TUI INTERFACE )
-target_link_libraries( TUI INTERFACE -lncurses )
+target_link_libraries( TUI INTERFACE -lncurses -lpthread)
 
 file( GLOB PROG ${PROJECT_SOURCE_DIR}/main.cpp )
 
