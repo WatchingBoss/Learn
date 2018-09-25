@@ -4,6 +4,7 @@
 #include <string>
 #include <cstring>
 #include <vector>
+#include <ctime>
 
 #include <ncurses.h>
 
@@ -54,16 +55,31 @@ void cleanWin(WINDOW *win, int bottom, int top, const win_param &param)
 		mvwaddnstr(win, i, 1, buffer, bufferSize);
 }
 
+void save_current_time(char buffer[], size_t bufferSize)
+{
+	time_t           curTime            = 0;
+	struct tm *      formTime           = NULL;
+
+	time(&curTime);
+	formTime = localtime(&curTime);
+	strftime(buffer, bufferSize, "%H:%M:%S", formTime);
+}
+
 void get_user_input(WINDOW *win, win_param win_p) {
 	const int top_line = 1, bottom_line = win_p.height - 2,
 	          input_line = win_p.height - 4;
 
-	constexpr size_t bufferSize         = 1024;
-	char             buffer[bufferSize] = { 0 };
+	constexpr size_t mesBufferSize = 1024, timeBufferSize = 20,
+	                 bufferSize   = mesBufferSize + timeBufferSize;
+	char mesBuffer[mesBufferSize] = { 0 }, timeBuffer[timeBufferSize] = { 0 },
+	     buffer[bufferSize] = { 0 };
 
 	cleanWin(win, bottom_line, top_line, win_p);
 
-	mvwgetnstr(win, input_line, 1, buffer, bufferSize);
+	mvwgetnstr(win, input_line, 1, mesBuffer, mesBufferSize);
+	save_current_time(timeBuffer, timeBufferSize);
+	snprintf(buffer, bufferSize, "%s >> %s", timeBuffer, mesBuffer);
+
 	inputQueue->push((str_ptr) new std::string(buffer));
 
 	wrefresh(win);
@@ -75,9 +91,8 @@ void show_output(WINDOW *win, win_param win_p) {
 	const int top_line = 3, bottom_line = win_p.height - top_line;
 	int       output_line = win_p.height - 2;
 
-	std::string new_mes;
-	str_ptr     new_mes_ptr  = inputQueue->front();
-	size_t      dispMesCount = 0;
+	str_ptr new_mes      = inputQueue->front();
+	size_t  dispMesCount = 0;
 
 	cleanWin(win, bottom_line, top_line, win_p);
 
