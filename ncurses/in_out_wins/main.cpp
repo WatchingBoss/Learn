@@ -1,12 +1,13 @@
 #include <cstring>
 #include <ctime>
 
+#include <array>
+#include <chrono>
 #include <iostream>
+#include <list>
 #include <memory>
 #include <queue>
 #include <string>
-#include <vector>
-#include <chrono>
 
 #include <mutex>
 #include <thread>
@@ -17,10 +18,10 @@
 
 using str_ptr   = std::shared_ptr<std::string>;
 using str_q_ptr = std::shared_ptr<std::queue<str_ptr>>;
-using str_v_ptr = std::shared_ptr<std::vector<str_ptr>>;
+using str_l_ptr = std::shared_ptr<std::list<str_ptr>>;
 
 str_q_ptr inputQueue(new std::queue<str_ptr>);
-str_v_ptr dispInputs(new std::vector<str_ptr>);
+str_l_ptr dispInputs(new std::list<str_ptr>);
 
 struct win_param {
 	int height, width, starty, startx;
@@ -90,8 +91,6 @@ void get_user_input(WINDOW *win, win_param win_p) {
 
 		inputQueue->push((str_ptr) new std::string(buffer));
 
-		std::this_thread::sleep_for(std::chrono::milliseconds(DELAY));
-
 		wrefresh(win);
 	}
 }
@@ -111,14 +110,13 @@ void show_output(WINDOW *win, win_param win_p) {
 
 		mvwaddnstr(win, output_line, 1, new_mes->c_str(), new_mes->length());
 
-		for (int i = static_cast<int>(dispMesCount - 1); i >= 0; --i) {
-			str_ptr cur_mes = dispInputs->at(i);
-			mvwaddnstr(win, --output_line, 1, cur_mes->c_str(),
-			           cur_mes->length());
-		}
+		mtx.lock();
+		for (str_ptr &s : *dispInputs)
+			mvwaddnstr(win, --output_line, 1, s->c_str(), s->length());
+		mtx.unlock();
 
 		if (dispMesCount >= static_cast<size_t>(bottom_line))
-			dispInputs->erase(dispInputs->begin());
+			dispInputs->pop_front();
 
 		dispInputs->push_back(new_mes);
 		inputQueue->pop();
@@ -129,13 +127,13 @@ void show_output(WINDOW *win, win_param win_p) {
 	}
 }
 
-std::vector<std::thread> define_threads(WINDOW *in, WINDOW *out, win_param in_p,
-                                        win_param out_p) {
-	std::vector<std::thread> ths;
-	std::thread              input(get_user_input, in, in_p);
-	std::thread              output(show_output, out, out_p);
-	ths.push_back(std::move(input));
-	ths.push_back(std::move(output));
+std::array<std::thread, 2> define_threads(WINDOW *in, WINDOW *out,
+                                          win_param in_p, win_param out_p) {
+	std::array<std::thread, 2> ths;
+	std::thread                input(get_user_input, in, in_p);
+	std::thread                output(show_output, out, out_p);
+	ths.at(0) = (std::move(input));
+	ths.at(1) = (std::move(output));
 	return ths;
 }
 
@@ -146,7 +144,7 @@ void prog() {
 	WINDOW *prog_in  = create_new_win(input_win);
 	WINDOW *prog_out = create_new_win(output_win);
 
-	std::vector<std::thread> threads =
+	std::array<std::thread, 2> threads =
 	    define_threads(prog_in, prog_out, input_win, output_win);
 
 	for (std::thread &th : threads)
