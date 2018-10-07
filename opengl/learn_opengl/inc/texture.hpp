@@ -3,12 +3,12 @@
 
 #include "sup.hpp"
 
-typedef enum {PNG, JPEG} eIMG_TYPE;
+typedef enum { PNG, JPEG } eIMG_TYPE;
 
-class Texture
-{
+class Texture {
   private:
 	uint32 m_Renderer;
+
   public:
 	Texture(const char *, eIMG_TYPE);
 	~Texture();
