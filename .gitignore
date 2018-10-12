@@ -1,3 +1,6 @@
 build/
+build*/
 .vs/
 cmake-build*/
+obj/
+bin/
