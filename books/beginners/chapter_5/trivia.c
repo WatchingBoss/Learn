@@ -2,54 +2,45 @@
 #include <stdlib.h>
 #include <time.h>
 
-int sportsQuestion(void);
-int geographyQuestion(void);
+int  sportsQuestion(void);
+int  geographyQuestion(void);
 void pause(int);
 
 int iResponse = 0;
 
-int
-main()
-{
-	do
-	{
+int main() {
+	do {
 		system("clear");
 		printf("\n\tThe Trivia Game\n\n");
 		printf("1\tSports\n");
 		printf("2\tGeography\n");
 		printf("3\tQuit\n");
 		printf("Enter you selection: ");
-		scanf("%d", &iResponse);
+		scanf_s("%d", &iResponse);
 
-		switch(iResponse)
-		{
-			case 1:
-			{
-				if(sportsQuestion() == 4)
+		switch (iResponse) {
+			case 1: {
+				if (sportsQuestion() == 4)
 					puts("Correct");
 				else
 					puts("Incorrect");
 				pause(2);
 			} break;
-			case 2:
-			{
-				if(geographyQuestion() == 2)
+			case 2: {
+				if (geographyQuestion() == 2)
 					puts("Correct");
 				else
 					puts("Incorrect");
-				pause(2);					
+				pause(2);
 			} break;
 		}
 
 	} while (iResponse != 3);
-	
 
-	return(0);
+	return (0);
 }
 
-int
-sportsQuestion()
-{
+int sportsQuestion() {
 	int iAnswer = 0;
 
 	system("clear");
@@ -60,14 +51,12 @@ sportsQuestion()
 	printf("3\tIndiana University\n");
 	printf("4\tFlorida State University\n");
 	printf("\nEnter you selection:  ");
-	scanf("%d", &iAnswer);
+	scanf_s("%d", &iAnswer);
 
-	return(iAnswer);
+	return (iAnswer);
 }
 
-int 
-geographyQuestion()
-{
+int geographyQuestion() {
 	int iAnswer = 0;
 
 	system("clear");
@@ -78,21 +67,18 @@ geographyQuestion()
 	printf("3\tJacksonville\n");
 	printf("4\tMiami\n");
 	printf("\nEnter you selection:  ");
-	scanf("%d", &iAnswer);
+	scanf_s("%d", &iAnswer);
 
-	return(iAnswer);
+	return (iAnswer);
 }
 
-void 
-pause(int inNum)
-{
+void pause(int inNum) {
 	int iCurrentTime = 0;
 	int iElapsedTime = 0;
 
 	iCurrentTime = time(NULL);
 
-	do
-	{
+	do {
 		iElapsedTime = time(NULL);
 	} while (iElapsedTime - iCurrentTime < inNum);
 }
