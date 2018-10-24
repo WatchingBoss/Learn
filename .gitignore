@@ -5,3 +5,5 @@ cmake-build*/
 obj/
 bin/
 target/
+*.sln
+*.csproj
