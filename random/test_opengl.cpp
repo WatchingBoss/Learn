@@ -4,7 +4,7 @@
 #include <GLFW/glfw3.h>
 
 int main(){
-	std::cout << "Works" << std::endl;
+	std::cout << hello << std::endl;
 
 	return 0;
 }
