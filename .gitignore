@@ -7,3 +7,5 @@ bin/
 target/
 *.sln
 *.csproj
+out/
+.idea/
