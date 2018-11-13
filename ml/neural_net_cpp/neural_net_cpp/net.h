@@ -15,6 +15,8 @@ class Net {
 	void BackPropagation( const std::vector<double> & );
 	void GetResults( std::vector<double> & ) const;
 
+	double GetRecentAverageError( ) const { return m_RecentAverageError; }
+
   private:
 	std::vector<Layer> m_Layers;
 

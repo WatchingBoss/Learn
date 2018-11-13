@@ -18,6 +18,7 @@ using Layer = std::vector<Neuron>;
 class Neuron {
   public:
 	Neuron( uint, uint );
+	~Neuron( );
 
 	void   SetOutputVal( double );
 	double GetOutputVal( ) const { return m_OutputVal; }
@@ -43,7 +44,7 @@ class Neuron {
 	static inline double TransferFunctionDerivation( double x ) { return 1. - x * x; }
 
 	static inline uint m_GetRand( ) {
-		std::srand( time( NULL ) );
+		std::srand( static_cast<uint>( time( NULL ) ) );
 		return std::rand( ) % 2;
 	}
 
