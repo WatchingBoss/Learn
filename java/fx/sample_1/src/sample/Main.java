@@ -1,9 +1,9 @@
 package sample;
 
-import sample.core.Window;
-import sample.sandbox.example;
+        import sample.core.Window;
+                import sample.sandbox.example;
 
-import java.awt.Color;
+                import java.awt.Color;
 
 public class Main {
     public static void main(String[] args){
