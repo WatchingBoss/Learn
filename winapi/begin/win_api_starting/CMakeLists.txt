@@ -2,10 +2,6 @@
 
 project ("win")
 
-if(MSVC)
-set( PLATFORM_REQUIRED "user32.lib" )
-endif(MSVC)
-
 file( GLOB PROJECT_SOURCES ${PROJECT_SOURCE_DIR}/*.cpp )
 file( GLOB PROJECT_HEADERS ${PROJECT_SOURCE_DIR}/*.h )
 
