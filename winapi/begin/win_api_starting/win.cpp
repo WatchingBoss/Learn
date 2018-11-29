@@ -6,7 +6,7 @@
 constexpr int MW_WIDHT  = 640;
 constexpr int MW_HEIGHT = 480;
 
-LPCSTR my_class_name = "my_win_class";
+LPCSTR MY_CLASS_NAME = "my_win_class";
 
 static LRESULT CALLBACK myWinProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam ) {
 	switch ( msg ) {
@@ -30,10 +30,10 @@ static WNDCLASSEX myCreateWindowClass( HINSTANCE hInstance ) {
 	wc.hCursor       = LoadCursor( NULL, IDC_ARROW );
 	wc.hbrBackground = ( HBRUSH )( COLOR_WINDOW + 1 );
 	wc.lpszMenuName  = NULL;
-	wc.lpszClassName = my_class_name;
+	wc.lpszClassName = MY_CLASS_NAME;
 	wc.hIconSm       = LoadIcon( NULL, IDI_APPLICATION );
 
-	if ( !RegisterClassEx( &wc ) ) {
+	if ( !RegisterClassExA( &wc ) ) {
 		MessageBox( NULL, "Failed RegisterClassEx", "Error", MB_ICONEXCLAMATION | MB_OK );
 		std::exit( EXIT_FAILURE );
 	}
@@ -46,9 +46,9 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE, LPSTR lpCmdLine, int nCmdSho
 	WNDCLASSEX wc = myCreateWindowClass( hInstance );
 
 	// Create window
-	HWND hwnd = CreateWindowEx( WS_EX_CLIENTEDGE, my_class_name, "Window name",
-	                            WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
-	                            MW_WIDHT, MW_HEIGHT, NULL, NULL, hInstance, NULL );
+	HWND hwnd = CreateWindowExA( WS_EX_CLIENTEDGE, MY_CLASS_NAME, "My window",
+	                             WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
+	                             MW_WIDHT, MW_HEIGHT, NULL, NULL, hInstance, NULL );
 	if ( !hwnd ) {
 		MessageBox( NULL, "Failed CreateWindowEx", "Error", MB_ICONEXCLAMATION | MB_OK );
 		std::exit( EXIT_FAILURE );
@@ -59,9 +59,9 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE, LPSTR lpCmdLine, int nCmdSho
 
 	// Message handling loop
 	MSG msg;
-	while ( GetMessage( &msg, NULL, NULL, NULL ) ) {
+	while ( GetMessageA( &msg, NULL, NULL, NULL ) ) {
 		TranslateMessage( &msg );
-		DispatchMessage( &msg );
+		DispatchMessageA( &msg );
 	}
 
 	return static_cast<int>( msg.wParam );
