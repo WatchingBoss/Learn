@@ -10,6 +10,16 @@ LPCSTR MY_CLASS_NAME = "my_win_class";
 
 static LRESULT CALLBACK myWinProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam ) {
 	switch ( msg ) {
+		case WM_LBUTTONDOWN:
+			MessageBox( NULL, "You pressed left button", "Hello",
+			            MB_OK | MB_ICONINFORMATION );
+			break;
+		case WM_RBUTTONDOWN: {
+			char bufferFileName[MAX_PATH] = { 0 };
+			GetModuleFileName( GetModuleHandleA( 0 ), bufferFileName, MAX_PATH );
+			MessageBox( NULL, bufferFileName, "File name is",
+			            MB_OK | MB_ICONINFORMATION );
+		} break;
 		case WM_CLOSE: DestroyWindow( hwnd ); break;
 		case WM_DESTROY: PostQuitMessage( 0 ); break;
 		default: return DefWindowProc( hwnd, msg, wParam, lParam );
@@ -18,7 +28,7 @@ static LRESULT CALLBACK myWinProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lP
 }
 
 static WNDCLASSEX myCreateWindowClass( HINSTANCE hInstance ) {
-	WNDCLASSEX wc;
+	WNDCLASSEX wc = { 0 };
 
 	wc.cbSize        = sizeof( WNDCLASSEX );
 	wc.style         = 0;
