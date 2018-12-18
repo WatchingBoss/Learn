@@ -12,3 +12,8 @@ if(MSVC)
 add_executable( ${PROJECT_NAME} WIN32 ${PROJECT_SOURCES} ${PROJECT_HEADERS} )
 endif(MSVC)
 #target_link_libraries( ${PROJECT_NAME} )
+
+# Copy resources
+if(MSVC)
+file( COPY ${CMAKE_CURRENT_SOURCE_DIR}/res/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/res/ )
+endif(MSVC)
