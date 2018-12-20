@@ -1,14 +1,25 @@
+#if COMPILE_TIME_RES_DEF
+#include "resource.h"
+#else
 #include "resources.h"
+#endif
 
 #include <iostream>
 
 #include <windows.h>
+
+typedef unsigned int uint;
 
 // Main window dimantions
 constexpr int MW_WIDHT  = 640;
 constexpr int MW_HEIGHT = 480;
 
 constexpr char *MY_CLASS_NAME = "my_win_class";
+
+#ifdef RUN_TIME_RES_DEF
+extern void myAppendMenuRunTime( HWND );
+extern void myLoadImageRunTime( HWND );
+#endif
 
 extern WNDCLASSEX myCreateWindowClass( HINSTANCE );
 extern HWND       myCreateMainWindow( HINSTANCE );
@@ -45,34 +56,12 @@ static LRESULT CALLBACK myWinProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lP
 				case ID_STUFF_GO: myInfoMsg( "File GO string", "You pressed" ); break;
 			}
 			break;
+#ifdef RUN_TIME_RES
 		case WM_CREATE: {
-			HMENU hMenu = CreateMenu( );
-
-			HMENU hSubMenu = CreatePopupMenu( );
-			AppendMenu( hSubMenu, MF_STRING, ID_FILE_EXIT, "E&exit" );
-			AppendMenu( hMenu, MF_STRING | MF_POPUP, (UINT)hSubMenu, "&File" );
-
-			hSubMenu = CreatePopupMenu( );
-			AppendMenu( hSubMenu, MF_STRING, ID_STUFF_GO, "&Go" );
-			AppendMenu( hMenu, MF_STRING | MF_POPUP, (UINT)hSubMenu, "&Stuff" );
-
-			SetMenu( hwnd, hMenu );
-
-			HICON hIconBg = (HICON)LoadImageA( NULL, ICON_ARROW_UP, IMAGE_ICON, 32, 32,
-			                                   LR_LOADFROMFILE );
-			if ( hIconBg )
-				SendMessageA( hwnd, WM_SETICON, ICON_BIG, (LPARAM)hIconBg );
-			else
-				myInfoMsg( "Could not load big image", "Error" );
-
-			HICON hIconSm = (HICON)LoadImageA( NULL, ICON_ARROW_UP, IMAGE_ICON, 16, 16,
-			                                   LR_LOADFROMFILE );
-			if ( hIconSm )
-				SendMessageA( hwnd, WM_SETICON, ICON_SMALL, (LPARAM)hIconSm );
-			else
-				myInfoMsg( "Could not load small image", "Error" );
-
+			myAppendMenuRunTime( hwnd );
+			myLoadImageRunTime( hwnd );
 		} break;
+#endif
 		case WM_LBUTTONDOWN:
 			MessageBox( NULL, "You pressed left button", "Hello",
 			            MB_OK | MB_ICONINFORMATION );
@@ -90,21 +79,55 @@ static LRESULT CALLBACK myWinProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lP
 	return 0;
 }
 
+#ifdef RUN_TIME_RED_DEF
+static void myAppendMenuRunTime( HWND hwnd ) {
+	HMENU hMenu = CreateMenu( );
+
+	HMENU hSubMenu = CreatePopupMenu( );
+	AppendMenu( hSubMenu, MF_STRING, ID_FILE_EXIT, "E&xit" );
+	AppendMenu( hMenu, MF_STRING | MF_POPUP, (UINT)hSubMenu, "File" );
+
+	hSubMenu = CreatePopupMenu( );
+	AppendMenu( hSubMenu, MF_STRING, ID_STUFF_GO, "&Go" );
+	AppendMenu( hMenu, MF_STRING | MF_POPUP, (UINT)hSubMenu, "&Stuff" );
+
+	SetMenu( hwnd, hMenu );
+}
+
+static void myLoadImageRunTime( HWND hwnd ) {
+	HICON hIconBg =
+	    (HICON)LoadImageA( NULL, ICON_ARROW_UP, IMAGE_ICON, 32, 32, LR_LOADFROMFILE );
+	if ( hIconBg )
+		SendMessageA( hwnd, WM_SETICON, ICON_BIG, (LPARAM)hIconBg );
+	else
+		myInfoMsg( "Could not load big image", "Error" );
+
+	HICON hIconSm =
+	    (HICON)LoadImageA( NULL, ICON_ARROW_UP, IMAGE_ICON, 16, 16, LR_LOADFROMFILE );
+	if ( hIconSm )
+		SendMessageA( hwnd, WM_SETICON, ICON_SMALL, (LPARAM)hIconSm );
+	else
+		myInfoMsg( "Could not load small image", "Error" );
+}
+#endif
+
 static WNDCLASSEX myCreateWindowClass( HINSTANCE hInstance ) {
 	WNDCLASSEX wc = { 0 };
 
-	wc.cbSize        = sizeof( WNDCLASSEX );
-	wc.style         = 0;
-	wc.lpfnWndProc   = myWinProc;
-	wc.cbClsExtra    = 0;
-	wc.cbWndExtra    = 0;
-	wc.hInstance     = hInstance;
-	wc.hIcon         = LoadIcon( NULL, IDI_APPLICATION );
-	wc.hCursor       = LoadCursor( NULL, IDC_ARROW );
+	wc.cbSize = sizeof( WNDCLASSEX );
+	//	wc.style         = 0;
+	wc.lpfnWndProc = myWinProc;
+	//	wc.cbClsExtra    = 0;
+	//	wc.cbWndExtra    = 0;
+	wc.hInstance = hInstance;
+	wc.hIcon     = LoadIconA( GetModuleHandleA( NULL ), MAKEINTRESOURCE( IDI_ICON1 ) );
+	wc.hCursor   = LoadCursor( NULL, IDC_ARROW );
 	wc.hbrBackground = ( HBRUSH )( COLOR_WINDOW + 1 );
-	wc.lpszMenuName  = NULL;
+	wc.lpszMenuName  = MAKEINTRESOURCE( IDR_MENU1 );
 	wc.lpszClassName = MY_CLASS_NAME;
-	wc.hIconSm       = LoadIcon( NULL, IDI_APPLICATION );
+	wc.hIconSm =
+	    (HICON)LoadImageA( GetModuleHandleA( NULL ), MAKEINTRESOURCE( IDI_ICON1 ),
+	                       IMAGE_ICON, 16, 16, NULL );
 
 	if ( !RegisterClassExA( &wc ) ) {
 		MessageBox( NULL, "Failed RegisterClassEx", "Error", MB_ICONEXCLAMATION | MB_OK );
