@@ -1,8 +1,4 @@
-#if COMPILE_TIME_RES_DEF
-#include "resource.h"
-#else
 #include "resources.h"
-#endif
 
 #include <iostream>
 
@@ -16,10 +12,8 @@ constexpr int MW_HEIGHT = 480;
 
 constexpr char *MY_CLASS_NAME = "my_win_class";
 
-#ifdef RUN_TIME_RES_DEF
 extern void myAppendMenuRunTime( HWND );
 extern void myLoadImageRunTime( HWND );
-#endif
 
 extern WNDCLASSEX myCreateWindowClass( HINSTANCE );
 extern HWND       myCreateMainWindow( HINSTANCE );
@@ -52,25 +46,27 @@ static LRESULT CALLBACK myWinProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lP
 	switch ( msg ) {
 		case WM_COMMAND:
 			switch ( LOWORD( wParam ) ) {
-				case ID_FILE_EXIT: myInfoMsg( "File exit string", "You pressed" ); break;
-				case ID_STUFF_GO: myInfoMsg( "File GO string", "You pressed" ); break;
+					// Menu -> File
+				case ID_FILE_NEW: myInfoMsg( "New string", "You pressed" ); break;
+				case ID_FILE_OPEN: myInfoMsg( "Open string", "You pressed" ); break;
+				case ID_FILE_EXPORT: myInfoMsg( "Export string", "You pressed" ); break;
+				case ID_FILE_EXIT: DestroyWindow( hwnd ); break;
+				// Menu -> Stuff
+				case ID_STUFF_GO: myInfoMsg( "GO string", "You pressed" ); break;
+				case ID_STUFF_AHEAD: myInfoMsg( "Go ahead string", "You pressed" ); break;
+				// Menu -> Help
+				case ID_HELP_MANUAL: myInfoMsg( "You can read manual", "Help" ); break;
 			}
 			break;
-#ifdef RUN_TIME_RES
 		case WM_CREATE: {
 			myAppendMenuRunTime( hwnd );
 			myLoadImageRunTime( hwnd );
 		} break;
-#endif
-		case WM_LBUTTONDOWN:
-			MessageBox( NULL, "You pressed left button", "Hello",
-			            MB_OK | MB_ICONINFORMATION );
-			break;
+		case WM_LBUTTONDOWN: myInfoMsg( "You pressed left button", "Hello" ); break;
 		case WM_RBUTTONDOWN: {
 			char bufferFileName[MAX_PATH] = { 0 };
 			GetModuleFileNameA( GetModuleHandleA( 0 ), bufferFileName, MAX_PATH );
-			MessageBox( NULL, bufferFileName, "File name is",
-			            MB_OK | MB_ICONINFORMATION );
+			myInfoMsg( bufferFileName, "File name is" );
 		} break;
 		case WM_CLOSE: DestroyWindow( hwnd ); break;
 		case WM_DESTROY: PostQuitMessage( 0 ); break;
@@ -79,17 +75,24 @@ static LRESULT CALLBACK myWinProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lP
 	return 0;
 }
 
-#ifdef RUN_TIME_RED_DEF
 static void myAppendMenuRunTime( HWND hwnd ) {
 	HMENU hMenu = CreateMenu( );
 
 	HMENU hSubMenu = CreatePopupMenu( );
-	AppendMenu( hSubMenu, MF_STRING, ID_FILE_EXIT, "E&xit" );
+	AppendMenu( hSubMenu, MF_STRING, ID_FILE_NEW, "Create new file" );
+	AppendMenu( hSubMenu, MF_STRING, ID_FILE_OPEN, "Open existing file" );
+	AppendMenu( hSubMenu, MF_STRING | MF_GRAYED, ID_FILE_EXPORT, "Export file" );
+	AppendMenu( hSubMenu, MF_STRING, ID_FILE_EXIT, "Exit" );
 	AppendMenu( hMenu, MF_STRING | MF_POPUP, (UINT)hSubMenu, "File" );
 
 	hSubMenu = CreatePopupMenu( );
-	AppendMenu( hSubMenu, MF_STRING, ID_STUFF_GO, "&Go" );
-	AppendMenu( hMenu, MF_STRING | MF_POPUP, (UINT)hSubMenu, "&Stuff" );
+	AppendMenu( hSubMenu, MF_STRING, ID_STUFF_GO, "Go" );
+	AppendMenu( hSubMenu, MF_STRING, ID_STUFF_AHEAD, "Go ahead" );
+	AppendMenu( hMenu, MF_STRING | MF_POPUP, (UINT)hSubMenu, "Stuff" );
+
+	hSubMenu = CreatePopupMenu( );
+	AppendMenu( hSubMenu, MF_STRING, ID_HELP_MANUAL, "Read help manual" );
+	AppendMenu( hMenu, MF_STRING | MF_POPUP, (UINT)hSubMenu, "Help" );
 
 	SetMenu( hwnd, hMenu );
 }
@@ -109,7 +112,6 @@ static void myLoadImageRunTime( HWND hwnd ) {
 	else
 		myInfoMsg( "Could not load small image", "Error" );
 }
-#endif
 
 static WNDCLASSEX myCreateWindowClass( HINSTANCE hInstance ) {
 	WNDCLASSEX wc = { 0 };
@@ -119,18 +121,16 @@ static WNDCLASSEX myCreateWindowClass( HINSTANCE hInstance ) {
 	wc.lpfnWndProc = myWinProc;
 	//	wc.cbClsExtra    = 0;
 	//	wc.cbWndExtra    = 0;
-	wc.hInstance = hInstance;
-	wc.hIcon     = LoadIconA( GetModuleHandleA( NULL ), MAKEINTRESOURCE( IDI_ICON1 ) );
-	wc.hCursor   = LoadCursor( NULL, IDC_ARROW );
+	wc.hInstance     = hInstance;
+	wc.hIcon         = LoadIcon( NULL, IDI_APPLICATION );
+	wc.hCursor       = LoadCursor( NULL, IDC_ARROW );
 	wc.hbrBackground = ( HBRUSH )( COLOR_WINDOW + 1 );
-	wc.lpszMenuName  = MAKEINTRESOURCE( IDR_MENU1 );
+	//	wc.lpszMenuName  = NULL;
 	wc.lpszClassName = MY_CLASS_NAME;
-	wc.hIconSm =
-	    (HICON)LoadImageA( GetModuleHandleA( NULL ), MAKEINTRESOURCE( IDI_ICON1 ),
-	                       IMAGE_ICON, 16, 16, NULL );
+	wc.hIconSm       = LoadIcon( NULL, IDI_APPLICATION );
 
 	if ( !RegisterClassExA( &wc ) ) {
-		MessageBox( NULL, "Failed RegisterClassEx", "Error", MB_ICONEXCLAMATION | MB_OK );
+		myInfoMsg( "Failed RegisterClassEx", "Error" );
 		std::exit( EXIT_FAILURE );
 	}
 
@@ -143,6 +143,7 @@ static HWND myCreateMainWindow( HINSTANCE hInstance ) {
 	                             MW_WIDHT, MW_HEIGHT, NULL, NULL, hInstance, NULL );
 	if ( hwnd ) return hwnd;
 
-	MessageBox( NULL, "Failed CreateWindowEx", "Error", MB_ICONEXCLAMATION | MB_OK );
+	myInfoMsg( "Failed CreateWindowEx", "Error" );
+
 	std::exit( EXIT_FAILURE );
 }
