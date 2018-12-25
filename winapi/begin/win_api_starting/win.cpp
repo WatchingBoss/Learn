@@ -42,6 +42,9 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE, LPSTR lpCmdLine, int nCmdSho
 	return static_cast<int>( msg.wParam );
 }
 
+bool  let_draw         = false;
+POINT cursor_prev_coor = { 0 };
+
 static LRESULT CALLBACK myWinProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam ) {
 	switch ( msg ) {
 		case WM_COMMAND:
@@ -62,7 +65,29 @@ static LRESULT CALLBACK myWinProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lP
 			myAppendMenuRunTime( hwnd );
 			myLoadImageRunTime( hwnd );
 		} break;
-		case WM_LBUTTONDOWN: myInfoMsg( "You pressed left button", "Hello" ); break;
+		case WM_LBUTTONDOWN:
+			let_draw           = true;
+			cursor_prev_coor.x = LOWORD( lParam );
+			cursor_prev_coor.y = HIWORD( lParam );
+			break;
+		case WM_LBUTTONUP:
+			if ( let_draw ) {
+				HDC hdc = GetDC( hwnd );
+				MoveToEx( hdc, cursor_prev_coor.x, cursor_prev_coor.y, NULL );
+				LineTo( hdc, LOWORD( lParam ), HIWORD( lParam ) );
+				ReleaseDC( hwnd, hdc );
+				let_draw = false;
+			}
+			break;
+		case WM_MOUSEMOVE:
+			if ( let_draw ) {
+				HDC hdc = GetDC( hwnd );
+				MoveToEx( hdc, cursor_prev_coor.x, cursor_prev_coor.y, NULL );
+				LineTo( hdc, cursor_prev_coor.x = LOWORD( lParam ),
+				        cursor_prev_coor.y = HIWORD( lParam ) );
+				ReleaseDC( hwnd, hdc );
+			}
+			break;
 		case WM_RBUTTONDOWN: {
 			char bufferFileName[MAX_PATH] = { 0 };
 			GetModuleFileNameA( GetModuleHandleA( 0 ), bufferFileName, MAX_PATH );
