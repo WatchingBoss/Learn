@@ -4,7 +4,7 @@ CFLAGS = -Wall -Wpedantic -Wextra
 CF_INC = `pkg-config --cflags gtk+-3.0`
 CF_LINK = `pkg-config --libs gtk+-3.0`
 
-SRC = 2.c
+SRC = 4.c
 OUT = sample
 
 $(OUT):
