@@ -1,14 +1,19 @@
 CC = gcc
 CFLAGS = -Wall -Wpedantic -Wextra
 
-CF_INC = `pkg-config --cflags gtk+-3.0`
-CF_LINK = `pkg-config --libs gtk+-3.0`
+PKGCONFIG = $(shell which pkg-config)
+CF_INC = $(shell $(PKGCONFIG) --cflags gtk+-3.0)
+CF_LINK = $(shell $(PKGCONFIG) --libs gtk+-3.0)
 
-SRC = app.c
+SRC = app.c example_app.c example_app_win.c
+OBJ = $(SRC:.c=.o)
 OUT = app
 
-$(OUT):
-	$(CC) $(CFLAGS) $(CF_INC) -o $(OUT) $(SRC) $(CF_LINK)
+%.o: %.c
+	$(CC) $(CFLAGS) $(CF_INC) -c -o $(@F) $<
+
+$(OUT): $(OBJ)
+	$(CC) -o $(@F) $(OBJ) $(CF_LINK)
 
 clean:
-	$(RM) *.o $(OUT)
+	$(RM) $(OBJ) $(OUT)
