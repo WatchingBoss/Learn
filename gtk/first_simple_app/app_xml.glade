@@ -4,14 +4,14 @@
   <requires lib="gtk+" version="3.20"/>
   <object class="GtkWindow" id="window">
     <property name="can_focus">False</property>
-    <property name="title" translatable="yes">First app</property>
-    <property name="default_width">400</property>
-    <property name="default_height">400</property>
+    <property name="title" translatable="yes">Example app</property>
+    <property name="default_width">600</property>
+    <property name="default_height">600</property>
     <child>
       <placeholder/>
     </child>
     <child>
-      <object class="GtkBox" id="content box">
+      <object class="GtkBox" id="content_box">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="orientation">vertical</property>

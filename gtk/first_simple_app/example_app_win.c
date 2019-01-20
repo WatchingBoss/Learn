@@ -6,10 +6,13 @@ struct _ExampleAppWindow {
 
 G_DEFINE_TYPE( ExampleAppWindow, example_app_window, GTK_TYPE_APPLICATION_WINDOW );
 
-static void example_app_window_init( ExampleAppWindow *app ) { (void)app; }
+static void example_app_window_init( ExampleAppWindow *app ) {
+	gtk_widget_init_template( GTK_WIDGET( app ) );
+}
 
 static void example_app_window_class_init( ExampleAppWindowClass *win_class ) {
-	(void)win_class;
+	gtk_widget_class_set_template_from_resource( GTK_WIDGET_CLASS( win_class ),
+	                                             "/org/gtk/example_app/app_xml.glade" );
 }
 
 ExampleAppWindow *example_app_window_new( ExampleApp *app ) {
