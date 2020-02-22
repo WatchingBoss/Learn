@@ -22,6 +22,8 @@ namespace LearnWPF
     {
         public MainWindow()
         {
+            ComboBoxColors.ItemsSource = arrayComboBoxColors;
+
             InitializeComponent();
         }
 
@@ -52,5 +54,25 @@ namespace LearnWPF
             TextBlock1.Foreground = Brushes.Blue;
             TextBlock2.Text = "You clicked blue button";
         }
+
+        private readonly String[] arrayComboBoxColors = {"Aqua", "Pink", "Yellow"};
+
+        private void ComboBoxColors_Selected(object sender, RoutedEventArgs e)
+        {
+            int selectedItem = ComboBoxColors.SelectedIndex;
+            switch (selectedItem) {
+                case 0:
+                    TextBlock1.Foreground = Brushes.Aqua;
+                    break;
+                case 1:
+                    TextBlock1.Foreground = Brushes.Pink;
+                    break;
+                case 2:
+                    TextBlock1.Foreground = Brushes.Yellow;
+                    break;
+            }
+            TextBlock2.Text = ComboBoxColors.SelectedItem.ToString();
+        }
     }
+
 }

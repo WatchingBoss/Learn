@@ -4,8 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LearnWPF"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <sys:String x:Key="ResourceString">This is resource string</sys:String>
+    </Window.Resources>
     <Grid Name="MainGrid" MouseUp="MainGrid_MouseUp" MouseDown="MainGrid_MouseDown" Background="LightBlue">
         <WrapPanel>
             <Button Name="RedButton" Click="RedButton_Click" Background="Red">Red</Button>
@@ -18,5 +22,23 @@
         <TextBlock Name="TextBlock2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="50" Margin="0,308,0,0">
             hello
         </TextBlock>
+        <TextBlock Text="{StaticResource ResourceString}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,50,0,0" FontSize="50"></TextBlock>
+
+        <StackPanel HorizontalAlignment="Center">
+            <StackPanel.Resources>
+                <x:Array x:Key="ComboBoxItems" Type="sys:String">
+                    <sys:String>Yellow</sys:String>
+                    <sys:String>Ping</sys:String>
+                    <sys:String>Aqua</sys:String>
+                </x:Array>
+                <LinearGradientBrush x:Key="WindowBackGroundBrush">
+                    <GradientStop Offset="0" Color="Aqua"/>
+                    <GradientStop Offset="1" Color="Bisque"/>
+                </LinearGradientBrush>
+            </StackPanel.Resources>
+
+            <Label>Colors: </Label>
+            <ComboBox Name="ComboBoxColors" Selected="ComboBoxColors_Selected"/>
+        </StackPanel>
     </Grid>
 </Window>
