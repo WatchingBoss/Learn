@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Reflection;
 
 namespace LearnWPF
 {
@@ -22,9 +23,9 @@ namespace LearnWPF
     {
         public MainWindow()
         {
-            ComboBoxColors.ItemsSource = arrayComboBoxColors;
-
             InitializeComponent();
+
+            ComboBoxColors.ItemsSource = new String[]{ "Aqua", "Pink", "Yellow", "Gray", "Cyan" };
         }
 
         private void MainGrid_MouseUp(object sender, MouseButtonEventArgs e)
@@ -55,22 +56,11 @@ namespace LearnWPF
             TextBlock2.Text = "You clicked blue button";
         }
 
-        private readonly String[] arrayComboBoxColors = {"Aqua", "Pink", "Yellow"};
-
-        private void ComboBoxColors_Selected(object sender, RoutedEventArgs e)
+        private void ComboBoxColors_SelectionChanged(object sender, RoutedEventArgs e)
         {
-            int selectedItem = ComboBoxColors.SelectedIndex;
-            switch (selectedItem) {
-                case 0:
-                    TextBlock1.Foreground = Brushes.Aqua;
-                    break;
-                case 1:
-                    TextBlock1.Foreground = Brushes.Pink;
-                    break;
-                case 2:
-                    TextBlock1.Foreground = Brushes.Yellow;
-                    break;
-            }
+            String SelectedItem = ComboBoxColors.SelectedItem.ToString();
+            Type t = typeof(Brushes);
+            TextBlock1.Foreground = (Brush)t.GetProperty(SelectedItem).GetValue(null, null);
             TextBlock2.Text = ComboBoxColors.SelectedItem.ToString();
         }
     }
