@@ -1,0 +1,22 @@
+﻿<Window x:Class="LearnWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LearnWPF"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+    <Grid Name="MainGrid" MouseUp="MainGrid_MouseUp" MouseDown="MainGrid_MouseDown" Background="LightBlue">
+        <WrapPanel>
+            <Button Name="RedButton" Click="RedButton_Click" Background="Red">Red</Button>
+            <Button Name="GreenButton" Click="GreenButton_Click" Background="Green">Green</Button>
+            <Button Name="BlueButton" Click="BlueButton_Click" Background="Blue">Blue</Button>
+        </WrapPanel>
+        <TextBlock Name="TextBlock1" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="60">
+            This is first text!
+        </TextBlock>
+        <TextBlock Name="TextBlock2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="50" Margin="0,308,0,0">
+            hello
+        </TextBlock>
+    </Grid>
+</Window>
