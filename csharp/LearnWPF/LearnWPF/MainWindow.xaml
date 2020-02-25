@@ -12,13 +12,33 @@
             <Button Name="GreenButton" Click="GreenButton_Click" Background="Green">Green</Button>
             <Button Name="BlueButton" Click="BlueButton_Click" Background="Blue">Blue</Button>
         </WrapPanel>
-        <WrapPanel Margin="20,53,0,0">
+        <WrapPanel Margin="10,25,0,0" Orientation="Vertical">
             <Button Name="ButtonMakeError" Content="Push" FontSize="16" Click="ButtonMakeError_Click" />
+            <Button Name="ButtonShowNumber" Content="Number" Click="ButtonShowNumber_Click"/>
+            <Button Name="ButtonShowDate" Content="Date" Click="ButtonShowDate_Click"/>
         </WrapPanel>
-        <TextBlock Name="TextBlock1" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="60">
+
+        <Grid Margin="60, 40, 0, 0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Label FontSize="18">Number: </Label>
+            <Label Name="lblNumber" Grid.Column="1" FontSize="18"/>
+            
+            <Label FontSize="18" Grid.Row="1">Date: </Label>
+            <Label Name="lblDate" Grid.Row="1" Grid.Column="1" FontSize="18"/>
+        </Grid>
+
+        <TextBlock Name="TextBlock1" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="60" Margin="0,259,0,0" RenderTransformOrigin="0.512,-1.002">
             This is first text!
         </TextBlock>
-        <TextBlock Name="TextBlock2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="50" Margin="0,308,0,0">
+        <TextBlock Name="TextBlock2" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="50" Margin="0,348,0,0">
             hello
         </TextBlock>
 

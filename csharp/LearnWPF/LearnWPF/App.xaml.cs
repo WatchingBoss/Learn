@@ -1,5 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Threading;
+using System.Globalization;
+using System.Threading;
 
 namespace LearnWPF
 {
@@ -10,6 +12,8 @@ namespace LearnWPF
     {
         private void MainApp(object sender, StartupEventArgs e)
         {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("ru-Ru");
+
             MainWindow win = new MainWindow();
             win.Show();
         }
