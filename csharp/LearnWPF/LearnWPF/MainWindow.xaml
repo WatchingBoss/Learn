@@ -12,6 +12,9 @@
             <Button Name="GreenButton" Click="GreenButton_Click" Background="Green">Green</Button>
             <Button Name="BlueButton" Click="BlueButton_Click" Background="Blue">Blue</Button>
         </WrapPanel>
+        <WrapPanel Margin="20,53,0,0">
+            <Button Name="ButtonMakeError" Content="Push" FontSize="16" Click="ButtonMakeError_Click" />
+        </WrapPanel>
         <TextBlock Name="TextBlock1" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="60">
             This is first text!
         </TextBlock>
@@ -20,8 +23,8 @@
         </TextBlock>
 
         <StackPanel HorizontalAlignment="Center">
-            <Label>Colors: </Label>
-            <ComboBox Name="ComboBoxColors" SelectionChanged="ComboBoxColors_SelectionChanged"/>
+            <Label>Colors:</Label>
+            <ComboBox Name="ComboBoxColors" SelectionChanged="ComboBoxColors_SelectionChanged" />
         </StackPanel>
     </Grid>
 </Window>

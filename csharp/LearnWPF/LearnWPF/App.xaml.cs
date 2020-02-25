@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
+using System.Windows.Threading;
 
 namespace LearnWPF
 {
@@ -17,6 +12,13 @@ namespace LearnWPF
         {
             MainWindow win = new MainWindow();
             win.Show();
+        }
+
+        private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            MessageBox.Show("Unhandle exception occured: " + e.Exception.Message,
+                "Global exception handling", MessageBoxButton.OK, MessageBoxImage.Warning);
+            e.Handled = true;
         }
     }
 }
