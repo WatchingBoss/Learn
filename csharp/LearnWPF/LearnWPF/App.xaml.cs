@@ -1,7 +1,7 @@
-﻿using System.Windows;
-using System.Windows.Threading;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Threading;
+using System.Windows;
+using System.Windows.Threading;
 
 namespace LearnWPF
 {
@@ -14,7 +14,8 @@ namespace LearnWPF
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("ru-Ru");
 
-            MainWindow win = new MainWindow();
+            //MainWindow win = new MainWindow();
+            SecondWindow win = new SecondWindow();
             win.Show();
         }
 

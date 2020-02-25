@@ -2,7 +2,6 @@
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Globalization;
 
 namespace LearnWPF
 {
@@ -68,10 +67,10 @@ namespace LearnWPF
             }
         }
 
+        private static readonly Random rand = new Random();
+
         private void ButtonShowNumber_Click(object sender, RoutedEventArgs e)
         {
-            var rand = new Random();
-
             lblNumber.Content = (rand.NextDouble() * 5000000).ToString("N1");
         }
 

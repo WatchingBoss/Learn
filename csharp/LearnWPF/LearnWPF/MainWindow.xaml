@@ -14,25 +14,25 @@
         </WrapPanel>
         <WrapPanel Margin="10,25,0,0" Orientation="Vertical">
             <Button Name="ButtonMakeError" Content="Push" FontSize="16" Click="ButtonMakeError_Click" />
-            <Button Name="ButtonShowNumber" Content="Number" Click="ButtonShowNumber_Click"/>
-            <Button Name="ButtonShowDate" Content="Date" Click="ButtonShowDate_Click"/>
+            <Button Name="ButtonShowNumber" Content="Number" Click="ButtonShowNumber_Click" />
+            <Button Name="ButtonShowDate" Content="Date" Click="ButtonShowDate_Click" />
         </WrapPanel>
 
         <Grid Margin="60, 40, 0, 0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="100"/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <Label FontSize="18">Number: </Label>
-            <Label Name="lblNumber" Grid.Column="1" FontSize="18"/>
-            
+            <Label Name="lblNumber" Grid.Column="1" FontSize="18" />
+
             <Label FontSize="18" Grid.Row="1">Date: </Label>
-            <Label Name="lblDate" Grid.Row="1" Grid.Column="1" FontSize="18"/>
+            <Label Name="lblDate" Grid.Row="1" Grid.Column="1" FontSize="18" />
         </Grid>
 
         <TextBlock Name="TextBlock1" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="60" Margin="0,259,0,0" RenderTransformOrigin="0.512,-1.002">
