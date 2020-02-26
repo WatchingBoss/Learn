@@ -7,6 +7,15 @@
         mc:Ignorable="d"
         Title="SecondWindow" Height="450" Width="800" WindowStartupLocation="CenterScreen" FontSize="24">
 
+    <Window.Resources>
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="Padding" Value="10, 4"/>
+        </Style>
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+    </Window.Resources>
+
     <Grid Name="MainGrid" Background="LightGray">
 
         <Grid.ColumnDefinitions>
@@ -36,7 +45,12 @@
             </TextBlock>
         </Label>
         <Label Grid.Row="1" Grid.Column="1">
-
+            <Button Background="Azure" Name="FillTextBoxButton" Click="FillTextBoxButton_Click">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="F:\Pictures\Icons\138544-interaction-assets\png\speech-bubble-3.png" Height="30" Margin="10"/>
+                    <TextBlock>Put all text to TextBox</TextBlock>
+                </StackPanel>
+            </Button>
         </Label>
         <StackPanel Grid.Row="1" Grid.Column="2">
             <Label Content="_Enter text:" Target="{Binding ElementName=tbLabelKeyAccess}"/>

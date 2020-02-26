@@ -35,5 +35,10 @@ namespace LearnWPF
             TextBox txtBox = sender as TextBox;
             GetSelectedText.Text = "Selected: \n" + txtBox.SelectedText;
         }
+
+        private void FillTextBoxButton_Click(object sender, RoutedEventArgs e)
+        {
+            GetSelectedText.Text = tbLabelKeyAccess.Text;
+        }
     }
 }
