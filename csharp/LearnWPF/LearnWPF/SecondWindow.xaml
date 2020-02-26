@@ -7,15 +7,42 @@
         mc:Ignorable="d"
         Title="SecondWindow" Height="450" Width="800" WindowStartupLocation="CenterScreen" FontSize="24">
 
-    <Grid Name="MainGrid" Background="BlueViolet">
+    <Grid Name="MainGrid" Background="LightGray">
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0">hello</TextBlock>
+        <TextBlock Grid.Row="0" Grid.Column="0" TextWrapping="Wrap">
+            This is just a sample text
+        </TextBlock>
+        <TextBlock Grid.Row="0" Grid.Column="1" TextWrapping="Wrap">
+            And here is another text sample
+        </TextBlock>
+        <TextBlock Grid.Row="0" Grid.Column="2" TextWrapping="Wrap">
+            Here is something more
+        </TextBlock>
+
+        <Label Grid.Row="1" Grid.Column="0" BorderThickness="5" BorderBrush="Yellow">
+            <TextBlock Name="txtLabel" TextWrapping="Wrap">
+                This text inside label with board
+            </TextBlock>
+        </Label>
+        <Label Grid.Row="1" Grid.Column="1">
+
+        </Label>
+        <StackPanel Grid.Row="1" Grid.Column="2">
+            <Label Content="_Enter text:" Target="{Binding ElementName=tbLabelKeyAccess}"/>
+            <TextBox Name="tbLabelKeyAccess" TextChanged="tbLabelKeyAccess_TextChanged" GotFocus="tbLabelKeyAccess_GotFocus" AcceptsReturn="True" TextWrapping="Wrap" SpellCheck.IsEnabled="True" Language="en-US" SelectionChanged="tbLabelKeyAccess_SelectionChanged"/>
+            <TextBox Name="GetSelectedText" TextWrapping="Wrap" AcceptsReturn="True" IsReadOnly="True"/>
+        </StackPanel>
+
     </Grid>
 </Window>
