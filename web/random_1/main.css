@@ -1,0 +1,11 @@
+body{
+    background-color: #dfdfdf;
+}
+
+#container{
+    padding: 0 5%;
+}
+
+li{
+    list-style-type: none;
+}
