@@ -7,11 +7,29 @@ namespace SoloLearn
 		static void Main(string[] args)
 		{
 			//Console.WriteLine(ExceptionSample());
-			foreach (int i in InputIntArray())
-			{
-				Console.Write(i + " ");
-			}
+			//foreach (int i in InputIntArray())
+			//{
+			//	Console.Write(i + " ");
+			//}
+
+			GuyFromVK();
 		}
+
+		static void GuyFromVK()
+		{
+			Console.WriteLine("Enter 3 number: ");
+            int[] numbers = InputIntArray();
+			int max = Int32.MinValue, min = Int32.MaxValue;
+            
+            foreach(int number in numbers)
+			{
+				if (number > max) max = number;
+				if (number < min) min = number;
+			}
+
+			Console.WriteLine($"{max} + {min} = {max + min}");
+		}
+
 		static int[] InputIntArray()
 		{
 			string[] arrAllWords = Console.ReadLine().Split(' ');
