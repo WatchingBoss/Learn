@@ -14,3 +14,4 @@ target/
 
 *.sln
 *.csproj
+*.user
