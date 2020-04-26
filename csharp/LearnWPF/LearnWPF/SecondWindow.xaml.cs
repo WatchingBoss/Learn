@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
 namespace LearnWPF
@@ -9,12 +8,20 @@ namespace LearnWPF
     /// </summary>
     public partial class SecondWindow : Window
     {
-
-        private bool FirstFocus = true;
+        private bool FirstFocusTo_tbLabelKeyAccess = true;
 
         public SecondWindow()
         {
             InitializeComponent();
+
+            PrintInTopMiddle();
+        }
+
+        private void PrintInTopMiddle()
+        {
+            object x = 50.5;
+
+            textblock_TopMiddle.Text = $"This is x: {x}";
         }
 
         private void tbLabelKeyAccess_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
@@ -24,10 +31,10 @@ namespace LearnWPF
 
         private void tbLabelKeyAccess_GotFocus(object sender, RoutedEventArgs e)
         {
-            if (!FirstFocus) return;
+            if (!FirstFocusTo_tbLabelKeyAccess) return;
 
             tbLabelKeyAccess.Text = "";
-            FirstFocus = false;
+            FirstFocusTo_tbLabelKeyAccess = false;
         }
 
         private void tbLabelKeyAccess_SelectionChanged(object sender, RoutedEventArgs e)

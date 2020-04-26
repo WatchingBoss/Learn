@@ -9,10 +9,10 @@
 
     <Window.Resources>
         <Style TargetType="{x:Type Button}">
-            <Setter Property="Padding" Value="10, 4"/>
+            <Setter Property="Padding" Value="10, 4" />
         </Style>
         <Style TargetType="{x:Type TextBlock}">
-            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Margin" Value="5" />
         </Style>
     </Window.Resources>
 
@@ -32,11 +32,11 @@
         <TextBlock Grid.Row="0" Grid.Column="0" TextWrapping="Wrap">
             This is just a sample text
         </TextBlock>
-        <TextBlock Grid.Row="0" Grid.Column="1" TextWrapping="Wrap">
+        <TextBlock Grid.Row="0" Grid.Column="1" TextWrapping="Wrap" Name="textblock_TopMiddle">
             And here is another text sample
         </TextBlock>
         <TextBlock Grid.Row="0" Grid.Column="2" TextWrapping="Wrap">
-            Here is something more
+            Here is some more text
         </TextBlock>
 
         <Label Grid.Row="1" Grid.Column="0" BorderThickness="5" BorderBrush="Yellow">
@@ -47,16 +47,15 @@
         <Label Grid.Row="1" Grid.Column="1">
             <Button Background="Azure" Name="FillTextBoxButton" Click="FillTextBoxButton_Click">
                 <StackPanel Orientation="Horizontal">
-                    <Image Source="F:\Pictures\Icons\138544-interaction-assets\png\speech-bubble-3.png" Height="30" Margin="10"/>
+                    <Image Source="F:\Pictures\Icons\138544-interaction-assets\png\speech-bubble-3.png" Height="30" Margin="10" />
                     <TextBlock>Put all text to TextBox</TextBlock>
                 </StackPanel>
             </Button>
         </Label>
         <StackPanel Grid.Row="1" Grid.Column="2">
-            <Label Content="_Enter text:" Target="{Binding ElementName=tbLabelKeyAccess}"/>
-            <TextBox Name="tbLabelKeyAccess" TextChanged="tbLabelKeyAccess_TextChanged" GotFocus="tbLabelKeyAccess_GotFocus" AcceptsReturn="True" TextWrapping="Wrap" SpellCheck.IsEnabled="True" Language="en-US" SelectionChanged="tbLabelKeyAccess_SelectionChanged"/>
-            <TextBox Name="GetSelectedText" TextWrapping="Wrap" AcceptsReturn="True" IsReadOnly="True"/>
+            <Label Content="_Enter text:" Target="{Binding ElementName=tbLabelKeyAccess}" />
+            <TextBox Name="tbLabelKeyAccess" TextChanged="tbLabelKeyAccess_TextChanged" GotFocus="tbLabelKeyAccess_GotFocus" AcceptsReturn="True" TextWrapping="Wrap" SpellCheck.IsEnabled="True" Language="en-US" SelectionChanged="tbLabelKeyAccess_SelectionChanged" />
+            <TextBox Name="GetSelectedText" TextWrapping="Wrap" AcceptsReturn="True" IsReadOnly="True" />
         </StackPanel>
-
     </Grid>
 </Window>
