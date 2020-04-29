@@ -17,4 +17,4 @@ target/
 *.user
 
 package-lock.json
-node_moduls/
+node_modules/
