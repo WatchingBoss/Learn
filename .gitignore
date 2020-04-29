@@ -15,3 +15,6 @@ target/
 *.sln
 *.csproj
 *.user
+
+package-lock.json
+node_moduls/
