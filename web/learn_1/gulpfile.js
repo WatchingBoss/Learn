@@ -1,47 +1,83 @@
 const gulp = require("gulp");
 const sass = require("gulp-sass");
 const pug = require("gulp-pug");
+const del = require("del");
 const browser_sync = require("browser-sync").create();
 
-const SASS_SRC = "src/sass/**/*.+(sass|scss)";
-const PUG_SRC = "src/**/*.pug";
-const JS_SRC = "src/script/**/*.js";
+// const settings = {
+//     clean: true,
+//     scripts: true,
+//     polyfills: false,
+//     styles: true,
+//     svgs: false,
+//     copy: false,
+//     reload: true
+// };
 
-gulp.task("sass", function(){
-    return gulp.src(SASS_SRC)
-        .pipe(sass())
-        .pipe(gulp.dest("build/css"))
-        .pipe(browser_sync.reload({
-            stream: true
-        }));
-});
+const paths = {
+    input: "src/",
+    output: "dist/",
+    scripts: {
+      input: "src/scripts/**/*.js",
+      output: "dist/scripts/"
+    },
+    styles: {
+        input: "src/sass/**/*.sass",
+        output: "dist/css/"
+    },
+    pug: {
+        input: "src/**/*.pug",
+        output: "dist/",
+    },
+    reload: "./dist"
+};
 
-gulp.task("pug", function(){
-    return gulp.src(PUG_SRC)
-        .pipe(pug())
-        .pipe(gulp.dest("build/"))
-        .pipe(browser_sync.reload({
-            stream: true
-        }));
-});
-
-gulp.task("js", function(){
-    return gulp.src(JS_SRC)
-        .pipe(gulp.dest("build/script"))
-        .pipe(browser_sync.reload({
-            stream: true
-        }));
-});
-
-gulp.task("browser_sync", function(){
+function browserSync(done){
     browser_sync.init({
-        server: {
-            baseDir: "build"
-        }
-    })
-});
+        server:{ baseDir: paths.reload },
+        port: 8555
+    });
+    done();
+}
 
-gulp.task("watch", gulp.series(["pug", "sass", "js", "browser_sync"]), function(){
-    gulp.watch(PUG_SRC, gulp.series(["pug"]));
-    gulp.watch(SASS_SRC, gulp.series(["sass"]));
-});
+function browserSyncReload(done){
+    browser_sync.reload();
+    done();
+}
+
+function sassTask(){
+    return gulp.src(paths.styles.input)
+        .pipe(sass())
+        .pipe(gulp.dest(paths.styles.output))
+        .pipe(browser_sync.stream());
+}
+
+function pugTask(){
+    return gulp.src(paths.pug.input)
+        .pipe(pug())
+        .pipe(gulp.dest(paths.pug.output))
+        .pipe(browser_sync.stream());
+}
+
+function scriptTask(){
+    return gulp.src(paths.scripts.input)
+        .pipe(gulp.dest(paths.scripts.output))
+        .pipe(browser_sync.stream());
+}
+
+function clean(){
+    return del([paths.output]);
+}
+
+function watchTask(){
+    gulp.watch(paths.pug.input, pugTask);
+    gulp.watch(paths.styles.input, sassTask);
+    gulp.watch(paths.scripts.input, scriptTask);
+}
+
+const build = gulp.series(clean, gulp.parallel(pugTask, sassTask, scriptTask));
+const watch = gulp.parallel(watchTask, browserSync);
+
+exports.build = build;
+exports.watch = watch;
+exports.default = build;
