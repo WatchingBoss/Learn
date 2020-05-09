@@ -4,6 +4,5 @@
              xmlns:local="clr-namespace:Let_go"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
     </Application.Resources>
 </Application>
