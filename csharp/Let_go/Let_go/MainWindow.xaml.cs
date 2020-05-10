@@ -13,10 +13,15 @@ namespace Let_go
         }
 
         private void PrintOutput() {
-            Learning FirstInstance = new Learning();
-            FirstInstance.RefreshTime();
-            tbTopLeft.Text = $"Date and time:\n{FirstInstance.CurrentDateTime}\n" +
-                $"All ticks:\n{FirstInstance.CurrentTicks}";
+            
+        }
+
+        private void DisplayTime() {
+            // TODO Update using Disparcher
+            TimeUsing TimeInst = new TimeUsing();
+            TimeInst.RefreshTime();
+            tbTopLeft.Text = $"Date:\n{TimeInst.CurrentDateTime}\n" +
+                $"Ticks:\n{TimeInst.CurrentTicks}";
         }
     }
 }

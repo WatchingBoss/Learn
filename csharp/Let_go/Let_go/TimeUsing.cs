@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Windows.Controls;
 
 namespace Let_go
 {
-    internal class Learning : ILearning {
+    internal class TimeUsing : ITimeUsing
+    {
         private DateTime _Time;
 
-        public Learning() {
+        public TimeUsing() {
             _Time = DateTime.Now;
         }
 
@@ -19,9 +21,9 @@ namespace Let_go
         public long CurrentTicks {
             get => _currentTicks = _Time.Ticks;
         }
-    }
+    } 
 
-    internal interface ILearning
+    internal interface ITimeUsing
     {
         string CurrentDateTime {
             get;
