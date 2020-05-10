@@ -1,0 +1,46 @@
+@import "vars";
+
+// Tags
+
+body {
+  font-family: "Microsoft New Tai Lue", monospace;
+  background-color: $background-color;
+}
+
+p {
+  font-size: 18px;
+  color: $text-color-1;
+}
+
+ol {
+  color: $list-colors;
+}
+
+ul {
+  color: $list-colors;
+}
+
+// Classes
+
+.container {
+  padding: 0 15% 0 5%;
+}
+
+.article {
+  margin: 3em 0;
+}
+
+.header {
+  text-align: center;
+  color: $text-color-2;
+}
+
+.h1-header {
+  font-size: 34px;
+}
+
+.h2-header {
+  font-size: 28px;
+}
+
+// IDs
