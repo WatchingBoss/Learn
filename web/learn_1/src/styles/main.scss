@@ -7,6 +7,20 @@ body {
   background-color: $background-color;
 }
 
+h1 h2 h3 h4 h5 h6 {
+  align-content: center;
+  text-align: center;
+  color: $text-color-2;
+}
+
+h1{
+  font-size: 34px;
+}
+
+h2{
+  font-size: 28px;
+}
+
 p {
   font-size: 18px;
   color: $text-color-1;
@@ -28,19 +42,6 @@ ul {
 
 .article {
   margin: 3em 0;
-}
-
-.header {
-  text-align: center;
-  color: $text-color-2;
-}
-
-.h1-header {
-  font-size: 34px;
-}
-
-.h2-header {
-  font-size: 28px;
 }
 
 // IDs
