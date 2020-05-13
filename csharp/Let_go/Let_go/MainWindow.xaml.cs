@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Windows.Media;
 using System;
+using System.Windows.Markup;
 
 namespace Let_go
 {
@@ -14,7 +15,21 @@ namespace Let_go
         }
 
         private void PrintOutput() {
-            usingPatternMatchingInSwitch( );
+            
+        }
+
+        private void usingSwitchExpression( ) {
+            object[] values = new object[] { 3, 4.5, 11};
+            string message = string.Empty;
+            foreach(var value in values)
+                message += value switch {
+                int thisInt when thisInt > 10 => $"{thisInt} is int and greater then 10\n",
+                int thisInt when thisInt <= 10 => $"{thisInt} is int and less or equal 10\n",
+                Double thisDouble => $"{thisDouble} is double\n",
+                _ => "This is default value\n"
+            };
+
+            tbTopLeft.Text = message;
         }
 
         private void usingPatternMatchingInSwitch( ) {
