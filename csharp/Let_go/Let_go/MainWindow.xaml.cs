@@ -1,8 +1,7 @@
 ﻿using System.Windows;
-using System.Threading;
-using System.Windows.Media;
 using System;
-using System.Windows.Markup;
+using System.Diagnostics;
+using System.IO;
 
 namespace Let_go
 {
@@ -11,14 +10,23 @@ namespace Let_go
         public MainWindow() {
             InitializeComponent();
 
+            Trace.Listeners.Add( new TextWriterTraceListener(File.CreateText("log.txt")) );
+            Trace.AutoFlush = true;
+
             PrintOutput();
         }
 
         private void PrintOutput() {
-            
+            Debug.WriteLine( "Calling PrintOutput()");
+            usingSwitchExpression( );
         }
 
+/// <summary>
+/// Sample using Switch Expression
+/// </summary>
         private void usingSwitchExpression( ) {
+            Debug.WriteLine( "Call usingSwitchExpression()");
+
             object[] values = new object[] { 3, 4.5, 11};
             string message = string.Empty;
             foreach(var value in values)
@@ -29,9 +37,10 @@ namespace Let_go
                 _ => "This is default value\n"
             };
 
+            Debug.WriteLine( "Assign message to tbTopLeft.Text" );
             tbTopLeft.Text = message;
         }
-
+        
         private void usingPatternMatchingInSwitch( ) {
             byte integral_8_bits = Byte.MaxValue;
             short integral_16_bits = Int16.MaxValue;
