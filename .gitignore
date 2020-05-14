@@ -14,7 +14,6 @@ res/
 target/
 
 *.sln
-*.csproj
 *.user
 
 package-lock.json
