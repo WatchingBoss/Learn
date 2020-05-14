@@ -2,31 +2,45 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using Microsoft.Extensions.Configuration;
 
 namespace Let_go
 {
     public partial class MainWindow : Window
     {
+        TraceSwitch ts;
+
         public MainWindow() {
             InitializeComponent();
 
-            Trace.Listeners.Add( new TextWriterTraceListener(File.CreateText("log.txt")) );
+            Trace.Listeners.Add( new TextWriterTraceListener(File.CreateText("log.txt")));
             Trace.AutoFlush = true;
+
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+            IConfigurationRoot configuration = builder.Build();
+
+            ts = new TraceSwitch(
+                displayName: "mySwitch",
+                description: "Switch via JSON file"
+                );
+
+            configuration.GetSection( "mySwitch" ).Bind( ts );
 
             PrintOutput();
         }
 
         private void PrintOutput() {
-            Debug.WriteLine( "Calling PrintOutput()");
+            Trace.WriteLineIf( ts.TraceInfo, "Trace: Call PrintOutput()");
             usingSwitchExpression( );
+            Trace.WriteLineIf( ts.TraceInfo, "Trace: usingSwitchExpression() returned" );
         }
 
-/// <summary>
-/// Sample using Switch Expression
-/// </summary>
+        /// <summary>
+        /// Sample using Switch Expression
+        /// </summary>
         private void usingSwitchExpression( ) {
-            Debug.WriteLine( "Call usingSwitchExpression()");
-
             object[] values = new object[] { 3, 4.5, 11};
             string message = string.Empty;
             foreach(var value in values)
@@ -37,7 +51,6 @@ namespace Let_go
                 _ => "This is default value\n"
             };
 
-            Debug.WriteLine( "Assign message to tbTopLeft.Text" );
             tbTopLeft.Text = message;
         }
         
