@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using Microsoft.Extensions.Configuration;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace Let_go
 {
@@ -33,8 +34,7 @@ namespace Let_go
 
         private void PrintOutput() {
             Trace.WriteLineIf( ts.TraceInfo, "Trace: Call PrintOutput()");
-            usingSwitchExpression( );
-            Trace.WriteLineIf( ts.TraceInfo, "Trace: usingSwitchExpression() returned" );
+            
         }
 
         /// <summary>
