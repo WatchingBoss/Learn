@@ -1,9 +1,12 @@
-﻿using System.Windows;
+﻿/// core
+using System.Windows;
 using System;
 using System.Diagnostics;
 using System.IO;
+/// third part
 using Microsoft.Extensions.Configuration;
-using System.Runtime.InteropServices.WindowsRuntime;
+/// my
+using FirstLibrary;
 
 namespace Let_go
 {
@@ -14,6 +17,9 @@ namespace Let_go
         public MainWindow() {
             InitializeComponent();
 
+            ///
+            // Configure Trace.Listener and TraceSwitch
+            ///
             Trace.Listeners.Add( new TextWriterTraceListener(File.CreateText("log.txt")));
             Trace.AutoFlush = true;
 
@@ -28,13 +34,57 @@ namespace Let_go
                 );
 
             configuration.GetSection( "mySwitch" ).Bind( ts );
+            /// 
+            // Done Trace configuration
+            ///
 
             PrintOutput();
         }
 
         private void PrintOutput() {
             Trace.WriteLineIf( ts.TraceInfo, "Trace: Call PrintOutput()");
-            
+
+
+        }
+
+        /// <summary>
+        /// Using indexer
+        /// </summary>
+        private void usingIndexer( ) {
+            Trace.WriteLineIf( ts.TraceInfo, "Calling List members through indexer");
+
+            Person person = new Person("David", "Mitchel", 23);
+            person.Children.Add(new Person("Sam", "Mitchel", 5));
+            person.Children.Add(new Person("Mark", "Mitchel", 4));
+
+            string info = $"{person[0].FirstName} :\t{person[0].Age}\n";
+            info += $"{person[1].FirstName} : \t{person[1].Age}\n";
+
+            tbTopLeft.Text = info;
+        }
+        /// <summary>
+        /// Sample of using tuple
+        /// </summary>
+        private void usingTuple( ) {
+            Person person = new Person("Jon", "Romeras", 32);
+
+            Trace.WriteLineIf(ts.TraceInfo, "Calling tuple sample");
+            // Explicite type definition
+            ///(string fname, string lname, int age) personInfo = person.GetInfo();
+            var personInfo = person.GetInfo();
+
+            tbTopLeft.Text = $"First name: {personInfo.fname}\n" +
+                $"Last name: {personInfo.lname}\n" +
+                $"Age: {personInfo.age}";
+
+            Trace.WriteLineIf( ts.TraceInfo, "Deconstructing tuple");
+            // Tuple deconstructing
+            (string firstName, string lastName, int age) = personInfo;
+            tbTopLeft.Text += $"\n\nSame after deconstructing tuple\n\n" +
+                $"{firstName}\n" +
+                $"{lastName}\n" +
+                $"{age}";
+
         }
 
         /// <summary>
