@@ -44,7 +44,26 @@ namespace Let_go
         private void PrintOutput() {
             Trace.WriteLineIf( ts.TraceInfo, "Trace: Call PrintOutput()");
 
+            workWithPersonClass( );
+        }
 
+        private void workWithPersonClass( ) {
+            APerson david = new APerson{ Name = "David", DateOfBirth = new DateTime(1995, 3, 6)};
+            APerson kate  = new APerson {Name = "Kate",  DateOfBirth = new DateTime(1996, 4, 15)};
+            APerson molly = new APerson {Name = "Molly", DateOfBirth = new DateTime(1994, 2, 28)};
+
+            APerson baby1 = APerson.Procreate( david, kate);
+            APerson baby2 = david.ProcreateWith(molly);
+            APerson baby3 = david * molly;
+
+            string getPersonInfo( APerson p ) =>
+                $"{p.Name} has {p.Children.Count} {(p.Children.Count == 1 ? "child" : "children")}\n";
+
+            string output = getPersonInfo(david) + getPersonInfo(kate) + getPersonInfo(molly);
+            foreach ( var child in david.Children )
+                output += $"\n{david.Children.IndexOf(child) + 1}) {child.Name}";
+
+            tbTopLeft.Text = output;
         }
 
         /// <summary>
