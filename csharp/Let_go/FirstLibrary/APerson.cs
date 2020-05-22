@@ -7,6 +7,9 @@ namespace FirstLibrary
 {
     public class APerson
     {
+        public delegate void logProcreateHandler( APerson p1, APerson p2);
+        public static logProcreateHandler logProcreate;
+
         public string Name;
         public DateTime DateOfBirth;
         public List<APerson> Children = new List<APerson>();
@@ -16,6 +19,8 @@ namespace FirstLibrary
 
             p1.Children.Add(baby);
             p2.Children.Add(baby);
+
+            logProcreate?.Invoke( p1, p2);
 
             return baby;
         }

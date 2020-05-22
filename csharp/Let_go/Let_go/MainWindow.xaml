@@ -19,6 +19,6 @@
         </Grid.RowDefinitions>
 
         <TextBlock Text="Left Text" Name="tbTopLeft" Grid.Row="0" Grid.Column="0" TextWrapping="Wrap" />
-        <TextBlock Text="Right Text" Name="tbTopRight" Grid.Row="0" Grid.Column="1" TextWrapping="Wrap" />
+        <TextBlock Text="Right Text" Name="tbTopRight" Grid.Row="0" Grid.Column="1" TextWrapping="Wrap" Foreground="BlueViolet"/>
     </Grid>
 </Window>
