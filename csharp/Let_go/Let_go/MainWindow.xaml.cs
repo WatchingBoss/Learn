@@ -3,12 +3,13 @@ using FirstLibrary;
 
 /// third part
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Diagnostics;
-using System.IO;
 
 /// core
+using System;
 using System.Windows;
+using System.Diagnostics;
+using System.IO;
+using System.Collections.Immutable;
 
 namespace Let_go
 {
@@ -44,7 +45,33 @@ namespace Let_go
         private void PrintOutput( ) {
             Trace.WriteLineIf(ts.TraceInfo, "Trace: Call PrintOutput()");
 
-            workWithPersonClass( );
+            workWithInterfacesImplementation( );
+        }
+
+        /// <summary>
+        /// Implementing interfaces in APerson class
+        /// </summary>
+        private void workWithInterfacesImplementation( ) {
+            Trace.WriteLineIf( ts.TraceInfo, "Trace: Call workWithInterfacesImplementation");
+
+            APerson[] people = { 
+                new APerson {Name = "Simon"},
+                new APerson {Name = "Kate"},
+                new APerson {Name = "Nora"},
+                new APerson {Name = "Yalgur"},
+                new APerson {Name = "Antonio"}
+            };
+
+            string concatNames(APerson[] people) {
+                string result = "";
+                foreach ( APerson p in people )
+                    result += $"{p.Name}\n";
+                return result;
+            };
+
+            tbTopLeft.Text = "Before sort:\n" + concatNames(people);
+            Array.Sort(people);
+            tbTopRight.Text = "After sort:\n" + concatNames(people);
         }
 
         /// <summary>
