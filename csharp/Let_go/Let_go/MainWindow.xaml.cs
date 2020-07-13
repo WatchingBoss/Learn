@@ -72,6 +72,14 @@ namespace Let_go
             tbTopLeft.Text = "Before sort:\n" + concatNames(people);
             Array.Sort(people);
             tbTopRight.Text = "After sort:\n" + concatNames(people);
+            Array.Sort(people, new APersonCompare());
+            tbTopRight.Text += "\nAfter Length sort:\n" + concatNames(people);
+
+            var dayly = people[1] as IDaylyLife;
+            string daylyLifeLog = $"{dayly.WakeUp()}\n";
+            daylyLifeLog += $"{dayly.Sleep()}\n";
+
+            tbTopLeft.Text += "\n" + daylyLifeLog;
         }
 
         /// <summary>

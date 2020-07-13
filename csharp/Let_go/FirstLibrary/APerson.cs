@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FirstLibrary
 {
-    public class APerson: IComparable<APerson>
+    public class APerson: IComparable<APerson>, IDaylyLife
     {
         public delegate void logProcreateHandler( APerson p1, APerson p2);
         public static logProcreateHandler logProcreate;
@@ -38,5 +38,31 @@ namespace FirstLibrary
         public int CompareTo( [AllowNull] APerson other ) {
             return Name.CompareTo(other.Name);
         }
+
+        public string WakeUp( ) => $"{Name} waked up";
+        public string Sleep( ) => $"{Name} is sleeping";
+    }
+
+    public class APersonCompare: IComparer<APerson>
+    {
+        public int Compare( APerson x, APerson y ) {
+            int result = x.Name.Length.CompareTo(y.Name.Length);
+
+            if ( result == 0 )
+                return x.Name.CompareTo(y.Name);
+
+            return result;
+        }
+    }
+
+    /// <summary>
+    /// Defien interface with(out) default implementation of methods
+    /// </summary>
+    public interface IDaylyLife
+    {
+        // WakeUp has no default implementation
+        string WakeUp( );
+        // Sleep has default implementation
+        string Sleep( ) => "Person has gotten sleep";
     }
 }
