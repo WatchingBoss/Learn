@@ -10,6 +10,7 @@ using System.Windows;
 using System.Diagnostics;
 using System.IO;
 using System.Collections.Immutable;
+using System.Text.RegularExpressions;
 
 namespace Let_go
 {
@@ -45,7 +46,37 @@ namespace Let_go
         private void PrintOutput( ) {
             Trace.WriteLineIf(ts.TraceInfo, "Trace: Call PrintOutput()");
 
-            managingMemory( );
+            workWithCasting( );
+        }
+
+        /// <summary>
+        /// Casting
+        /// </summary>
+        private void workWithCasting( ) {
+            Runner r1 = new Runner("John", new DateTime(1994, 4, 18), 15, 80);
+            if ( r1 is APerson ) {
+                APerson p1 = r1;
+                tbTopLeft.Text += $"\n{p1.StringToWrite()}\n";
+            }
+
+            APerson p2 = new APerson();
+            p2.Name = "Kate";
+            p2.DateOfBirth = new DateTime(1985, 11, 23);
+
+            Runner r2 = p2 as Runner;
+
+            if ( r2 != null )
+                tbTopLeft.Text += $"\n{r2.Name} was born at {r2.DateOfBirth}\n";
+            else
+                tbTopLeft.Text += "p2 couldn't be cast to Runner type";
+        }
+        
+        private void usingClassWithInheritance( ) {
+            Trace.WriteLineIf(ts.TraceInfo, "Trace: Call usingClassWithInheritance()");
+
+            Runner r1 = new Runner("John", new DateTime(1995, 3, 15), 10, 50);
+            tbTopLeft.Text = r1.ResultToString( );
+            tbTopRight.Text = r1.StringToWrite( );
         }
 
         /// <summary>
