@@ -45,7 +45,39 @@ namespace Let_go
         private void PrintOutput( ) {
             Trace.WriteLineIf(ts.TraceInfo, "Trace: Call PrintOutput()");
 
-            workWithInterfacesImplementation( );
+            workWithGenerics( );
+        }
+
+        /// <summary>
+        /// Generics sample
+        /// </summary>
+        private void workWithGenerics( ) {
+            GenericSample<int> intSample = new GenericSample<int>();
+            GenericSample<string> strSample = new GenericSample<string>();
+
+            int oneInt = 55;
+            string oneStr = "Hello";
+
+            intSample.Data = 55;
+            strSample.Data = "Potato";
+
+            tbTopLeft.Text = $"{oneInt} and {intSample.Data} are {intSample.IsSameTo(oneInt)}\n";
+            tbTopLeft.Text += $"{oneStr} and {strSample.Data} are {strSample.IsSameTo(oneStr)}\n";
+
+            int first = 6;
+            string second = "16";
+            byte third = 32;
+            short forth = 86;
+            long fifth = 985;
+            double sixth = 54.12;
+
+            tbTopRight.Text =
+                $"Square of {first,-8} is {SimpleMath.Square<int>(first):N0}\n" +
+                $"Square of {second,-8} is {SimpleMath.Square<string>(second):N0}\n" +
+                $"Square of {third,-8} is {SimpleMath.Square<byte>(third):N0}\n" +
+                $"Square of {forth,-8} is {SimpleMath.Square<short>(forth):N0}\n" +
+                $"Square of {fifth,-8} is {SimpleMath.Square<long>(fifth):N0}\n" +
+                $"Square of {sixth,-8} is {SimpleMath.Square<double>(sixth):N2}\n";
         }
 
         /// <summary>
