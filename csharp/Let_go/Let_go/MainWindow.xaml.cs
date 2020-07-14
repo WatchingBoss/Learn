@@ -66,6 +66,10 @@ namespace Let_go
 
             // Call Dispose to deallocate resourses
             m2.Dispose( );
+
+            using (ManageMemory m3 = new ManageMemory( ) ) {
+                tbTopRight.Text = "m3 instance will be deallocated then";
+            }
         }
 
         /// <summary>
