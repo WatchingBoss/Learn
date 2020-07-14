@@ -45,7 +45,27 @@ namespace Let_go
         private void PrintOutput( ) {
             Trace.WriteLineIf(ts.TraceInfo, "Trace: Call PrintOutput()");
 
-            workWithGenerics( );
+            managingMemory( );
+        }
+
+        /// <summary>
+        /// Using strung
+        /// Using Dispase() and "using" statement
+        /// </summary>
+        private void managingMemory( ) {
+            Trace.WriteLineIf(ts.TraceInfo, "Trace: Call managingMemory()");
+
+            MyVector v1 = new MyVector(2, -3);
+            MyVector v2 = new MyVector(4, 7);
+            MyVector v3 = v1 + v2;
+
+            tbTopLeft.Text = $"{v1.ToString()} + {v2.ToString()} = {v3.ToString()}";
+
+            ManageMemory m1 = new ManageMemory();
+            ManageMemory m2 = new ManageMemory();
+
+            // Call Dispose to deallocate resourses
+            m2.Dispose( );
         }
 
         /// <summary>
