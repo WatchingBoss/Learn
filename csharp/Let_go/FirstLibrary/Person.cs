@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace FirstLibrary
 {
-    public class Person {
+    public class Person
+    {
         private string _firstName, _lastName;
         private int _age;
         private List<Person> _children;
@@ -16,9 +16,9 @@ namespace FirstLibrary
         /// <summary>
         /// Using Indexer
         /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
-        public Person this [int index]{
+        /// <param name="index"> </param>
+        /// <returns> </returns>
+        public Person this[int index] {
             get => Children[index];
             set => Children[index] = value;
         }
@@ -26,7 +26,7 @@ namespace FirstLibrary
         /// <summary>
         /// Constractor for Person class
         /// </summary>
-        public Person( string fname, string lname, int age) {
+        public Person( string fname, string lname, int age ) {
             _firstName = fname;
             _lastName = lname;
             _age = age;

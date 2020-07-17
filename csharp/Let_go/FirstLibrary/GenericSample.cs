@@ -20,7 +20,7 @@ namespace FirstLibrary
 
     static public class SimpleMath
     {
-        static public double Square<T>(T x ) 
+        static public double Square<T>( T x )
             where T : IConvertible {
             double number = x.ToDouble(Thread.CurrentThread.CurrentCulture);
             return number * number;

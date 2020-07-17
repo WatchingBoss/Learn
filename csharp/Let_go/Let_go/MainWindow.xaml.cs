@@ -6,11 +6,11 @@ using Microsoft.Extensions.Configuration;
 
 /// core
 using System;
-using System.Windows;
 using System.Diagnostics;
 using System.IO;
-using System.Collections.Immutable;
-using System.Text.RegularExpressions;
+using System.Windows;
+using System.Net;
+using System.Net.NetworkInformation;
 
 namespace Let_go
 {
@@ -46,17 +46,60 @@ namespace Let_go
         private void PrintOutput( ) {
             Trace.WriteLineIf(ts.TraceInfo, "Trace: Call PrintOutput()");
 
-            workWithCasting( );
+        }
+        private void tbutTopRight_Click( object sender, RoutedEventArgs e ) {
+            workWithNetResources( );
+        }
+
+        private void workWithNetResources( ) {
+            Trace.WriteLineIf(ts.TraceInfo, "Trace: Call workWithCommonDotNetTypes()");
+
+            string inputURL = tboxTopLeft.Text, 
+                outputServerInfo = "", outputServerPing = "";
+
+            if ( string.IsNullOrWhiteSpace(inputURL) )
+                inputURL = "https://google.com";
+
+            Uri uri = new Uri(inputURL);
+
+            outputServerInfo = 
+                inputURL + '\n' + 
+                uri.Scheme + '\n' + 
+                uri.Port + '\n' + 
+                uri.Host + '\n' + 
+                uri.AbsolutePath + '\n' + 
+                uri.Query + '\n';
+
+            IPHostEntry entry = Dns.GetHostEntry(uri.Host);
+            outputServerInfo += $"{entry.HostName} has following IP adresses: \n";
+            foreach ( IPAddress address in entry.AddressList )
+                outputServerInfo += $"{address} \n";
+
+            try {
+                Ping ping = new Ping();
+                PingReply reply = ping.Send(uri.Host);
+                outputServerPing = $"Status: {reply.Status}\n";
+
+                if ( reply.Status == IPStatus.Success )
+                    outputServerPing += $"Reply from {reply.Address} took {reply.RoundtripTime}ms\n";
+            } catch (Exception ex) {
+                outputServerPing = $"{ex.GetType().ToString()} says: {ex.Message}";
+            }
+
+            tbTopLeft.Text = outputServerInfo;
+            tbTopRight.Text = outputServerPing;
         }
 
         /// <summary>
         /// Casting
         /// </summary>
         private void workWithCasting( ) {
+            Trace.WriteLineIf(ts.TraceInfo, "Trace: Call workWithCasting()");
+
             Runner r1 = new Runner("John", new DateTime(1994, 4, 18), 15, 80);
             if ( r1 is APerson ) {
                 APerson p1 = r1;
-                tbTopLeft.Text += $"\n{p1.StringToWrite()}\n";
+                tbTopLeft.Text += $"\n{p1.StringToWrite( )}\n";
             }
 
             APerson p2 = new APerson();
@@ -70,7 +113,7 @@ namespace Let_go
             else
                 tbTopLeft.Text += "p2 couldn't be cast to Runner type";
         }
-        
+
         private void usingClassWithInheritance( ) {
             Trace.WriteLineIf(ts.TraceInfo, "Trace: Call usingClassWithInheritance()");
 
@@ -80,8 +123,7 @@ namespace Let_go
         }
 
         /// <summary>
-        /// Using strung
-        /// Using Dispase() and "using" statement
+        /// Using strung Using Dispase() and "using" statement
         /// </summary>
         private void managingMemory( ) {
             Trace.WriteLineIf(ts.TraceInfo, "Trace: Call managingMemory()");
@@ -90,7 +132,7 @@ namespace Let_go
             MyVector v2 = new MyVector(4, 7);
             MyVector v3 = v1 + v2;
 
-            tbTopLeft.Text = $"{v1.ToString()} + {v2.ToString()} = {v3.ToString()}";
+            tbTopLeft.Text = $"{v1.ToString( )} + {v2.ToString( )} = {v3.ToString( )}";
 
             ManageMemory m1 = new ManageMemory();
             ManageMemory m2 = new ManageMemory();
@@ -98,7 +140,7 @@ namespace Let_go
             // Call Dispose to deallocate resourses
             m2.Dispose( );
 
-            using (ManageMemory m3 = new ManageMemory( ) ) {
+            using ( ManageMemory m3 = new ManageMemory( ) ) {
                 tbTopRight.Text = "m3 instance will be deallocated then";
             }
         }
@@ -139,9 +181,9 @@ namespace Let_go
         /// Implementing interfaces in APerson class
         /// </summary>
         private void workWithInterfacesImplementation( ) {
-            Trace.WriteLineIf( ts.TraceInfo, "Trace: Call workWithInterfacesImplementation");
+            Trace.WriteLineIf(ts.TraceInfo, "Trace: Call workWithInterfacesImplementation");
 
-            APerson[] people = { 
+            APerson[] people = {
                 new APerson {Name = "Simon"},
                 new APerson {Name = "Kate"},
                 new APerson {Name = "Nora"},
@@ -149,7 +191,7 @@ namespace Let_go
                 new APerson {Name = "Antonio"}
             };
 
-            string concatNames(APerson[] people) {
+            string concatNames( APerson[] people ) {
                 string result = "";
                 foreach ( APerson p in people )
                     result += $"{p.Name}\n";
@@ -159,12 +201,12 @@ namespace Let_go
             tbTopLeft.Text = "Before sort:\n" + concatNames(people);
             Array.Sort(people);
             tbTopRight.Text = "After sort:\n" + concatNames(people);
-            Array.Sort(people, new APersonCompare());
+            Array.Sort(people, new APersonCompare( ));
             tbTopRight.Text += "\nAfter Length sort:\n" + concatNames(people);
 
             var dayly = people[1] as IDaylyLife;
             string daylyLifeLog = $"{dayly.WakeUp()}\n";
-            daylyLifeLog += $"{dayly.Sleep()}\n";
+            daylyLifeLog += $"{dayly.Sleep( )}\n";
 
             tbTopLeft.Text += "\n" + daylyLifeLog;
         }
@@ -178,7 +220,7 @@ namespace Let_go
 
             APerson.logProcreate += ( APerson p1, APerson p2 )
                 => bornAlert += $"{DateTime.Now.TimeOfDay}\n";
-            APerson.logProcreate += ( APerson p1, APerson p2) 
+            APerson.logProcreate += ( APerson p1, APerson p2 )
                 => bornAlert += $"{++bornNumber}) {p1.Name} and {p2.Name} made a baby\n";
 
             APerson david = new APerson {Name = "David", DateOfBirth = new DateTime(1995, 3, 6)};
