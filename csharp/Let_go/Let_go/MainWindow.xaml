@@ -20,7 +20,7 @@
 
         <StackPanel>
             <TextBox Name="tboxTopLeft" Grid.Row="0" Grid.Column="0"/>
-            <Button Content="Get info about host of URL" Name="tbutTopRight" Grid.Row="0" Grid.Column="0" 
+            <Button Content="Our button" Name="tbutTopRight" Grid.Row="0" Grid.Column="0" 
                     Click="tbutTopRight_Click"/>
         </StackPanel>
         <TextBlock Text="Left Text" Name="tbTopLeft" Grid.Row="1" Grid.Column="0" TextWrapping="Wrap" />

@@ -11,6 +11,7 @@ using System.IO;
 using System.Windows;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Text;
 
 namespace Let_go
 {
@@ -48,9 +49,30 @@ namespace Let_go
 
         }
         private void tbutTopRight_Click( object sender, RoutedEventArgs e ) {
-            workWithNetResources( );
+
+            workWithFiles( );
         }
      
+        private void workWithFiles( ) {
+            Trace.WriteLineIf(ts.TraceInfo, "Trace: Call workWithFiles()");
+
+            string path = Path.Combine(Environment.CurrentDirectory, "workWithFiles.dat");
+            string input = tboxTopLeft.Text;
+
+            tbTopLeft.Text = $"Wrote data:\n" +
+                $"{input}\n" +
+                $"Length of string: {input.Length}";
+
+            using (StreamWriter sw = File.AppendText(path) ) {
+                sw.WriteLine( input );
+            }
+
+            using (StreamReader sr = File.OpenText(path)) { 
+                tbTopRight.Text = $"Size of file \"{path}\" is {new FileInfo(path).Length} bytes\n" +
+                    $"Content of file:\n\n" +
+                    $"{sr.ReadToEnd()}";
+            }
+        }
 
         private void workWithNetResources( ) {
             Trace.WriteLineIf(ts.TraceInfo, "Trace: Call workWithCommonDotNetTypes()");
