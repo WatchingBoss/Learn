@@ -50,6 +50,7 @@ namespace Let_go
         private void tbutTopRight_Click( object sender, RoutedEventArgs e ) {
             workWithNetResources( );
         }
+     
 
         private void workWithNetResources( ) {
             Trace.WriteLineIf(ts.TraceInfo, "Trace: Call workWithCommonDotNetTypes()");
@@ -60,7 +61,14 @@ namespace Let_go
             if ( string.IsNullOrWhiteSpace(inputURL) )
                 inputURL = "https://google.com";
 
-            Uri uri = new Uri(inputURL);
+            Uri uri = default(Uri);
+
+            try {
+                uri = new Uri(inputURL);
+            } catch ( Exception ex ) {
+                MessageBox.Show($"{ex.GetType( ).ToString( )}: {ex.Message}");
+                return;
+            }
 
             outputServerInfo = 
                 inputURL + '\n' + 
@@ -70,7 +78,13 @@ namespace Let_go
                 uri.AbsolutePath + '\n' + 
                 uri.Query + '\n';
 
-            IPHostEntry entry = Dns.GetHostEntry(uri.Host);
+            IPHostEntry entry = new IPHostEntry();
+            try {
+                entry = Dns.GetHostEntry(uri.Host);
+            } catch(Exception ex) {
+                MessageBox.Show($"{ex.GetType().ToString()}: {ex.Message}");
+            }
+
             outputServerInfo += $"{entry.HostName} has following IP adresses: \n";
             foreach ( IPAddress address in entry.AddressList )
                 outputServerInfo += $"{address} \n";
