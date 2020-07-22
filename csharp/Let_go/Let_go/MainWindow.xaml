@@ -18,11 +18,28 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <StackPanel>
-            <TextBox Name="tboxTopLeft" Grid.Row="0" Grid.Column="0"/>
-            <Button Content="Our button" Name="tbutTopRight" Grid.Row="0" Grid.Column="0" 
-                    Click="tbutTopRight_Click"/>
+        <StackPanel Grid.Row="0" Grid.Column="0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBox Name="tboxTopLeft" Grid.Column="0" TextWrapping="Wrap"/>
+                <TextBox Name="tboxTopLeft2" Grid.Column="1"/>
+            </Grid>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Content="Write" Name="tbutTopLeft1" Click="tbutTopLeft1_Click" Grid.Column="0"/>
+                <Button Content="Read" Name="tbutTopLeft2" Click="tbutTopLeft2_Click" Grid.Column="1"/>
+            </Grid>
         </StackPanel>
+        
         <TextBlock Text="Left Text" Name="tbTopLeft" Grid.Row="1" Grid.Column="0" TextWrapping="Wrap" />
         <TextBlock Text="Right Text" Name="tbTopRight" Grid.Row="1" Grid.Column="1" TextWrapping="Wrap" Foreground="BlueViolet" />
     </Grid>

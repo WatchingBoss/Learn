@@ -12,12 +12,15 @@ using System.Windows;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Text;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 
 namespace Let_go
 {
     public partial class MainWindow : Window
     {
         private TraceSwitch ts;
+        private readonly string textFilePath = Path.Combine(Environment.CurrentDirectory, "textFile.txt");
 
         public MainWindow( ) {
             InitializeComponent( );
@@ -48,11 +51,54 @@ namespace Let_go
             Trace.WriteLineIf(ts.TraceInfo, "Trace: Call PrintOutput()");
 
         }
-        private void tbutTopRight_Click( object sender, RoutedEventArgs e ) {
-
-            workWithFiles( );
+        private void tbutTopLeft1_Click( object sender, RoutedEventArgs e ) {
+            saveEncryptedText( );
         }
-     
+        private void tbutTopLeft2_Click( object sender, RoutedEventArgs e ) {
+            readEncryptedText( );
+        }
+
+        private void saveEncryptedText( ) {
+            string inputText = tboxTopLeft.Text;
+            string password = tboxTopLeft2.Text;
+
+            cleanTextBoxes( );
+
+            string encryptText = Protector.Encrypt(inputText, password);
+
+            using (StreamWriter sw = File.CreateText(textFilePath) ) {
+                sw.Write( encryptText );
+            }
+
+            tbTopLeft.Text = $"Enctypted text to record: \n" +
+                $"{encryptText}";
+        }
+
+        private void readEncryptedText( ) {
+            string encryptText;
+            string password = tboxTopLeft2.Text;
+
+            cleanTextBoxes();
+
+            using (StreamReader sr = File.OpenText(textFilePath) ) {
+                encryptText = sr.ReadToEnd();
+            }
+
+            try {
+                string outputText = Protector.Dectypt(encryptText, password);
+                tbTopRight.Text = $"Decrypted text from file {new FileInfo(textFilePath).Name}: \n" +
+                    $"{outputText}";
+            } catch (CryptographicException ex) {
+                MessageBox.Show( $"Wrong password\n" +
+                    $"{ex.Message}" );
+                return;
+            } catch ( Exception ex ) {
+                MessageBox.Show( $"{ex.GetType().Name} says: \n" +
+                    $"{ex.Message}");
+                return;
+            }
+        }
+
         private void workWithFiles( ) {
             Trace.WriteLineIf(ts.TraceInfo, "Trace: Call workWithFiles()");
 
@@ -391,6 +437,11 @@ namespace Let_go
             TimeInst.RefreshTime( );
             tbTopLeft.Text = $"Date:\n{TimeInst.CurrentDateTime}\n" +
                 $"Ticks:\n{TimeInst.CurrentTicks}";
+        }
+        
+        private void cleanTextBoxes( ) {
+            tboxTopLeft.Clear( );
+            tboxTopLeft2.Clear( );
         }
     }
 }
