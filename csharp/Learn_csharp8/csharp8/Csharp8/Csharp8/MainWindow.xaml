@@ -1,0 +1,50 @@
+﻿<Window x:Class="Csharp8.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Csharp8"
+        mc:Ignorable="d"
+        Title="My Cool Learn Program" Height="720" Width="980"
+        FontSize="14px" Background="#FFA0A0A2">
+
+    <Window.Resources>
+        <Style x:Key="myLabelStyle" TargetType="{x:Type Label}">
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#FF111111"/>
+        </Style>
+        <Style x:Key="myTextBoxStyle" TargetType="{x:Type TextBox}">
+            <Setter Property="Foreground" Value="#FF111111"/>
+        </Style>
+        <Style x:Key="myButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="Foreground" Value="#FF111111"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.Resources>
+            <Style BasedOn="{StaticResource myLabelStyle}" TargetType="{x:Type Label}"/>
+            <Style BasedOn="{StaticResource myTextBoxStyle}" TargetType="{x:Type TextBox}"/>
+            <Style BasedOn="{StaticResource myButtonStyle}" TargetType="{x:Type Button}"/>
+        </Grid.Resources>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Grid.Column="0">
+            <Label Content="Number to get factorial" Target="{Binding ElementName=Input_1}"/>
+            <TextBox Name="Input_1" Text="Type int" PreviewMouseLeftButtonDown="Input_1_PreviewMouseLeftButtonDown"/>
+
+            <Label Content="Result of factorial" Target="{Binding ElementName=Output_1}"/>
+            <TextBox Name="Output_1" Text="Place for result"/>
+
+            <Button Name="Button_1" Content="Get result" Click="Button_1_Clik" Width="100px"/>
+        </StackPanel>
+    </Grid>
+</Window>
