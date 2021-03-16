@@ -43,13 +43,12 @@ namespace Csharp8
 
         private void Button_1_Clik(object sender, RoutedEventArgs e)
         {
-            if(!int.TryParse(Input_1.Text, out int x))
+            if(UInt32.TryParse(Input_1.Text, out UInt32 x))
             {
-                UInt32 number = Convert.ToUInt32(Input_1.Text);
-                UInt32 factorial = GetFactorial(number);
+                UInt32 factorial = GetFactorial(x);
 
                 if (factorial == 0)
-                    MessageBox.Show($"The factorial of {number} is greater then max value of uint32, {UInt32.MaxValue}");
+                    MessageBox.Show($"The factorial of {x} is greater then max value of uint32, {UInt32.MaxValue}");
                 else
                     Output_1.Text = factorial.ToString();
             }
