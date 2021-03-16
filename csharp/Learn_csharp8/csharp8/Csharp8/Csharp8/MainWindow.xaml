@@ -31,20 +31,27 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Grid.Column="0">
-            <Label Content="Number to get factorial" Target="{Binding ElementName=Input_1}"/>
-            <TextBox Name="Input_1" Text="Type int" PreviewMouseLeftButtonDown="Input_1_PreviewMouseLeftButtonDown"/>
+            <Label Content="Input field" Target="{Binding ElementName=Input_1}"/>
+            <TextBox Name="Input_1" Text="Type here" PreviewMouseLeftButtonDown="Input_1_PreviewMouseLeftButtonDown"/>
 
-            <Label Content="Result of factorial" Target="{Binding ElementName=Output_1}"/>
-            <TextBox Name="Output_1" Text="Place for result"/>
+            <Label Content="Output field" Target="{Binding ElementName=Output_1}"/>
+            <TextBox Name="Output_1" Text="Result"/>
 
             <Button Name="Button_1" Content="Get result" Click="Button_1_Clik" Width="100px"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="0" Grid.Column="1">
+            <TextBox Name="InputTemp" PreviewMouseLeftButtonDown="InputTemp_PreviewMouseLeftButtonDown" PreviewKeyUp="InputTemp_PreviewKeyUp"/>
+            <TextBlock Name="TextBlock_1"/>
         </StackPanel>
     </Grid>
 </Window>

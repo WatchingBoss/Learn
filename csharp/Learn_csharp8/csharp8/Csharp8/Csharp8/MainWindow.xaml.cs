@@ -25,13 +25,25 @@ namespace Csharp8
             InitializeComponent();
         }
 
+        
+
+        /// <summary>
+        /// Use simplifine of switch statement frome C# 8.0
+        /// </summary>
+        private void SimpleSwitchWithPatternMatching(double x)
+        {
+            TextBlock_1.Text = x switch
+            { 
+                double when x > 36.4 & x < 36.8 => "It's perfect temperature",
+                double when x < 36 => "You have too low temperature",
+                double when x > 37 => "You have too high temperature",
+                _ => "Your temperature is fine"
+            };
+        }
+
         private void Button_1_Clik(object sender, RoutedEventArgs e)
         {
-            if(Input_1.Text.Equals("Type int"))
-            {
-                MessageBox.Show("You should type number to the input box!");
-            }
-            else
+            if(!int.TryParse(Input_1.Text, out int x))
             {
                 UInt32 number = Convert.ToUInt32(Input_1.Text);
                 UInt32 factorial = GetFactorial(number);
@@ -41,9 +53,13 @@ namespace Csharp8
                 else
                     Output_1.Text = factorial.ToString();
             }
+            else
+            {
+                MessageBox.Show("You should type number to the input box!");
+            }
         }
 
-        private UInt32 GetFactorial(uint x)
+        private UInt32 GetFactorial(UInt32 x)
         {
             if (x == 1) return 1;
             
@@ -53,6 +69,19 @@ namespace Csharp8
         private void Input_1_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Input_1.Text = string.Empty;
+        }
+
+        private void InputTemp_PreviewKeyUp(object sender, KeyEventArgs e)
+        {
+            if (double.TryParse(InputTemp.Text, out double result))
+            {
+                SimpleSwitchWithPatternMatching(result);
+            }
+        }
+
+        private void InputTemp_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            InputTemp.Text = string.Empty;
         }
     }
 }
