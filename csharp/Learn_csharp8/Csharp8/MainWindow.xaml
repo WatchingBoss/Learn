@@ -15,9 +15,12 @@
         </Style>
         <Style x:Key="myTextBoxStyle" TargetType="{x:Type TextBox}">
             <Setter Property="Foreground" Value="#FF111111"/>
+            <Setter Property="Margin" Value="2, 1"/>
         </Style>
         <Style x:Key="myButtonStyle" TargetType="{x:Type Button}">
             <Setter Property="Foreground" Value="#FF111111"/>
+            <Setter Property="Padding" Value="5, 2"/>
+            <Setter Property="Margin" Value="1, 2"/>
         </Style>
     </Window.Resources>
 
@@ -53,5 +56,65 @@
             <TextBox Name="InputTemp" PreviewMouseLeftButtonDown="InputTemp_PreviewMouseLeftButtonDown" PreviewKeyUp="InputTemp_PreviewKeyUp"/>
             <TextBlock Name="TextBlock_1"/>
         </StackPanel>
+
+        <TextBlock Text="Person and Bank Accoutn application" 
+                   Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                   TextAlignment="Center" FontSize="16px" FontWeight="ExtraBlack" />
+
+        <StackPanel Grid.Row="2" Grid.Column="0">
+            <ComboBox Name="cbPeopleList" SelectionChanged="cbPeopleList_SelectionChanged" SelectedIndex="0">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <Grid Margin="5px">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="" Name="tbPersonName"/>
+                    <TextBlock Text="" Name="tbPersonAge"/>
+                    <TextBlock Text="" Name="tbPersonBirthday"/>
+                    <TextBlock Text="" Name="tbPersonBankAccountBalance"/>
+                </StackPanel>
+                
+                <StackPanel Grid.Column="1">
+                    <TextBox Name="tboxPersonBankAccountMoneyChange"/>
+                    <DockPanel HorizontalAlignment="Center">
+                        <Button Content="Income" Name="btBankAccountIncome" Click="btBankAccountIncome_Click"/>
+                        <Button Content="Withdraw" Name="btBankAccountWithdraw" Click="btBankAccountWithdraw_Click"/>
+                    </DockPanel>
+                </StackPanel>
+            </Grid>
+
+            <Button Content="Save to file" HorizontalAlignment="Left" Name="btSaveToFile" Click="btSaveToFile_Click"/>
+        </StackPanel>
+        
+        <StackPanel Grid.Row="2" Grid.Column="1">
+            <StackPanel>
+                <Label Content="New name" Target="{Binding ElementName=tboxPersonNewName}"/>
+                <TextBox Name="tboxPersonNewName"/>
+
+                <Label Content="New birthday" Target="{Binding ElementName=dpBirthdayForm}"/>
+                <DockPanel HorizontalAlignment="Left" Name="dpBirthdayForm">
+                    <Label Content="Day" Target="{Binding ElementName=tboxPersonNewBirthdayDay}"/>
+                    <TextBox Name="tboxPersonNewBirthdayDay" MinWidth="60"/>
+
+                    <Label Content="Month" Target="{Binding ElementName=tboxPersonNewBirthdayMonth}"/>
+                    <TextBox Name="tboxPersonNewBirthdayMonth" MinWidth="60"/>
+                    
+                    <Label Content="Year" Target="{Binding ElementName=tboxPersonNewBirthdayYear}"/>
+                    <TextBox Name="tboxPersonNewBirthdayYear" MinWidth="60"/>
+                </DockPanel>
+
+                <Button Content="Add new Person" HorizontalAlignment="Right" Name="btAddNewPerson" Click="btAddNewPerson_Click"/>
+            </StackPanel>
+        </StackPanel>
+        
     </Grid>
 </Window>
