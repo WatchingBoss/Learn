@@ -29,27 +29,12 @@ namespace Csharp8
             dataDirectoryPath = Path.Combine(Directory.GetCurrentDirectory(), "data");
             PeopleListFilePathBinary = Path.Combine(dataDirectoryPath, "PeopleList.bin");
             PeopleListFilePathJSON = Path.Combine(dataDirectoryPath, "PeopleList.json");
+            BankAppInit();
 
-            if (!Directory.Exists(dataDirectoryPath))
-            {
-                Directory.CreateDirectory(dataDirectoryPath);
-            }
 
-            if (File.Exists(PeopleListFilePathBinary))
-            {
-                using (Stream stream = File.Open(PeopleListFilePathBinary, FileMode.Open))
-                {
-                    var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-                    PeopleList = (List<Person>)binaryFormatter.Deserialize(stream);
-                }
-            }
-            else
-            {
-                PeopleList = new List<Person>();
-            }
-
-            cbPeopleList.ItemsSource = PeopleList;
         }
+
+        
 
         //
         // Person and BankAccount application
@@ -162,7 +147,28 @@ namespace Csharp8
                 binaryFormatter.Serialize(stream, PeopleList);
             }
         }
+        private void BankAppInit()
+        {
+            if (!Directory.Exists(dataDirectoryPath))
+            {
+                Directory.CreateDirectory(dataDirectoryPath);
+            }
 
+            if (File.Exists(PeopleListFilePathBinary))
+            {
+                using (Stream stream = File.Open(PeopleListFilePathBinary, FileMode.Open))
+                {
+                    var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                    PeopleList = (List<Person>)binaryFormatter.Deserialize(stream);
+                }
+            }
+            else
+            {
+                PeopleList = new List<Person>();
+            }
+
+            cbPeopleList.ItemsSource = PeopleList;
+        }
         // End of Person and BankAccount application
         //
 
