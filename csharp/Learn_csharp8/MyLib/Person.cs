@@ -5,7 +5,7 @@ using System.Text;
 namespace MyLib
 {
     [Serializable]
-    public class Person
+    public class Person : IComparable<Person>
     {
         private int age;
         private readonly string name;
@@ -23,6 +23,14 @@ namespace MyLib
             this.birthday = birthday;
             age = DateTime.Today.Subtract(birthday).Days / 365;
             this.ba = new BankAccount(name);
+        }
+
+        public int CompareTo(Person other)
+        {
+            if (this.Name == null && other.Name == null) return 0;
+            else if (this.Name == null) return -1;
+            else if (other.Name == null) return 1;
+            else return this.Name.CompareTo(other.Name);
         }
     }
 }

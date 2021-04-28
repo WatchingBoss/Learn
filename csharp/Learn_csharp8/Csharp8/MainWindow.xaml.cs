@@ -34,8 +34,6 @@ namespace Csharp8
 
         }
 
-        
-
         //
         // Person and BankAccount application
 
@@ -89,13 +87,7 @@ namespace Csharp8
                 name = tboxPersonNewName.Text;
 
                 PeopleList.Add(new Person(name, new DateTime(year, month, day)));
-                PeopleList.Sort(delegate(Person p1, Person p2)
-                {
-                    if (p1.Name == null && p2.Name == null) return 0;
-                    else if (p1.Name == null) return -1;
-                    else if (p2.Name == null) return 1;
-                    else return p1.Name.CompareTo(p2.Name);
-                });
+                PeopleList.Sort();
             }
             catch (ArgumentException ex)
             {
