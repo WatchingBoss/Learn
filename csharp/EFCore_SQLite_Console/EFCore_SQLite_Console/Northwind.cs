@@ -29,6 +29,11 @@ namespace EFCore_SQLite_Console
 
             modelBuilder.Entity<Product>()
                 .HasQueryFilter(p => !p.Discontinued);
+
+            modelBuilder.Entity<Product>()
+                .HasOne<Category>(p => p.Category)
+                .WithMany(c => c.Products)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

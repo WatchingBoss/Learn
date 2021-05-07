@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +23,7 @@ namespace EFCore_SQLite_Console
                     "1. Add new Product\n" +
                     "2. List Products\n" +
                     "3. Increase Product\'s cost\n" +
+                    "4. Delete Products\n" +
                     "Escape to exit");
 
                 key = Console.ReadKey().Key;
@@ -53,6 +55,13 @@ namespace EFCore_SQLite_Console
                     decimal inputAmount = decimal.Parse(Console.ReadLine());
 
                     IncreasePrice(inputName, inputAmount);
+                }
+                else if(key == ConsoleKey.D4)
+                {
+                    Console.WriteLine("\nEnter name\'s first letters");
+                    int deleted = DeleteProduct(Console.ReadLine());
+                    string prod = deleted == 1 ? "product" : "products";
+                    Console.WriteLine($"{deleted} {prod} were deleted");
                 }
                 else
                 {
@@ -88,6 +97,20 @@ namespace EFCore_SQLite_Console
                 updateProd.Cost += amount;
 
                 return (db.SaveChanges() == 1);
+            }
+        }
+
+        private static int DeleteProduct(string name)
+        {
+            using(var db = new Northwind())
+            {
+                IEnumerable<Product> prods = db.Products
+                    .Where(p => p.ProductName.StartsWith(name));
+
+                db.Products.RemoveRange(prods);
+
+                int affected = db.SaveChanges();
+                return affected;
             }
         }
 
