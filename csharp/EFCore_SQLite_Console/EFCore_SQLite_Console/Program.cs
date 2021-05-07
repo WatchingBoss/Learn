@@ -16,18 +16,19 @@ namespace EFCore_SQLite_Console
             //QueryingWithLike();
 
             ConsoleKey key = ConsoleKey.A;
-            while (key != ConsoleKey.D3 && key != ConsoleKey.Escape)
+            while (key != ConsoleKey.Escape)
             {
-                Console.WriteLine($"Menu:\n" +
-                    $"1. Add new Product\n" +
-                    $"2. List Products\n" +
-                    $"3. Exit");
+                Console.WriteLine("Menu:\n" +
+                    "1. Add new Product\n" +
+                    "2. List Products\n" +
+                    "3. Increase Product\'s cost\n" +
+                    "Escape to exit");
 
                 key = Console.ReadKey().Key;
 
                 if(key == ConsoleKey.D1)
                 {
-                    Console.WriteLine($"\nEnter CategoryID, ProductName, Price - separate with space \' \'");
+                    Console.WriteLine("\nEnter CategoryID, ProductName, Price - separate with space \' \'");
                     string[] input = Console.ReadLine().Split(' ');
 
                     int id = int.Parse(input[0]);
@@ -44,9 +45,14 @@ namespace EFCore_SQLite_Console
                 {
                     ListProducts();
                 }
-                else if(key != ConsoleKey.D3 && key != ConsoleKey.Escape)
+                else if(key == ConsoleKey.D3)
                 {
-                    break;
+                    Console.WriteLine("\nEnter name\'s first letters");
+                    string inputName = Console.ReadLine();
+                    Console.WriteLine("\nEnter amount to increase cost");
+                    decimal inputAmount = decimal.Parse(Console.ReadLine());
+
+                    IncreasePrice(inputName, inputAmount);
                 }
                 else
                 {
@@ -55,14 +61,14 @@ namespace EFCore_SQLite_Console
             }
         }
 
-        private static bool AddProduct(int categoryID, string productName, decimal? price)
+        private static bool AddProduct(int id, string name, decimal? price)
         {
             using(var db = new Northwind())
             {
                 Product newProduct = new Product
                 {
-                    CategoryID = categoryID,
-                    ProductName = productName,
+                    CategoryID = id,
+                    ProductName = name,
                     Cost = price,
                     Stock = 1
                 };
@@ -71,6 +77,17 @@ namespace EFCore_SQLite_Console
 
                 int affected = db.SaveChanges();
                 return (affected == 1);
+            }
+        }
+
+        private static bool IncreasePrice(string name, decimal amount)
+        {
+            using(var db = new Northwind())
+            {
+                Product updateProd = db.Products.First(p => p.ProductName.StartsWith(name));
+                updateProd.Cost += amount;
+
+                return (db.SaveChanges() == 1);
             }
         }
 
