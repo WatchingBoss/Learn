@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace EFCore_SQLite_Console
 {
@@ -104,13 +105,18 @@ namespace EFCore_SQLite_Console
         {
             using(var db = new Northwind())
             {
-                IEnumerable<Product> prods = db.Products
-                    .Where(p => p.ProductName.StartsWith(name));
+                using (IDbContextTransaction t = db.Database.BeginTransaction())
+                {
+                    Console.WriteLine($"Transaction isolation level: {t.GetDbTransaction().IsolationLevel}");
 
-                db.Products.RemoveRange(prods);
+                    IEnumerable<Product> prods = db.Products
+                        .Where(p => p.ProductName.StartsWith(name));
 
-                int affected = db.SaveChanges();
-                return affected;
+                    db.Products.RemoveRange(prods);
+
+                    int affected = db.SaveChanges();
+                    return affected;
+                }
             }
         }
 
