@@ -30,8 +30,6 @@ namespace Csharp8
             PeopleListFilePathBinary = Path.Combine(dataDirectoryPath, "PeopleList.bin");
             PeopleListFilePathJSON = Path.Combine(dataDirectoryPath, "PeopleList.json");
             BankAppInit();
-
-
         }
 
         //

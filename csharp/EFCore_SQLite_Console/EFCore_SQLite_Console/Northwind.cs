@@ -25,6 +25,9 @@ namespace EFCore_SQLite_Console
             modelBuilder.Entity<Product>()
                 .Property(p => p.Cost)
                 .HasConversion<double>();
+
+            modelBuilder.Entity<Product>()
+                .HasQueryFilter(p => !p.Discontinued);
         }
     }
 }
