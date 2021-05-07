@@ -11,9 +11,80 @@ namespace EFCore_SQLite_Console
     {
         static void Main(string[] args)
         {
-            QueryingCategories();
-            QueryingProducts();
-            QueryingWithLike();
+            //QueryingCategories();
+            //QueryingProducts();
+            //QueryingWithLike();
+
+            ConsoleKey key = ConsoleKey.A;
+            while (key != ConsoleKey.D3 && key != ConsoleKey.Escape)
+            {
+                Console.WriteLine($"Menu:\n" +
+                    $"1. Add new Product\n" +
+                    $"2. List Products\n" +
+                    $"3. Exit");
+
+                key = Console.ReadKey().Key;
+
+                if(key == ConsoleKey.D1)
+                {
+                    Console.WriteLine($"\nEnter CategoryID, ProductName, Price - separate with space \' \'");
+                    string[] input = Console.ReadLine().Split(' ');
+
+                    int id = int.Parse(input[0]);
+                    string name = string.Empty;
+                    for(int i = 1; i < input.Length - 1; ++i)
+                    {
+                        name += i == 1 ? input[i] : $" {input[i]}";
+                    }
+                    decimal price = decimal.Parse(input[input.Length - 1]);
+
+                    AddProduct(id, name, price);
+                }
+                else if(key == ConsoleKey.D2)
+                {
+                    ListProducts();
+                }
+                else if(key != ConsoleKey.D3 && key != ConsoleKey.Escape)
+                {
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("\nWrong input. Try again.");
+                }
+            }
+        }
+
+        private static bool AddProduct(int categoryID, string productName, decimal? price)
+        {
+            using(var db = new Northwind())
+            {
+                Product newProduct = new Product
+                {
+                    CategoryID = categoryID,
+                    ProductName = productName,
+                    Cost = price,
+                    Stock = 1
+                };
+
+                db.Products.Add(newProduct);
+
+                int affected = db.SaveChanges();
+                return (affected == 1);
+            }
+        }
+
+        private static void ListProducts()
+        {
+            using(var db = new Northwind())
+            {
+                Console.WriteLine($"\n{"ID", -3} {"Product Name", -40} {"Cost", 8} {"Stock", 5} {"Disc."}");
+
+                foreach (Product item in db.Products.OrderBy(p => p.CategoryID))
+                {
+                    Console.WriteLine($"{item.CategoryID:000} {item.ProductName, -40} {item.Cost, 8:$#,##0.00} {item.Stock, 5} {item.Discontinued}");
+                }
+            }
         }
 
         private static void QueryingCategories()
@@ -29,7 +100,7 @@ namespace EFCore_SQLite_Console
 
                 foreach(Category c in cats)
                 {
-                    Console.WriteLine($"{c.CategoryName} has {c.Products.Count} products\n");
+                    Console.WriteLine($"{c.CategoryName} has {c.Products.Count} products");
                 }
             }
         }
