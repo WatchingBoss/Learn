@@ -34,6 +34,16 @@ namespace EFCore_SQLite_Console
                 .HasOne<Category>(p => p.Category)
                 .WithMany(c => c.Products)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Product>()
+                .HasOne<Category>(p => p.Category)
+                .WithMany(c => c.Products)
+                .HasForeignKey(pkey => pkey.CategoryID);
+
+            modelBuilder.Entity<Category>()
+                .HasMany(c => c.Products)
+                .WithOne(p => p.Category)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
