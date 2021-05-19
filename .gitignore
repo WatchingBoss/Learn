@@ -24,3 +24,5 @@ node_modules/
 Pipfile*
 csharp/EFCore_learn/db/Northwind.db
 csharp/EFCore_learn/db/Northwind.sql
+
+private_info*
