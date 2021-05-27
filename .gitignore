@@ -8,21 +8,28 @@ packages/
 .idea/
 
 cmake-build*/
+__pycache__/
+Migrations/
 
 obj/
 bin/
 out/
 res/
 target/
+node_modules/
+data/
+
 
 *.sln
 *.user
+*.log
+*.db
+
+
+no_commit_info.json
 
 package-lock.json
-node_modules/
 
 Pipfile*
 csharp/EFCore_learn/db/Northwind.db
 csharp/EFCore_learn/db/Northwind.sql
-
-private_info*
