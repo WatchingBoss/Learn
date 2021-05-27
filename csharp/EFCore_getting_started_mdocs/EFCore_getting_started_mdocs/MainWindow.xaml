@@ -1,0 +1,62 @@
+﻿<Window x:Class="EFCore_getting_started_mdocs.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EFCore_getting_started_mdocs"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800"
+        Loaded="Window_Loaded">
+
+    <Window.Resources>
+        <CollectionViewSource x:Key="blogViewSource"/>
+        <CollectionViewSource x:Key="blogPostsViewSource"
+                              Source="{Binding Posts, Source={StaticResource blogViewSource}}"/>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <DataGrid Grid.Row="0"
+            x:Name="blogDataGrid" AutoGenerateColumns="False"
+              EnableRowVirtualization="True" RowDetailsVisibilityMode="VisibleWhenSelected"
+              ItemsSource="{Binding Source={StaticResource blogViewSource}}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding BlogID}"
+                                Header="Blog ID" Width="SizeToHeader"
+                                IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding URL}" 
+                                Header="URL" Width="*"/>
+                <DataGridTextColumn Binding="{Binding Title}"
+                                    Header="Title" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <DataGrid Grid.Row="1"
+            x:Name="postDataGrid" AutoGenerateColumns="False"
+                  EnableRowVirtualization="True" RowDetailsVisibilityMode="VisibleWhenSelected"
+                  ItemsSource="{Binding Source={StaticResource blogPostsViewSource}}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding BlogID}"
+                                    Header="Blog ID" Width="SizeToHeader"
+                                    IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding PostID}"
+                                    Header="Post ID" Width="SizeToHeader"
+                                    IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding Title}"
+                                    Header="Title" Width="SizeToHeader"/>
+                <DataGridTextColumn Binding="{Binding Content}"
+                                    Header="Content" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StackPanel Grid.Row="2" Margin="5">
+            <Button Content="Save" HorizontalAlignment="Center" Padding="15 2"
+                    Name="buttonSave" Click="buttonSave_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>
