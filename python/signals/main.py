@@ -1,8 +1,7 @@
-import os, datetime, sys, json
+import os, datetime, sys, json, xlwt
 import tinvest
-from bs4 import BeautifulSoup
-import requests
-from fake_useragent import UserAgent
+import concurrent.futures
+import scraper
 
 STOCKS_USD = []
 STOCKS_RUB = []
@@ -69,7 +68,10 @@ class Instrument:
     """
     Exchange instrument imlementation
     """
+    _all_instruments_ = 0
+
     def __init__(self, ticker, figi, isin, currency):
+        Instrument._all_instruments_ += 1
         self.ticker = ticker
         self.figi = figi
         self.isin = isin
@@ -80,12 +82,41 @@ class Stock(Instrument):
     """
     Stock implementation
     """
+    _all_stocks_ = 0
+
     def __init__(self, ticker, figi, isin, currency):
         super().__init__(ticker, figi, isin, currency)
+        data = self.add_scraping_data()
+        self.scrap_data = True
+
+        try:
+            self.name = data['name']
+            self.sector = data['sector']
+            self.industry = data['industry']
+            self.index = data['index']
+            self.capitalization = data['capitalization']
+            self.p_e = data['p_e']
+            self.p_s = data['p_s']
+            self.p_b = data['p_b']
+            self.debt_eq = data['debt_eq']
+            self.short_float = data['short_float']
+            self.target_price = data['target_price']
+        except TypeError:
+            self.scrap_data = False
+            print(f"{self.ticker}: no scaraping data")
+
+        if self.scrap_data:
+            Stock._all_stocks_ += 1
+            print(Stock._all_stocks_)
+
+    def __lt__(self, another):
+        return self.ticker < another.ticker
 
     def add_scraping_data(self):
+        data = {}
+
         if self.currency == 'USD':
-            pass
+            data = scraper.check_finviz(self.ticker)
         elif self.currency == 'RUB':
             pass
         elif self.currency == 'EUR':
@@ -93,52 +124,65 @@ class Stock(Instrument):
         else:
             pass
 
+        return data
+
+    def output_data(self):
+        return {
+            'ticker': self.ticker,
+            'figi': self.figi,
+            'isin': self.isin,
+            'currency': self.currency,
+            'name': self.name,
+            'sector': self.sector,
+            'industry': self.industry,
+            'index': self.index,
+            'capitalization': self.capitalization,
+            'p_e': self.p_e,
+            'p_s': self.p_s,
+            'p_b': self.p_b,
+            'debt_eq': self.debt_eq,
+            'short_float': self.short_float,
+            'target_price': self.target_price
+        }
+
+
+def stocks_to_file(file_name):
+    data_dir = os.path.join(os.path.curdir, 'data')
+    data_path = os.path.join(data_dir, file_name + '.json')
+
+    if not os.path.isdir(data_dir):
+        os.mkdir(data_dir)
+
+    output = [stock.output_data() for stock in STOCKS_USD if stock.scrap_data]
+
+    with open(data_path, 'w') as f:
+        json.dump(output, f)
+
+
+def stocks_from_file(file_name):
+    data_dir = os.path.join(os.path.curdir, 'data')
+    data_path = os.path.join(data_dir, file_name + '.json')
+
+    with open(data_path, 'r') as f:
+        input_data = json.load(f)
+
+    for stock in input_data:
+        STOCKS_USD.append(stock)
+
 
 def get_market_stocks(client):
     payload = client.get_market_stocks().payload
-    total_stocks = payload.total
     stocks_usd = [stock for stock in payload.instruments[:] if stock.currency == 'USD']
     stocks_rub = [stock for stock in payload.instruments[:] if stock.currency == 'RUB']
-    # for stock in stocks_usd:
-    #     STOCKS_USD.append(Stock(stock.ticker, stock.figi, stock.isin, stock.currency))
-    # for stock in stocks_rub:
-    #     STOCKS_RUB.append(Stock(stock.ticker, stock.figi, stock.isin, stock.currency))
 
-    check_finviz(stocks_usd[3].ticker)
-
-
-def check_finviz(ticker):
-    # url = f"https://finviz.com/quote.ashx?t={ticker}"
-    # ua = UserAgent()
-    # header = {'User-Agent': str(ua.chrome)}
-    # r = requests.get(url, headers=header)
-    with open('temp.html', 'r', encoding='utf-8') as f:
-        soup = BeautifulSoup(f, "lxml")
-
-    table_title = soup.find('table', class_='fullview-title')
-
-    table_title_trs = table_title.find_all('tr')
-    page_ticker = table_title.find(id='ticker').text
-    print(page_ticker)
-    exchange = table_title_trs[0].find(class_='body-table').text
-    if exchange.find('NASD'):
-        exchange = 'NASDAQ'
-    elif exchange.find('NYSE'):
-        exchange = 'NYSE'
-    print(exchange)
-    name = table_title_trs[1].text
-    print(name)
-    sector = table_title_trs[2].find_all('a')[0].text
-    industrial = table_title_trs[2].find_all('a')[1].text
-    print(f"{sector}\n{industrial}")
-
-    table_mult = soup.find('table', class_='snapshot-table2')
-    snapshot_td2_cp = table_mult.find_all('td', class_='snapshot-td2-cp')
-    snapshot_td2 = table_mult.find_all('td', class_='snapshot-td2')
-    mult = {snapshot_td2_cp[i].text.lower(): snapshot_td2[i].text.lower()
-            for i in range(len(snapshot_td2))}
-    for k, v in mult.items():
-        print(f"{k}: {v}")
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        futures = [executor.submit(Stock, s.ticker, s.figi, s.isin, s.currency) for s in stocks_usd]
+        for future in futures:
+            data = future.result()
+            if data.scrap_data:
+                STOCKS_USD.append(future.result())
+        STOCKS_USD.sort()
+    stocks_to_file('stocks_usd')
 
 
 def main():
@@ -148,7 +192,7 @@ def main():
     }
     get_all_keys(keys)
     client = tinvest.SyncClient(keys['token_tinkoff_real'])
-    get_market_stocks(client)
+    stocks_from_file('stocks_usd')
 
 
 if __name__ == "__main__":
