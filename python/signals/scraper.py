@@ -37,39 +37,21 @@ def check_finviz(ticker):
     mult = {snapshot_td2_cp[i].text.lower(): snapshot_td2[i].text.lower()
             for i in range(len(snapshot_td2))}
 
-    index = mult['index']
-    if len(index) < 2:
-        index = "None"
-
-    capitalization = mult['market cap']
-    cap_multiplication = 1
-    if capitalization.find('t'):
-        cap_multiplication = 1_000_000_000_000
-    elif capitalization.find('b'):
-        cap_multiplication = 1_000_000_000
-    elif capitalization.find('m'):
-        cap_multiplication = 1_000_000
-    capitalization = int(check_for_hash(capitalization[0:-1]) * cap_multiplication)
-
     p_e = check_for_hash(mult['p/e'])
     p_s = check_for_hash(mult['p/s'])
     p_b = check_for_hash(mult['p/b'])
     debt_eq = check_for_hash(mult['debt/eq'])
     short_float = check_for_hash(mult['short float'][0:-1]) / 100
-    target_price = check_for_hash(mult['target price'])
 
     data = {
         'name': name,
         'sector': sector,
         'industry': industry,
-        'index': index,
-        'capitalization': capitalization,
         'p_e': p_e,
         'p_s': p_s,
         'p_b': p_b,
         'debt_eq': debt_eq,
         'short_float': short_float,
-        'target_price': target_price
     }
 
     if this_ticker == ticker:
