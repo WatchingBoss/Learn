@@ -1,10 +1,19 @@
-import os, datetime, sys, json, xlwt
+import os, sys, json, xlwt, time
+from datetime import datetime, timedelta
 import tinvest
+import numpy as np
 import concurrent.futures
+import asyncio
 import scraper
 
 STOCKS_USD = []
-STOCKS_RUB = []
+TRADE_STOCKS_USD = []
+
+PATH = {
+    'data_dir': os.path.join(os.curdir, 'data'),
+    'stocks_usd': os.path.join(os.curdir, 'data', 'stocks_usd' + '.json'),
+    'trade_stocks_usd': os.path.join(os.curdir, 'data', 'trade_stocks_usd' + '.json')
+}
 
 
 def get_all_keys(keys):
@@ -68,10 +77,7 @@ class Instrument:
     """
     Exchange instrument imlementation
     """
-    _all_instruments_ = 0
-
     def __init__(self, ticker, figi, isin, currency):
-        Instrument._all_instruments_ += 1
         self.ticker = ticker
         self.figi = figi
         self.isin = isin
@@ -82,107 +88,127 @@ class Stock(Instrument):
     """
     Stock implementation
     """
-    _all_stocks_ = 0
-
     def __init__(self, ticker, figi, isin, currency):
         super().__init__(ticker, figi, isin, currency)
-        data = self.add_scraping_data()
-        self.scrap_data = True
-
-        try:
-            self.name = data['name']
-            self.sector = data['sector']
-            self.industry = data['industry']
-            self.index = data['index']
-            self.capitalization = data['capitalization']
-            self.p_e = data['p_e']
-            self.p_s = data['p_s']
-            self.p_b = data['p_b']
-            self.debt_eq = data['debt_eq']
-            self.short_float = data['short_float']
-            self.target_price = data['target_price']
-        except TypeError:
-            self.scrap_data = False
-            print(f"{self.ticker}: no scaraping data")
-
-        if self.scrap_data:
-            Stock._all_stocks_ += 1
-            print(Stock._all_stocks_)
+        self.data = {}
 
     def __lt__(self, another):
         return self.ticker < another.ticker
 
     def add_scraping_data(self):
-        data = {}
-
         if self.currency == 'USD':
-            data = scraper.check_finviz(self.ticker)
-        elif self.currency == 'RUB':
-            pass
-        elif self.currency == 'EUR':
-            pass
-        else:
-            pass
+            self.data = scraper.check_finviz(self.ticker)
 
-        return data
-
-    def output_data(self):
-        return {
-            'ticker': self.ticker,
-            'figi': self.figi,
-            'isin': self.isin,
-            'currency': self.currency,
-            'name': self.name,
-            'sector': self.sector,
-            'industry': self.industry,
-            'index': self.index,
-            'capitalization': self.capitalization,
-            'p_e': self.p_e,
-            'p_s': self.p_s,
-            'p_b': self.p_b,
-            'debt_eq': self.debt_eq,
-            'short_float': self.short_float,
-            'target_price': self.target_price
-        }
+    def output_data(self, level):
+        if level == 2:
+            return {
+                'ticker': self.ticker,
+                'figi': self.figi,
+                'isin': self.isin,
+                'currency': self.currency,
+                'name': self.data['name'],
+                'sector': self.data['sector'],
+                'industry': self.data['industry'],
+                'p_e': self.data['p_e'],
+                'p_s': self.data['p_s'],
+                'p_b': self.data['p_b'],
+                'debt_eq': self.data['debt_eq'],
+                'short_float': self.data['short_float']
+            }
+        elif level == 1:
+            return {
+                'ticker': self.ticker,
+                'figi': self.figi,
+                'isin': self.isin,
+                'currency': self.currency
+            }
 
 
-def stocks_to_file(file_name):
-    data_dir = os.path.join(os.path.curdir, 'data')
-    data_path = os.path.join(data_dir, file_name + '.json')
+def stocks_to_file(file_name, this_list):
+    if not os.path.isdir(PATH['data_dir']):
+        os.mkdir(PATH['data_dir'])
 
-    if not os.path.isdir(data_dir):
-        os.mkdir(data_dir)
+    output = [stock.output_data(1) for stock in this_list]
 
-    output = [stock.output_data() for stock in STOCKS_USD if stock.scrap_data]
-
-    with open(data_path, 'w') as f:
+    with open(PATH[file_name], 'w') as f:
         json.dump(output, f)
 
 
-def stocks_from_file(file_name):
-    data_dir = os.path.join(os.path.curdir, 'data')
-    data_path = os.path.join(data_dir, file_name + '.json')
+def stocks_from_file(file_name, this_list):
+    if not os.path.isdir(PATH['data_dir']):
+        print(f"No current directory: {PATH['data_dir']}")
+        return 0
 
-    with open(data_path, 'r') as f:
+    with open(PATH[file_name], 'r') as f:
         input_data = json.load(f)
 
-    for stock in input_data:
-        STOCKS_USD.append(stock)
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        futures = [executor.submit(Stock, s['ticker'], s['figi'], s['isin'], s['currency']) for s in input_data]
+        for future in futures:
+            this_list.append(future.result())
 
 
 def get_market_stocks(client):
     payload = client.get_market_stocks().payload
     stocks_usd = [stock for stock in payload.instruments[:] if stock.currency == 'USD']
-    stocks_rub = [stock for stock in payload.instruments[:] if stock.currency == 'RUB']
+    # stocks_rub = [stock for stock in payload.instruments[:] if stock.currency == 'RUB']
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
         futures = [executor.submit(Stock, s.ticker, s.figi, s.isin, s.currency) for s in stocks_usd]
         for future in futures:
-            data = future.result()
-            if data.scrap_data:
-                STOCKS_USD.append(future.result())
-        STOCKS_USD.sort()
-    stocks_to_file('stocks_usd')
+            STOCKS_USD.append(future.result())
+
+    STOCKS_USD.sort()
+
+
+def choose_trade_stocks_usd(client):
+    max_high_price = 350
+    min_month_high_low_difference = 0.05
+
+    now = datetime.now()
+    start_month = now - timedelta(30 * 5)
+    start_hour = now - timedelta(7)
+
+    for i in range(len(STOCKS_USD)):
+        stock = STOCKS_USD[i]
+        try:
+            candles_month = client.get_market_candles(
+                figi=stock.figi,
+                from_=start_month,
+                to=now,
+                interval=tinvest.CandleResolution.month
+            ).payload.candles
+
+            # candles_hour = client.get_market_candles(
+            #     figi=stock.figi,
+            #     from_=start_hour,
+            #     to=now,
+            #     interval=tinvest.CandleResolution.hour
+            # ).payload.candles
+        except tinvest.exceptions.TooManyRequestsError:
+            print("Waiting for 61 seconds")
+            time.sleep(61)
+            i -= 1
+            continue
+        except tinvest.exceptions.UnexpectedError:
+            continue
+        print(i)
+
+        try:
+            if sorted([candle.h for candle in candles_month])[-1] > max_high_price:
+                continue
+        except IndexError:
+            print([candle.h for candle in candles_month])
+
+        try:
+            if np.mean([candle.l / (candle.h - candle.l) for candle in candles_month]) < min_month_high_low_difference:
+                continue
+        except ZeroDivisionError:
+            continue
+
+        TRADE_STOCKS_USD.append(stock)
+
+    TRADE_STOCKS_USD.sort()
 
 
 def main():
@@ -192,7 +218,22 @@ def main():
     }
     get_all_keys(keys)
     client = tinvest.SyncClient(keys['token_tinkoff_real'])
-    stocks_from_file('stocks_usd')
+
+    if not os.path.isfile(PATH['stocks_usd']):
+        get_market_stocks(client)
+        stocks_to_file('stocks_usd', STOCKS_USD)
+    else:
+        stocks_from_file('stocks_usd', STOCKS_USD)
+
+    if not os.path.isfile(PATH['trade_stocks_usd']):
+        choose_trade_stocks_usd(client)
+        stocks_to_file('trade_stocks_usd', TRADE_STOCKS_USD)
+    else:
+        stocks_from_file('trade_stocks_usd', TRADE_STOCKS_USD)
+
+    print(len(TRADE_STOCKS_USD))
+    for stock in TRADE_STOCKS_USD:
+        print(stock.ticker)
 
 
 if __name__ == "__main__":
