@@ -2,6 +2,8 @@ from bs4 import BeautifulSoup
 import requests
 from fake_useragent import UserAgent
 
+tinkoff_table_check_for_short_access = "https://www.tinkoff.ru/invest/margin/equities/"
+
 
 def check_for_hash(string):
     if len(string) < 2:
