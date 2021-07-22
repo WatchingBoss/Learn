@@ -1,28 +1,20 @@
 import os, sys, json, xlwt, time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import tinvest
 import numpy as np
 import concurrent.futures
 import asyncio
 import scraper
 
-STOCKS_USD = []
-TRADE_STOCKS_USD = []
 
-PATH = {
-    'data_dir': os.path.join(os.curdir, 'data'),
-    'stocks_usd': os.path.join(os.curdir, 'data', 'stocks_usd' + '.json'),
-    'trade_stocks_usd': os.path.join(os.curdir, 'data', 'trade_stocks_usd' + '.json')
-}
+FIGI_TICKER = {}
 
 
 def get_all_keys(keys):
     with open(os.path.join(os.path.expanduser('~'), 'no_commit', 'info.json')) as f:
         data = json.load(f)
-        ttr = data['token_tinkoff_real']
-        ttd = data['token_tinkoff_demo']
-        keys['token_tinkoff_real'] = ttr
-        keys['token_tinkoff_demo'] = ttd
+        keys['token_tinkoff_real'] = data['token_tinkoff_real']
+        keys['token_tinkoff_demo'] = data['token_tinkoff_demo']
 
 
 def show_get_portfolio(client):
@@ -124,53 +116,46 @@ class Stock(Instrument):
             }
 
 
-def stocks_to_file(file_name, this_list):
-    if not os.path.isdir(PATH['data_dir']):
-        os.mkdir(PATH['data_dir'])
+def stocks_to_file(folder, file, stocks):
+    if not os.path.isdir(folder):
+        os.mkdir(folder)
 
-    output = [stock.output_data(1) for stock in this_list]
+    output = [s.output_data(1) for s in stocks]
 
-    with open(PATH[file_name], 'w') as f:
+    with open(file, 'w') as f:
         json.dump(output, f)
 
 
-def stocks_from_file(file_name, this_list):
-    if not os.path.isdir(PATH['data_dir']):
-        print(f"No current directory: {PATH['data_dir']}")
+def stocks_from_file(folder, file, stocks):
+    if not os.path.isdir(folder):
+        print(f"No current directory: {folder}")
         return 0
 
-    with open(PATH[file_name], 'r') as f:
+    with open(file, 'r') as f:
         input_data = json.load(f)
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
         futures = [executor.submit(Stock, s['ticker'], s['figi'], s['isin'], s['currency']) for s in input_data]
         for future in futures:
-            this_list.append(future.result())
+            stocks.append(future.result())
+
+    stocks.sort()
 
 
-def get_market_stocks(client):
+def get_market_stocks(client, stocks_list):
     payload = client.get_market_stocks().payload
     stocks_usd = [stock for stock in payload.instruments[:] if stock.currency == 'USD']
-    # stocks_rub = [stock for stock in payload.instruments[:] if stock.currency == 'RUB']
 
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        futures = [executor.submit(Stock, s.ticker, s.figi, s.isin, s.currency) for s in stocks_usd]
-        for future in futures:
-            STOCKS_USD.append(future.result())
-
-    STOCKS_USD.sort()
-
-
-def choose_trade_stocks_usd(client):
-    max_high_price = 350
-    min_month_high_low_difference = 0.05
+    max_high_price = 200
+    min_avg_month_high_low_diff = 0.15
+    min_avg_volume = 100_000
 
     now = datetime.now()
     start_month = now - timedelta(30 * 5)
-    start_hour = now - timedelta(7)
+    start_day = now - timedelta(10)
 
-    for i in range(len(STOCKS_USD)):
-        stock = STOCKS_USD[i]
+    for i in range(len(stocks_usd)):
+        stock = stocks_usd[i]
         try:
             candles_month = client.get_market_candles(
                 figi=stock.figi,
@@ -179,12 +164,13 @@ def choose_trade_stocks_usd(client):
                 interval=tinvest.CandleResolution.month
             ).payload.candles
 
-            # candles_hour = client.get_market_candles(
-            #     figi=stock.figi,
-            #     from_=start_hour,
-            #     to=now,
-            #     interval=tinvest.CandleResolution.hour
-            # ).payload.candles
+            candles_day = client.get_market_candles(
+                figi=stock.figi,
+                from_=start_day,
+                to=now,
+                interval=tinvest.CandleResolution.day
+            ).payload.candles
+
         except tinvest.exceptions.TooManyRequestsError:
             print("Waiting for 61 seconds")
             time.sleep(61)
@@ -192,49 +178,95 @@ def choose_trade_stocks_usd(client):
             continue
         except tinvest.exceptions.UnexpectedError:
             continue
-        print(i)
+        print(f"{i}: {stock.ticker}")
+
+        if len(candles_month) < 2 or len(candles_day) < 2:
+            continue
 
         try:
-            if sorted([candle.h for candle in candles_month])[-1] > max_high_price:
+            this_max_high = sorted([candle.h for candle in candles_month])[-1]
+            print(f"Max high: {this_max_high}")
+            if this_max_high > max_high_price:
                 continue
         except IndexError:
             print([candle.h for candle in candles_month])
 
         try:
-            if np.mean([candle.l / (candle.h - candle.l) for candle in candles_month]) < min_month_high_low_difference:
+            difference = np.mean([(candle.h - candle.l) / candle.l for candle in candles_month])
+            print(f"Average high - low difference: {difference:.1%}")
+            if difference < min_avg_month_high_low_diff:
                 continue
         except ZeroDivisionError:
             continue
 
-        TRADE_STOCKS_USD.append(stock)
+        try:
+            avg_volume = np.mean([candle.v for candle in candles_day])
+            print(f"Average 10 days volume: {avg_volume}")
+            if avg_volume < min_avg_volume:
+                continue
+        except ZeroDivisionError:
+            pass
 
-    TRADE_STOCKS_USD.sort()
+        stocks_list.append(Stock(stock.ticker, stock.figi, stock.isin, stock.currency))
+
+    stocks_list.sort()
 
 
-def main():
+async def test_streaming(key, stocks):
+    async with tinvest.Streaming(key) as streaming:
+        # for s in stocks:
+        #     await streaming.candle.subscribe(s.figi, tinvest.CandleResolution.min5)
+        #     await streaming.candle.subscribe(s.figi, tinvest.CandleResolution.min15)
+        #     await streaming.candle.subscribe(s.figi, tinvest.CandleResolution.hour)
+        await streaming.candle.subscribe(stocks[104].figi, tinvest.CandleResolution.min5)
+        await streaming.candle.subscribe(stocks[104].figi, tinvest.CandleResolution.min15)
+        await streaming.candle.subscribe(stocks[104].figi, tinvest.CandleResolution.hour)
+
+        async for event in streaming:
+            if event.payload.interval == tinvest.CandleResolution.min5:
+                m5 = event.payload.time
+                print(f"Ticker: {FIGI_TICKER[event.payload.figi]}\n"
+                      f"Interval: {event.payload.interval}\n"
+                      f"o: {event.payload.o}  l: {event.payload.l}  h: {event.payload.h}  c: {event.payload.c}\n"
+                      f"v: {event.payload.v}")
+            if event.payload.interval == tinvest.CandleResolution.min15:
+                pass
+            if event.payload.interval == tinvest.CandleResolution.hour:
+                pass
+
+
+async def fill_candles(client, stocks):
+    pass
+
+
+async def main():
     keys = {
         "token_tinkoff_real": "",
         "token_tinkoff_demo": ""
     }
+
+    path_data_dir = os.path.join(os.curdir, 'data')
+    path_stocks_usd = os.path.join(path_data_dir, 'stocks_usd' + '.json')
+
+    stocks_usd = []
+
     get_all_keys(keys)
     client = tinvest.SyncClient(keys['token_tinkoff_real'])
 
-    if not os.path.isfile(PATH['stocks_usd']):
-        get_market_stocks(client)
-        stocks_to_file('stocks_usd', STOCKS_USD)
-    else:
-        stocks_from_file('stocks_usd', STOCKS_USD)
+    if not os.path.isdir(path_data_dir):
+        os.mkdir(path_data_dir)
 
-    if not os.path.isfile(PATH['trade_stocks_usd']):
-        choose_trade_stocks_usd(client)
-        stocks_to_file('trade_stocks_usd', TRADE_STOCKS_USD)
+    if not os.path.isfile(path_stocks_usd):
+        get_market_stocks(client, stocks_usd)
+        stocks_to_file(path_data_dir, path_stocks_usd, stocks_usd)
     else:
-        stocks_from_file('trade_stocks_usd', TRADE_STOCKS_USD)
+        stocks_from_file(path_data_dir, path_stocks_usd, stocks_usd)
 
-    print(len(TRADE_STOCKS_USD))
-    for stock in TRADE_STOCKS_USD:
-        print(stock.ticker)
+    for s in stocks_usd:
+        FIGI_TICKER[s.figi] = s.ticker
+
+    await test_streaming(keys['token_tinkoff_real'], stocks_usd)
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
