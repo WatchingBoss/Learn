@@ -4,6 +4,8 @@ from fake_useragent import UserAgent
 
 tinkoff_table_check_for_short_access = "https://www.tinkoff.ru/invest/margin/equities/"
 
+HEADER = {'User-Agent': str(UserAgent().chrome)}
+
 
 def check_for_hash(string):
     if len(string) < 2:
@@ -16,10 +18,9 @@ def check_for_hash(string):
 
 
 def check_finviz(ticker):
-    header = {'User-Agent': str(UserAgent().chrome)}
     url = f"https://finviz.com/quote.ashx?t={ticker}"
-    r = requests.get(url, headers=header)
-    soup = BeautifulSoup(r.content, "lxml")
+    r = requests.get(url, headers=HEADER)
+    soup = BeautifulSoup(r.content, 'lxml')
 
     if not soup.find(id='ticker'):
         return False
@@ -58,3 +59,29 @@ def check_finviz(ticker):
 
     if this_ticker == ticker:
         return data
+
+
+isin_able = {}
+
+
+def check_tinkoff_short_table(stock_isin):
+    if len(isin_able.values()) < 2:
+        url = "https://www.tinkoff.ru/invest/margin/equities/"
+        r = requests.get(url, headers=HEADER)
+        soup = BeautifulSoup(r.content, 'lxml')
+
+        all_tr = soup.find_all('tr', class_='Table__row_3Unlc Table__row_clickable_3EeUg')
+        for tr in all_tr:
+            all_td = tr.find_all('td')
+            isin = all_td[1].text
+            ability = all_td[2].text
+            if ability == "Доступен":
+                isin_able[isin] = True
+            else:
+                isin_able[isin] = False
+
+    try:
+        return isin_able[stock_isin]
+    except KeyError:
+        return False
+
