@@ -2,6 +2,7 @@ import os, sys, json, xlwt, time
 from datetime import datetime, timedelta, timezone
 import tinvest
 import numpy as np
+import pandas as pd
 import concurrent.futures
 import asyncio
 import support, instrument as inst
@@ -20,8 +21,7 @@ def stocks_to_file(folder, file, stocks_dict):
 
 def stocks_from_file(folder, file, stocks_dict):
     if not os.path.isdir(folder):
-        print(f"No current directory: {folder}")
-        return 0
+        raise FileExistsError
 
     with open(file, 'r') as f:
         input_data = json.load(f)
@@ -115,10 +115,8 @@ def get_market_stocks(client, stocks_dict):
 
 async def test_streaming(key, stock_dict):
     async with tinvest.Streaming(key) as streaming:
-        for s in [stock_dict['BBG00MVWLLM2'], stock_dict['BBG000M65M61'], stock_dict['BBG005P7Q881']]:
-            await streaming.candle.subscribe(s.figi, tinvest.CandleResolution.min15)
-            await streaming.candle.subscribe(s.figi, tinvest.CandleResolution.hour)
-            await streaming.candle.subscribe(s.figi, tinvest.CandleResolution.day)
+        for s in stock_dict.values():
+            await streaming.candle.subscribe(s.figi, s.m15.interval)
 
         async for event in streaming:
             stock = stock_dict[event.payload.figi]
@@ -131,130 +129,61 @@ async def test_streaming(key, stock_dict):
             elif p.interval == tinvest.CandleResolution.day:
                 timeframe = stock.day
 
-            if timeframe.candles[-1].t < p.time:
-                timeframe.candles.append(inst.Candle(o=p.o, l=p.l, h=p.h, c=p.c, v=p.v, t=p.time))
+            if timeframe.candles.loc[0][0] < p.time:
+                timeframe.candles.shift(1)
+                timeframe.candles.loc[0] = [p.time, p.o, p.h, p.l, p.c, p.v]
 
-            c = timeframe.candles[-1]
-            c.o = p.o
-            c.l = p.l
-            c.h = p.h
-            c.c = p.c
-            c.v = p.v
+            timeframe.candles.loc[0] = [p.time, p.o, p.h, p.l, p.c, p.v]
 
             timeframe.last_modify_time = event.time
 
 
-async def get_ema(candles, periods) -> float:
-    all_c = [float(candle.c) for candle in candles]
-
-    if len(all_c) >= periods * 2:
-        sma_c = all_c[-(periods * 2):-periods]
-    elif len(all_c) > periods:
-        sma_c = all_c[:-periods]
-    else:
-        return -1
-
-    sma = float(sum(sma_c) / len(sma_c))
-    multiplier = 2 / (periods + 1)
-
-    ema = 0
-    for i in range(-periods, -1, 1):
-        if i == -periods:
-            ema = (all_c[i] - sma) * multiplier + sma
-        ema = (all_c[i] - ema) * multiplier + ema
-
-    return ema
-
-
-async def compute_ema(timeframe: inst.Timeframe):
-    task_ema_200 = asyncio.create_task(get_ema(timeframe.candles, 200))
-    task_ema_50 = asyncio.create_task(get_ema(timeframe.candles, 50))
-    task_ema_20 = asyncio.create_task(get_ema(timeframe.candles, 20))
-    task_ema_10 = asyncio.create_task(get_ema(timeframe.candles, 10))
-    timeframe.ema_10 = await task_ema_10
-    timeframe.ema_20 = await task_ema_20
-    timeframe.ema_50 = await task_ema_50
-    timeframe.ema_200 = await task_ema_200
-
-
-async def update_ema(stock_dict):
-    while True:
-        for stock in [stock_dict['BBG00MVWLLM2'], stock_dict['BBG000M65M61'], stock_dict['BBG005P7Q881']]:
-            for timeframe in [stock.m15, stock.hour, stock.day]:
-                timeframe.ema_10 = (float(timeframe.candles[-1].c) - timeframe.ema_10) * (2 / (10 + 1)) + timeframe.ema_10
-                timeframe.ema_20 = (float(timeframe.candles[-1].c) - timeframe.ema_20) * (2 / (20 + 1)) + timeframe.ema_20
-                timeframe.ema_50 = (float(timeframe.candles[-1].c) - timeframe.ema_50) * (2 / (50 + 1)) + timeframe.ema_50
-                timeframe.ema_200 = (float(timeframe.candles[-1].c) - timeframe.ema_200) * (2 / (200 + 1)) + timeframe.ema_200
-                await asyncio.sleep(10)
-
-
-async def get_candles(client, figi, timeframe: inst.Timeframe):
-    candles = []
-    end_period = datetime.now(tz=timezone.utc)
-
-    for _ in range(5):
+def get_candles(client, figi, tf: inst.Timeframe):
+    now = datetime.now(tz=timezone.utc)
+    candle_list = []
+    max_list = 200
+    for _ in range(10):
+        if len(candle_list) >= max_list:
+            break
         try:
-            candles += client.get_market_candles(
-                figi, from_=end_period - timeframe.delta, to=end_period, interval=timeframe.interval
-            ).payload.candles[::-1]
-            end_period -= timeframe.delta
+            candles = client.get_market_candles(
+                figi, from_=now - tf.delta, to=now, interval=tf.interval
+            ).payload.candles
+            now -= tf.delta
+            for c in candles:
+                candle_list.append([c.time, c.o, c.h, c.l, c.c, c.v])
         except tinvest.exceptions.TooManyRequestsError:
-            await asyncio.sleep(61)
+            time.sleep(60)
 
-    timeframe.candles.clear()
-    timeframe.candles = [
-        inst.Candle(o=candle.o, l=candle.o, h=candle.h, c=candle.c, v=candle.v, t=candle.time)
-        for candle in candles[::-1]
-    ]
+    if len(candle_list) < 200:
+        max_list = len(candle_list)
 
-
-async def fill_candles(client, stock_dict):
-    for stock in [stock_dict['BBG00MVWLLM2'], stock_dict['BBG000M65M61'], stock_dict['BBG005P7Q881']]:
-        await asyncio.gather(
-            get_candles(client, stock.figi, stock.day),
-            get_candles(client, stock.figi, stock.hour),
-            get_candles(client, stock.figi, stock.m15)
-        )
-
-        await asyncio.gather(
-            compute_ema(stock.day),
-            compute_ema(stock.hour),
-            compute_ema(stock.m15)
-        )
+    tf.candles = pd.DataFrame(
+        candle_list, columns=['Time', 'Open', 'High', 'Low', 'Close', 'Volume']
+        ).sort_values(by='Time', ascending=False, ignore_index=True)[:max_list]
 
 
-def send_event(ticker: str, interval, msg: str):
-    print(f"Ticker: {ticker}\n"
-          f"Interval: {interval}\n"
-          f"{msg}")
+def fill_candles(client, stock_dict):
+    for stock in stock_dict.values():
+        get_candles(client, stock.figi, stock.day)
+        get_candles(client, stock.figi, stock.hour)
+        get_candles(client, stock.figi, stock.m15)
 
 
-async def detect_intersection_in_timeframe(stock: Stock, tf: inst.Timeframe):
-    if tf.ema10_above_20:
-        if tf.ema_10 < tf.ema_20:
-            tf.ema10_above_20 = False
-            send_event(stock.ticker, tf.interval, "EMA 10 under EMA 20")
-    else:
-        if tf.ema_10 > tf.ema_20:
-            tf.ema10_above_20 = True
-            send_event(stock.ticker, tf.interval, "EMA 10 above EMA 20")
-
-    if tf.ema50_above_200:
-        if tf.ema_50 < tf.ema_200:
-            tf.ema50_above_200 = False
-            send_event(stock.ticker, tf.interval, "EMA 50 under EMA 200")
-    else:
-        if tf.ema_50 > tf.ema_200:
-            tf.ema50_above_200 = True
-            send_event(stock.ticker, tf.interval, "EMA 50 above EMA 200")
+async def print_stock(stock_dict):
+    for stock in stock_dict.values():
+        print(f"Interval: 15m\n"
+              f"{stock.m15.candles.loc[0].to_string()}\n"
+              f"Last time modify: {stock.m15.last_modify_time.time()}")
+        await stock.ema()
+        print(stock.m15.ema.to_string())
 
 
-async def detect_intersection(stock_dict):
-    while True:
-        for stock in [stock_dict['BBG00MVWLLM2'], stock_dict['BBG000M65M61'], stock_dict['BBG005P7Q881']]:
-            asyncio.create_task(detect_intersection_in_timeframe(stock, stock.m15))
-            asyncio.create_task(detect_intersection_in_timeframe(stock, stock.hour))
-            asyncio.create_task(detect_intersection_in_timeframe(stock, stock.day))
+# async def calc_ema(stock_dict):
+#     while True:
+#         for stock in stock_dict.values():
+#             await stock.ema()
+#         await asyncio.sleep(10)
 
 
 async def main():
@@ -270,31 +199,32 @@ async def main():
     if not os.path.isdir(path_data_dir):
         os.mkdir(path_data_dir)
 
-    stocks_usd = {}
-    stocks_able_for_short = {}
+    stock_long = {}
+    stock_long_short = {}
 
     client = tinvest.SyncClient(keys['token_tinkoff_real'])
 
-    if not os.path.isfile(path_stocks_usd):
-        get_market_stocks(client, stocks_usd)
-        stocks_to_file(path_data_dir, path_stocks_usd, stocks_usd)
-    else:
-        stocks_from_file(path_data_dir, path_stocks_usd, stocks_usd)
+    p = client.get_market_search_by_ticker('CNK').payload.instruments[0]
+    stock = Stock(ticker=p.ticker, figi=p.figi, isin=p.isin, currency=p.currency)
+    stock_long_short[stock.figi] = stock
+    fill_candles(client, stock_long_short)
 
-    for stock in stocks_usd.values():
-        if stock.able_for_short:
-            stocks_able_for_short[stock.figi] = stock
-
-    # for s in stocks_usd.values():
-    #     print(f"{s.ticker}, {s.figi}\n")
-    # print(f"There are {len(stocks_usd.values())} stocks to trade")
-
-    # task_fill_candles = asyncio.create_task(fill_candles(client, stocks_usd))
-    # await task_fill_candles
+    # if not os.path.isfile(path_stocks_usd):
+    #     get_market_stocks(client, stock_usd)
+    #     stocks_to_file(path_data_dir, path_stocks_usd, stock_usd)
+    # else:
+    #     stocks_from_file(path_data_dir, path_stocks_usd, stock_usd)
     #
-    # asyncio.create_task(test_streaming(keys['token_tinkoff_real'], stocks_usd))
-    # asyncio.create_task(update_ema(stocks_usd))
-    # asyncio.create_task(detect_intersection(stocks_usd))
+    # for stock in stock_usd.values():
+    #     if stock.able_for_short:
+    #         stock_able_for_short[stock.figi] = stock
+
+    # task_streaming = asyncio.create_task(test_streaming(keys['token_tinkoff_real'], stock_long_short))
+    await asyncio.create_task(print_stock(stock_long_short))
+    # asyncio.create_task(update_ema(stock_usd))
+    # asyncio.create_task(detect_intersection(stock_usd))
+
+    # await task_streaming
 
 
 if __name__ == "__main__":
