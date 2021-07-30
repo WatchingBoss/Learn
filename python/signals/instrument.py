@@ -2,6 +2,11 @@ from datetime import datetime, timedelta, timezone
 import asyncio
 import scraper
 import tinvest
+import pandas as pd
+
+
+class Event:
+    pass
 
 
 class Instrument:
@@ -15,45 +20,20 @@ class Instrument:
         self.currency = currency
 
 
-class Candle:
-    """
-    Stock candle implementation
-    """
-
-    def __init__(self, o: float, l: float, h: float, c: float, v: float, t: datetime):
-        self.o = o
-        self.l = l
-        self.h = h
-        self.c = c
-        self.v = v
-        self.t = t
-
-
 class Timeframe:
     """
     Timeframe implementation
     """
 
-    def __init__(self, interval, delta):
-        self.candles: list[Candle] = []
+    def __init__(self, interval: tinvest.CandleResolution, delta: timedelta):
+        self.candles = pd.DataFrame()
 
-        self.ema_10: float = 0
-        self.ema_20: float = 0
-        self.ema_50: float = 0
-        self.ema_200: float = 0
-
-        self.ema10_above_20: bool = False
-        self.ema50_above_200: bool = False
-
-        self.c_above_10: bool = False
-        self.c_above_20: bool = False
-        self.c_above_50: bool = False
-        self.c_above_200: bool = False
+        self.ema = pd.DataFrame()
 
         self.interval = interval
-        self.delta: timedelta = delta
+        self.delta = delta
 
-        self.last_modify_time: datetime = datetime.now(tz=timezone.utc)
+        self.last_modify_time = datetime.now(tz=timezone.utc)
 
 
 class Stock(Instrument):
@@ -82,6 +62,12 @@ class Stock(Instrument):
     def check_if_able_for_short(self):
         self.able_for_short = scraper.check_tinkoff_short_table(self.isin)
 
+    async def ema(self):
+        self.m15.ema = ema(self.m15.candles, 'High', 'EMA_10', 10)
+
+    async def detect_intersection(self):
+        pass
+
     def output_data(self, level):
         if level == 2:
             return {
@@ -105,3 +91,62 @@ class Stock(Instrument):
                 'isin': self.isin,
                 'currency': self.currency
             }
+
+
+def ema(df: pd.DataFrame, base, target, period, alpha=False):
+    con = pd.concat([df[:period][base].rolling(window=period).mean(), df[period:][base]])
+
+    result = pd.DataFrame()
+
+    if alpha:
+        # (1 - alpha) * previous_val + alpha * current_val where alpha = 1 / period
+        result = con.ewm(alpha=1 / period, adjust=False).mean()
+    else:
+        # ((current_val - previous_val) * coeff) + previous_val where coeff = 2 / (period + 1)
+        result = con.ewm(span=period, adjust=False).mean()
+
+    return result
+    # df[target].fillna(0, inplace=True)
+    # return df
+
+
+async def intersection():
+    pass
+
+
+"""
+async def detect_intersection_in_timeframe(stock: Stock, tf: inst.Timeframe):
+    if tf.ema10_above_20:
+        if tf.ema_10 < tf.ema_20:
+            tf.ema10_above_20 = False
+            send_event(stock.ticker, tf.interval, "EMA 10 under EMA 20")
+        else:
+            print(f"{stock.ticker}: No intersections")
+    else:
+        if tf.ema_10 > tf.ema_20:
+            tf.ema10_above_20 = True
+            send_event(stock.ticker, tf.interval, "EMA 10 above EMA 20")
+        else:
+            print(f"{stock.ticker}: No intersections")
+
+    if tf.ema50_above_200:
+        if tf.ema_50 < tf.ema_200:
+            tf.ema50_above_200 = False
+            send_event(stock.ticker, tf.interval, "EMA 50 under EMA 200")
+        else:
+            print(f"{stock.ticker}: No intersections")
+    else:
+        if tf.ema_50 > tf.ema_200:
+            tf.ema50_above_200 = True
+            send_event(stock.ticker, tf.interval, "EMA 50 above EMA 200")
+        else:
+            print(f"{stock.ticker}: No intersections")
+
+
+async def detect_intersection(stock_dict):
+    while True:
+        for stock in [stock_dict['BBG00MVWLLM2'], stock_dict['BBG000M65M61'], stock_dict['BBG005P7Q881']]:
+            asyncio.create_task(detect_intersection_in_timeframe(stock, stock.m15))
+            asyncio.create_task(detect_intersection_in_timeframe(stock, stock.hour))
+            asyncio.create_task(detect_intersection_in_timeframe(stock, stock.day))
+"""
