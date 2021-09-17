@@ -30,6 +30,10 @@ def check_finviz(ticker):
     table_title_trs = table_title.find_all('tr')
     this_ticker = table_title.find(id='ticker').text
 
+    exchange = table_title_trs[0].text
+    exchange = exchange[exchange.index('[')+1:-1]
+    if exchange == 'NASD':
+        exchange = 'NASDAQ'
     name = table_title_trs[1].text
     sector = table_title_trs[2].find_all('a')[0].text
     industry = table_title_trs[2].find_all('a')[1].text
@@ -42,19 +46,24 @@ def check_finviz(ticker):
 
     p_e = check_for_hash(mult['p/e'])
     p_s = check_for_hash(mult['p/s'])
-    p_b = check_for_hash(mult['p/b'])
     debt_eq = check_for_hash(mult['debt/eq'])
     short_float = check_for_hash(mult['short float'][0:-1]) / 100
+    price = mult['price']
+    avg_v = mult['avg volume']
+    atr = mult['atr']
 
     data = {
         'name': name,
         'sector': sector,
         'industry': industry,
+        'exchange': exchange,
         'p_e': p_e,
         'p_s': p_s,
-        'p_b': p_b,
         'debt_eq': debt_eq,
         'short_float': short_float,
+        'price': price,
+        'avg_v': avg_v,
+        'atr': atr
     }
 
     if this_ticker == ticker:
@@ -84,4 +93,3 @@ def check_tinkoff_short_table(stock_isin):
         return isin_able[stock_isin]
     except KeyError:
         return False
-
