@@ -83,6 +83,8 @@ class Stock(Instrument):
         self.hour = Timeframe(tinvest.CandleResolution.hour, timedelta(days=7))
         self.day = Timeframe(tinvest.CandleResolution.day, timedelta(days=360))
 
+        self.tv_m5 = TradingviewTF(self.ticker, tvta.Interval.INTERVAL_5_MINUTES)
+        self.tv_m15 = TradingviewTF(self.ticker, tvta.Interval.INTERVAL_15_MINUTES)
         self.tv_hour = TradingviewTF(self.ticker, tvta.Interval.INTERVAL_1_HOUR)
         self.tv_day = TradingviewTF(self.ticker, tvta.Interval.INTERVAL_1_DAY)
 
@@ -99,8 +101,8 @@ class Stock(Instrument):
     def check_if_able_for_short(self):
         self.able_for_short = scraper.check_tinkoff_short_table(self.isin)
 
-    def get_tradingview_data(self):
-        for tf in [self.tv_hour, self.tv_day]:
+    def get_tradingview_data(self, time_frames):
+        for tf in time_frames:
             data = tvta.TA_Handler(
                 symbol=self.ticker,
                 screener="america",
@@ -125,17 +127,15 @@ class Stock(Instrument):
             update_tvtf(tf, tf.ema, this_ema)
             update_tvtf(tf, tf.osc, this_osc)
 
-    def output_data(self, level):
-        base_data = {
+    def output_data(self):
+        return_data = {
             'ticker': self.ticker,
             'figi': self.figi,
             'isin': self.isin,
-            'currency': self.currency
+            'currency': self.currency,
+            'data': self.data
         }
-        if level == 2:
-            return base_data.update(self.data)
-        elif level == 1:
-            return base_data
+        return return_data
 
 
 def ema(df: pd.DataFrame, base, target, period, alpha=False):
@@ -172,7 +172,7 @@ def EMA(df, base, target, period, alpha=False):
 
     con = pd.concat([df[:period][base].rolling(window=period).mean(), df[period:][base]])
 
-    if (alpha == True):
+    if alpha:
         # (1 - alpha) * previous_val + alpha * current_val where alpha = 1 / period
         df[target] = con.ewm(alpha=1 / period, adjust=False).mean()
     else:

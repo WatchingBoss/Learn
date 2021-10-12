@@ -16,7 +16,7 @@ def stocks_to_file(folder, file, stocks_dict):
     if not os.path.isdir(folder):
         os.mkdir(folder)
 
-    output = [s.output_data(1) for s in stocks_dict.values()]
+    output = [s.output_data() for s in stocks_dict.values()]
 
     with open(file, 'w') as f:
         json.dump(output, f)
@@ -29,12 +29,17 @@ def stocks_from_file(folder, file, stocks_dict):
     with open(file, 'r') as f:
         input_data = json.load(f)
 
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        futures = [executor.submit(Stock, s['ticker'], s['figi'], s['isin'], s['currency']) for s in input_data]
-        for future in futures:
-            stock = future.result()
-            stocks_dict[stock.figi] = stock
-            stock.check_if_able_for_short()
+    for s in input_data:
+        stock = Stock(s['ticker'], s['figi'], s['isin'], s['currency'])
+        stock.data = s['data']
+        stocks_dict[stock.figi] = stock
+
+    # with concurrent.futures.ThreadPoolExecutor() as executor:
+    #     futures = [executor.submit(Stock, s['ticker'], s['figi'], s['isin'], s['currency']) for s in input_data]
+    #     for future in futures:
+    #         stock = future.result()
+    #         stocks_dict[stock.figi] = stock
+    #         stock.check_if_able_for_short()
 
 
 def get_market_stocks(client, stocks_dict):
@@ -43,6 +48,14 @@ def get_market_stocks(client, stocks_dict):
 
     for i in range(len(stocks_usd)):
         stock = stocks_usd[i]
+        stocks_dict[stock.figi] = Stock(stock.ticker, stock.figi, stock.isin, stock.currency)
+
+
+def load_stocks(file, client, stocks_dict):
+    with open(file, 'r') as f:
+        tickers = f.readline().split(' ')
+    for t in tickers:
+        stock = client.get_market_search_by_ticker(t).payload.instruments[0]
         stocks_dict[stock.figi] = Stock(stock.ticker, stock.figi, stock.isin, stock.currency)
 
 
@@ -133,19 +146,25 @@ async def main():
 
     client = tinvest.SyncClient(keys['token_tinkoff_real'])
 
-    get_market_stocks(client, all_stocks)
-    stocks = [s for s in all_stocks.values()]
-    now_stocks = stocks[120:150]
+    # get_market_stocks(client, all_stocks)
+    if os.path.isfile(path_stocks_usd):
+        stocks_from_file(path_data_dir, path_stocks_usd, all_stocks)
+    if len(all_stocks) < 3:
+        load_stocks(os.path.join(path_data_dir, 'stocks' + '.txt'), client, all_stocks)
+        with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
+            for stock in all_stocks.values():
+                executor.submit(stock.add_scraping_data())
+        stocks_to_file(path_data_dir, path_stocks_usd, all_stocks)
+    # stocks = [s for s in all_stocks.values()]
+    # now_stocks = stocks[120:150]
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
-        for stock in now_stocks:
-            executor.submit(stock.add_scraping_data())
-        for stock in now_stocks:
-            executor.submit(stock.get_tradingview_data())
+        for stock in all_stocks.values():
+            executor.submit(stock.get_tradingview_data([stock.tv_m5]))
 
-    for s in now_stocks:
+    for s in all_stocks.values():
         print('\n' + s.ticker)
-        for tf in (s.tv_hour, s.tv_day):
+        for tf in [s.tv_m5]:
             print(tf.interval)
             print(tf.sum)
             print(tf.ema)
