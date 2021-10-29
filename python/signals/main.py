@@ -8,8 +8,8 @@ import numpy as np
 import pandas as pd
 from tradingview_ta import TA_Handler, Interval, Exchange
 
-import support, instrument as inst
-from instrument import Stock
+import support
+from instrument import Stock, Timeframe
 
 
 def stocks_to_file(folder, file, stocks_dict):
@@ -84,24 +84,25 @@ async def test_streaming(key, stock_dict):
             timeframe.last_modify_time = event.time
 
 
-def get_candles(client, figi, tf: inst.Timeframe):
-    now = datetime.now(tz=timezone.utc)
+def get_candles(client, figi, tf: Timeframe):
+    today = datetime.today()
+    start = datetime(today.year, today.month, today.day, hour=13, minute=30, tzinfo=timezone.utc)
     candle_list = []
-    max_list = 250
+    max_list = 101
     for _ in range(10):
         if len(candle_list) >= max_list:
             break
         try:
             candles = client.get_market_candles(
-                figi, from_=now - tf.delta, to=now, interval=tf.interval
+                figi, from_=start, to=start + timedelta(hours=6, minutes=30), interval=tf.interval
             ).payload.candles
-            now -= tf.delta
+            start -= timedelta(days=1)
             for c in candles:
                 candle_list.append([c.time, c.o, c.h, c.l, c.c, c.v])
         except tinvest.exceptions.TooManyRequestsError:
             time.sleep(60)
 
-    if len(candle_list) < 250:
+    if len(candle_list) < max_list:
         max_list = len(candle_list)
 
     tf.candles = pd.DataFrame(
@@ -111,21 +112,22 @@ def get_candles(client, figi, tf: inst.Timeframe):
 
 def fill_candles(client, stock_dict):
     for stock in stock_dict.values():
-        # get_candles(client, stock.figi, stock.day)
-        # get_candles(client, stock.figi, stock.hour)
-        get_candles(client, stock.figi, stock.m15)
+        for tf in [stock.m1, stock.m5, stock.m15]:
+            get_candles(client, stock.figi, tf)
 
 
 async def print_stock(stock_dict):
     for stock in stock_dict.values():
-        tf = stock.m15
-        print(f"Ticker: {stock.ticker}\n"
-              f"Interval: {tf.interval}\n"
-              f"{tf.candles}\n"
-              f"Last time modify: {tf.last_modify_time.time()}")
-        tf.ema()
-        print(tf.candles)
-        # print(stock.m15.ema.to_string())
+        for tf in [stock.m1, stock.m5, stock.m15]:
+            tf.ema('ema_10', 10)
+            tf.ema('ema_20', 20)
+            tf.ema('ema_50', 50)
+            tf.macd()
+            tf.rsi()
+            print(f"Ticker: {stock.ticker}\n"
+                  f"Interval: {tf.interval}\n"
+                  f"{tf.candles.to_string()}\n"
+                  f"Last time modify: {tf.last_modify_time.time()}")
 
 
 async def main():
@@ -140,50 +142,16 @@ async def main():
     if not os.path.isdir(path_data_dir):
         os.mkdir(path_data_dir)
 
-    all_stocks = {}
-    stock_long_only = {}
-    stock_long_short = {}
+    scanning_stocks = {}
 
     client = tinvest.SyncClient(keys['token_tinkoff_real'])
 
-    # get_market_stocks(client, all_stocks)
-    if os.path.isfile(path_stocks_usd):
-        stocks_from_file(path_data_dir, path_stocks_usd, all_stocks)
-    if len(all_stocks) < 3:
-        load_stocks(os.path.join(path_data_dir, 'stocks' + '.txt'), client, all_stocks)
-        with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
-            for stock in all_stocks.values():
-                executor.submit(stock.add_scraping_data())
-        stocks_to_file(path_data_dir, path_stocks_usd, all_stocks)
-    # stocks = [s for s in all_stocks.values()]
-    # now_stocks = stocks[120:150]
+    stocks = client.get_market_search_by_ticker('CCL').payload.instruments
+    for s in stocks:
+        scanning_stocks[s.figi] = Stock(s.ticker, s.figi, s.isin, s.currency)
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
-        for stock in all_stocks.values():
-            executor.submit(stock.get_tradingview_data([stock.tv_m5]))
-
-    for s in all_stocks.values():
-        print('\n' + s.ticker)
-        for tf in [s.tv_m5]:
-            print(tf.interval)
-            print(tf.sum)
-            print(tf.ema)
-            print(tf.osc)
-
-    # for stock in stock_long_short.values():
-    #     this_stock = TA_Handler(
-    #         symbol=stock.ticker,
-    #         screener="america",
-    #         exchange=stock.data['exchange'],
-    #         interval=Interval.INTERVAL_1_DAY
-    #     )
-
-    # brent = TA_Handler(
-    #     symbol='UKOIL',
-    #     screener="cfd",
-    #     exchange='FX',
-    #     interval=Interval.INTERVAL_15_MINUTES
-    # )
+    fill_candles(client, scanning_stocks)
+    await print_stock(scanning_stocks)
 
 
 if __name__ == "__main__":
