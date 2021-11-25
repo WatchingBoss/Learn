@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container-xl">
+
+  <p class="text-md-start">Name: {{ user.name }}, Age: {{ user.age }}</p>
+
+  <div class="container">
+    <div class="row">
+      <ul class="list-group col">
+      {% for phone in phones %}
+        <li class="list-group-item">{{ phone.manufacturer }}: {{ phone.model }}, {{ phone.price }} {{ phone.currency }}</li>
+      {% endfor %}
+      </ul>
+      <ul class="list-group col">
+      {% for phone in phones %}
+        <li class="list-group-item">{{ phone.manufacturer }}: {{ phone.model }}, {{ phone.price }} {{ phone.currency }}</li>
+      {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}
