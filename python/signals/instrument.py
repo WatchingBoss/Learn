@@ -145,28 +145,3 @@ def rsi(df, base="Close", period=14):
 
 async def intersection():
     pass
-
-
-"""
-async def detect_intersection_in_timeframe(stock: Stock, tf: inst.Timeframe):
-    if tf.ema10_above_20:
-        if tf.ema_10 < tf.ema_20:
-            tf.ema10_above_20 = False
-            send_event(stock.ticker, tf.interval, "EMA 10 under EMA 20")
-        else:
-            print(f"{stock.ticker}: No intersections")
-    else:
-        if tf.ema_10 > tf.ema_20:
-            tf.ema10_above_20 = True
-            send_event(stock.ticker, tf.interval, "EMA 10 above EMA 20")
-        else:
-            print(f"{stock.ticker}: No intersections")
-
-
-async def detect_intersection(stock_dict):
-    while True:
-        for stock in [stock_dict['BBG00MVWLLM2'], stock_dict['BBG000M65M61'], stock_dict['BBG005P7Q881']]:
-            asyncio.create_task(detect_intersection_in_timeframe(stock, stock.m15))
-            asyncio.create_task(detect_intersection_in_timeframe(stock, stock.hour))
-            asyncio.create_task(detect_intersection_in_timeframe(stock, stock.day))
-"""
