@@ -1,10 +1,50 @@
 from flask import render_template, flash, redirect, url_for, request
 from flask_app import app, db
-from flask_app.forms import LoginForm, RegistrationForm, EditProfileForm
+from flask_app.forms import LoginForm, RegistrationForm, EditProfileForm, EmptyForm
 from flask_login import current_user, login_user, logout_user, login_required
-from flask_app.models import User
+from flask_app.models import User, Post
 from werkzeug.urls import url_parse
 from datetime import datetime
+
+
+@app.route('/follow/<username>', methods=['POST'])
+@login_required
+def follow(username):
+    form = EmptyForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=username).first()
+        if user is None:
+            flash(f"There is no {username} user")
+            return redirect(url_for('index'))
+        if user == current_user:
+            flash("You cannot follow yourself")
+            return redirect(url_for('profile', username=username))
+        current_user.follow(user)
+        db.session.commit()
+        flash(f"Now you following {username} user")
+        return redirect(url_for('profile', username=username))
+    else:
+        return redirect(url_for('index'))
+
+
+@app.route('/unfollow/<username>', methods=['POST'])
+@login_required
+def unfollow(username):
+    form = EmptyForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=username).first()
+        if user is None:
+            flash(f"There is no {username} user")
+            return redirect(url_for('index'))
+        if user == current_user:
+            flash("You cannot unfollow yourself")
+            return redirect(url_for('profile', username=username))
+        current_user.unfollow(user)
+        db.session.commit()
+        flash(f"Now you not following {username} user")
+        return redirect(url_for('profile', username=username))
+    else:
+        return redirect(url_for('index'))
 
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
@@ -27,12 +67,9 @@ def edit_profile():
 @login_required
 def profile(username):
     user = User.query.filter_by(username=username).first_or_404()
-    posts = [
-        {'author': user, 'body': 'Post body #1'},
-        {'author': user, 'body': 'Post body #2'},
-        {'author': user, 'body': 'Post body #3'}
-    ]
-    return render_template('profile.html', title='Profile', user=user, posts=posts)
+    posts = Post.query.filter_by(author=user).all()
+    form = EmptyForm()
+    return render_template('profile.html', title='Profile', user=user, posts=posts, form=form)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -41,7 +78,7 @@ def register():
         return redirect(url_for('index'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(form.username.data, form.email.data)
+        user = User(username=form.username.data, email=form.email.data)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
