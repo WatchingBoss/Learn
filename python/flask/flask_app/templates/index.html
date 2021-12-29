@@ -4,12 +4,33 @@
 <div class="container-xl">
 
   <h1>Hi, {{ current_user.username }}</h1>
-<!--  {% for post in posts %}-->
-<!--  <div>-->
-<!--    <p>{{ post.author.username }}</p>-->
-<!--    <p>{{ post.body }}</p>-->
-<!--  </div>-->
-<!--  {% endfor %}-->
+
+  {% if form %}
+  <form action="" method="post">
+    {{ form.hidden_tag() }}
+    <div>
+        {{ form.post.label }} <br>
+        {{ form.post(cols=32, rows=4) }}
+        {% for error in form.post.errors %}
+        <span class="error-message">[{{error}}]</span>
+        {% endfor %}
+    </div>
+    <p>{{ form.submit(class='btn btn-primary') }}</p>
+  </form>
+  {% endif %}
+
+  {% for post in posts %}
+  <div>
+      {% include '_post.html' %}
+  </div>
+  {% endfor %}
+
+    {% if prev_url %}
+    <a href="{{ prev_url }}">Back</a>
+    {% endif %}
+    {% if next_url %}
+    <a href="{{ next_url }}">Next</a>
+    {% endif %}
 
 </div>
 
