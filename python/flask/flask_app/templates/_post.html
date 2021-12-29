@@ -1,3 +1,5 @@
  <div>
-    <p><img src="{{ user.avatar(24) }}" alt="Avatar"> {{ post.author.username }}: {{ post.body }}</p>
-  </div>
+    <p><img src="{{ post.author.avatar(24) }}" alt="Avatar">
+        <a href="{{ url_for('profile', username=post.author.username) }}">{{ post.author.username }}</a>: {{ post.body }}
+    </p>
+ </div>
