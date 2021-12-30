@@ -1,16 +1,47 @@
 from flask import render_template, flash, redirect, url_for, request
 from flask_app import app, db
-from flask_app.forms import LoginForm, RegistrationForm, EditProfileForm, EmptyForm, PostForm
+import flask_app.forms as forms
 from flask_login import current_user, login_user, logout_user, login_required
 from flask_app.models import User, Post
 from werkzeug.urls import url_parse
 from datetime import datetime
+import flask_app.email as email
+
+
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    user = User.verify_reset_password_token(token)
+    if not user:
+        return redirect(url_for('index'))
+    form = forms.ResetPasswordForm()
+    if form.validate_on_submit():
+        user.set_password(form.password.data)
+        db.session.commit()
+        flash('Your password has been reset')
+        return redirect(url_for('login'))
+    return render_template('reset_password.html', title='Reset Password', form=form)
+
+
+@app.route('/reset_password_request', methods=['GET', 'POST'])
+def reset_password_request():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = forms.ResetPasswordRequestForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user:
+            email.send_password_reset_email(user)
+        flash('Check your email for the instructions to reset your password')
+        return redirect(url_for('login'))
+    return render_template('reset_password_request.html', title='Reset Password', form=form)
 
 
 @app.route('/follow/<username>', methods=['POST'])
 @login_required
 def follow(username):
-    form = EmptyForm()
+    form = forms.EmptyForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=username).first()
         if user is None:
@@ -30,7 +61,7 @@ def follow(username):
 @app.route('/unfollow/<username>', methods=['POST'])
 @login_required
 def unfollow(username):
-    form = EmptyForm()
+    form = forms.EmptyForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=username).first()
         if user is None:
@@ -50,7 +81,7 @@ def unfollow(username):
 @app.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
-    form = EditProfileForm(current_user.username)
+    form = forms.EditProfileForm(current_user.username)
     if form.validate_on_submit():
         current_user.username = form.username.data
         current_user.about_me = form.about_me.data
@@ -72,7 +103,7 @@ def profile(username):
                 .paginate(page, app.config['POSTS_PER_PAGE'], False)
     next_url = url_for('profile', username=user.username, page=posts.next_num) if posts.has_next else None
     prev_url = url_for('profile', username=user.username, page=posts.prev_num) if posts.has_prev else None
-    form = EmptyForm()
+    form = forms.EmptyForm()
     return render_template('profile.html', title='Profile', user=user, posts=posts.items, form=form,
                            next_url=next_url, prev_url=prev_url)
 
@@ -81,7 +112,7 @@ def profile(username):
 def register():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
-    form = RegistrationForm()
+    form = forms.RegistrationForm()
     if form.validate_on_submit():
         user = User(username=form.username.data, email=form.email.data)
         user.set_password(form.password.data)
@@ -97,7 +128,7 @@ def register():
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
-    form = LoginForm()
+    form = forms.LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
@@ -139,7 +170,7 @@ def explore():
 @app.route('/index', methods=["GET", "POST"])
 @login_required
 def index():
-    form = PostForm()
+    form = forms.PostForm()
     if form.validate_on_submit():
         post = Post(body=form.post.data, author=current_user)
         db.session.add(post)

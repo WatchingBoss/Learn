@@ -3,7 +3,7 @@
 
 <h1 class="display-1">Sign in</h1>
 
-<div class='form-group form-sign-in p-3 py-1'>
+<div class='form-group form-sign-in p-2 py-2'>
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
         <div>
@@ -27,6 +27,10 @@
     </form>
 
     <p>New user? <a href="{{ url_for('register') }}">Click to register</a></p>
+    <p>
+        Forget password?
+        <a href="{{ url_for('reset_password_request') }}">Click here to resert it</a>
+    </p>
 </div>
 
 {% endblock %}
