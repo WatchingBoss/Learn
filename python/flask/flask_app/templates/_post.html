@@ -8,7 +8,7 @@
                 <a class="col" href="{{ url_for('profile', username=post.author.username) }}">
                     {{ post.author.username }}
                 </a>
-                 <p class="col">{{ post.timestamp }}</p>
+                 <p class="col">{{ moment(post.timestamp).fromNow() }}</p>
              </div>
              <div class="mb-1">
                  <p class="text-justify">{{ post.body }}</p>
