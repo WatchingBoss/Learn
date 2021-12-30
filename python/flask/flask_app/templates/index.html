@@ -1,36 +1,33 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="container-xl">
+<div class="container">
 
-  <h1>Hi, {{ current_user.username }}</h1>
+    <h1>Hi, {{ current_user.username }}</h1>
 
-  {% if form %}
-  <form action="" method="post">
-    {{ form.hidden_tag() }}
-    <div>
-        {{ form.post.label }} <br>
-        {{ form.post(cols=32, rows=4) }}
-        {% for error in form.post.errors %}
-        <span class="error-message">[{{error}}]</span>
-        {% endfor %}
+    {% if form %}
+    <div class="container">
+        <form class="form-group" action="" method="post">
+            {{ form.hidden_tag() }}
+            <div>
+                {{ form.post.label }} <br>
+                {{ form.post(cols=32, rows=4, class='form-control mb-2 mt-2') }}
+                {% for error in form.post.errors %}
+                    <span class="error-message">[{{error}}]</span>
+                {% endfor %}
+            </div>
+            <p>{{ form.submit(class='btn btn-primary mb-2') }}</p>
+        </form>
     </div>
-    <p>{{ form.submit(class='btn btn-primary') }}</p>
-  </form>
-  {% endif %}
-
-  {% for post in posts %}
-  <div>
-      {% include '_post.html' %}
-  </div>
-  {% endfor %}
-
-    {% if prev_url %}
-    <a href="{{ prev_url }}">Back</a>
     {% endif %}
-    {% if next_url %}
-    <a href="{{ next_url }}">Next</a>
-    {% endif %}
+
+    <div class="container">
+        {% for post in posts %}
+            {% include '_post.html' %}
+        {% endfor %}
+
+        {% include '_pagination.html' %}
+    </div>
 
 </div>
 

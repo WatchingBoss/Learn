@@ -31,12 +31,8 @@
     {% for post in posts %}
         {% include '_post.html' %}
     {% endfor %}
-    {% if prev_url %}
-    <a href="{{ prev_url }}">Back</a>
-    {% endif %}
-    {% if next_url %}
-    <a href="{{ next_url }}">Next</a>
-    {% endif %}
+
+    {% include '_pagination.html' %}
 
 </div>
 
