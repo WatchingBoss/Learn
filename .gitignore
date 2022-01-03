@@ -24,6 +24,8 @@ data/
 *.user
 *.log
 *.db
+*.mo
+messages.mo
 
 
 no_commit_info.json
@@ -34,4 +36,3 @@ package-lock.json
 Pipfile*
 csharp/EFCore_learn/db/Northwind.db
 csharp/EFCore_learn/db/Northwind.sql
-*.mo
