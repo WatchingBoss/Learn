@@ -14,4 +14,4 @@ class Config(object):
     # MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     # MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     ADMINS = os.environ.get('ADMINS') or ['admin@email.com']
-    LANGUAGES = ['en-US', 'ru']
+    LANGUAGES = ['en', 'ru']

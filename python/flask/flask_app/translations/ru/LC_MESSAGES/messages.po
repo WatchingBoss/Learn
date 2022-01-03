@@ -1,0 +1,219 @@
+# Russian translations for PROJECT.
+# Copyright (C) 2022 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2022-01-03 12:43+0300\n"
+"PO-Revision-Date: 2022-01-03 11:49+0300\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.9.1\n"
+
+#: flask_app/__init__.py:16
+msgid "Plese log in to access this page."
+msgstr "Пожалуйста, авторизуйтесь для доступа к этой странице."
+
+#: flask_app/forms.py:9 flask_app/forms.py:16 flask_app/forms.py:34
+msgid "Username"
+msgstr "Имя"
+
+#: flask_app/forms.py:10 flask_app/forms.py:18 flask_app/forms.py:64
+msgid "Password"
+msgstr "Пароль"
+
+#: flask_app/forms.py:11
+msgid "Remember Me"
+msgstr "Запомнить"
+
+#: flask_app/forms.py:12 flask_app/templates/edit_profile.html:4
+msgid "Sign in"
+msgstr "Авторизоваться"
+
+#: flask_app/forms.py:17 flask_app/forms.py:59
+msgid "Email"
+msgstr "Email"
+
+#: flask_app/forms.py:19 flask_app/forms.py:65
+msgid "Repeat Password"
+msgstr "Повторите пароль"
+
+#: flask_app/forms.py:20 flask_app/templates/base.html:48
+msgid "Register"
+msgstr "Регистрация"
+
+#: flask_app/forms.py:25 flask_app/forms.py:46
+msgid "Please use different username. This username already taken."
+msgstr "Пожалуйста, используйте другое имя. Это имя уже занято."
+
+#: flask_app/forms.py:30
+msgid "Please use different email address. This email already used."
+msgstr "Пожалуйста, используйте другой адрес. Этот адрес уже используется."
+
+#: flask_app/forms.py:35
+msgid "About me"
+msgstr "Обо мне"
+
+#: flask_app/forms.py:36 flask_app/forms.py:50 flask_app/forms.py:55
+#: flask_app/forms.py:60 flask_app/forms.py:66
+msgid "Submit"
+msgstr "Принять"
+
+#: flask_app/forms.py:54
+msgid "Write something"
+msgstr "Напишите что-нибудь"
+
+#: flask_app/routes.py:23
+msgid "Your password has been reset"
+msgstr "Ваш пароль был сброшен"
+
+#: flask_app/routes.py:37
+msgid "Check your email for the instructions to reset your password"
+msgstr "Следуйте инструкциям по восстановлению вашего пароля в письме на почте."
+
+#: flask_app/routes.py:49 flask_app/routes.py:69
+#, python-format
+msgid "There is no %(username)s user"
+msgstr "Нет пользователя с именем %(username)s"
+
+#: flask_app/routes.py:52
+msgid "You cannot follow yourself"
+msgstr "Вы не можете подписаться на себя"
+
+#: flask_app/routes.py:56
+#, python-format
+msgid "Now you following %(username)s user"
+msgstr "На подписаны на %(username)s"
+
+#: flask_app/routes.py:72
+msgid "You cannot unfollow yourself"
+msgstr "Вы не можете отписаться от себя"
+
+#: flask_app/routes.py:76
+#, python-format
+msgid "Now you not following %(username)s user"
+msgstr "Вы отписались от %(username)s"
+
+#: flask_app/routes.py:90
+msgid "Your changes have been saved"
+msgstr "Ваши изменения сохранены"
+
+#: flask_app/routes.py:122
+msgid "You are now registered user"
+msgstr "Вы зарегестрированы"
+
+#: flask_app/routes.py:136
+msgid "Invalid username or password"
+msgstr "Неверное имя пользователя или пароль"
+
+#: flask_app/routes.py:179
+msgid "You post is live now"
+msgstr "Ваш пост опубликован"
+
+#: flask_app/templates/404.html:4
+msgid "File not found"
+msgstr "Файл не найден"
+
+#: flask_app/templates/404.html:5 flask_app/templates/500.html:6
+msgid "Back"
+msgstr "Назад"
+
+#: flask_app/templates/500.html:4
+msgid "An unexpected error has occurred"
+msgstr "Случилась неизвестная ошибка"
+
+#: flask_app/templates/500.html:5
+msgid "The administrator has been notified. Sorry for the inconvenience!"
+msgstr "Администрация уведомлена. Извините за неудобства."
+
+#: flask_app/templates/_pagination.html:5
+msgid "Newer"
+msgstr "Раньше"
+
+#: flask_app/templates/_pagination.html:10
+msgid "Older"
+msgstr "Позже"
+
+#: flask_app/templates/base.html:42
+msgid "Home"
+msgstr "Главная"
+
+#: flask_app/templates/base.html:43
+msgid "Explore"
+msgstr "Обзор"
+
+#: flask_app/templates/base.html:47 flask_app/templates/login.html:4
+msgid "Login"
+msgstr "Авторизоваться"
+
+#: flask_app/templates/base.html:50
+msgid "Profile"
+msgstr "Профиль"
+
+#: flask_app/templates/base.html:51
+msgid "Logout"
+msgstr "Выйти"
+
+#: flask_app/templates/index.html:6
+msgid "Hi,"
+msgstr "Привет,"
+
+#: flask_app/templates/login.html:29
+msgid "New user?"
+msgstr "Новый пользователь?"
+
+#: flask_app/templates/login.html:29
+msgid "Click to register"
+msgstr "Нажмите для регистрации"
+
+#: flask_app/templates/login.html:31
+msgid "Forget password?"
+msgstr "Забыли пароль?"
+
+#: flask_app/templates/login.html:32
+msgid "Click here to resert it"
+msgstr "Нажмите для восстановления"
+
+#: flask_app/templates/profile.html:8
+#, python-format
+msgid "Bio: %(about_me)s"
+msgstr "Биография: %(about_me)s"
+
+#: flask_app/templates/profile.html:9
+msgid "Last seen:"
+msgstr "Последняя активность:"
+
+#: flask_app/templates/profile.html:10
+msgid "followers"
+msgstr "подписчики"
+
+#: flask_app/templates/profile.html:10
+msgid "following"
+msgstr "подписки"
+
+#: flask_app/templates/profile.html:12
+#, fuzzy
+msgid "Edit profile"
+msgstr "Профиль"
+
+#: flask_app/templates/register.html:4
+msgid "Registration"
+msgstr "Регистрация"
+
+#: flask_app/templates/reset_password.html:4
+msgid "Reset Password"
+msgstr "Восстановление пароля"
+
+#: flask_app/templates/reset_password_request.html:4
+msgid "Reset Password Request"
+msgstr "Заявка на восстановление пароля"
+
