@@ -34,3 +34,4 @@ package-lock.json
 Pipfile*
 csharp/EFCore_learn/db/Northwind.db
 csharp/EFCore_learn/db/Northwind.sql
+*.mo
