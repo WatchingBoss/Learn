@@ -20,8 +20,7 @@ babel = Babel(app)
 
 @babel.localeselector
 def get_locale():
-    return 'ru'
-    # return request.accept_languages.best_match(app.config['LANGUAGES'])
+    return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 
 from flask_app import routes, models, errors

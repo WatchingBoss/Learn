@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-01-03 12:43+0300\n"
+"POT-Creation-Date: 2022-01-03 12:56+0300\n"
 "PO-Revision-Date: 2022-01-03 11:49+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ru\n"
@@ -115,7 +115,7 @@ msgstr "Вы зарегестрированы"
 msgid "Invalid username or password"
 msgstr "Неверное имя пользователя или пароль"
 
-#: flask_app/routes.py:179
+#: flask_app/routes.py:180
 msgid "You post is live now"
 msgstr "Ваш пост опубликован"
 
@@ -204,6 +204,16 @@ msgstr "подписки"
 #, fuzzy
 msgid "Edit profile"
 msgstr "Профиль"
+
+#: flask_app/templates/profile.html:17
+#, fuzzy
+msgid "Follow"
+msgstr "Подписаться"
+
+#: flask_app/templates/profile.html:24
+#, fuzzy
+msgid "Unfollow"
+msgstr "Отписаться"
 
 #: flask_app/templates/register.html:4
 msgid "Registration"

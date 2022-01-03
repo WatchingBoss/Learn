@@ -14,14 +14,14 @@
     <div>
       <form action="{{ url_for('follow', username=user.username) }}" method="post">
         {{ form.hidden_tag() }}
-        {{ form.submit(value='Follow') }}
+        {{ form.submit(value=_('Follow')) }}
       </form>
     </div>
     {% else %}
     <div>
       <form action="{{ url_for('unfollow', username=user.username) }}" method="post">
           {{ form.hidden_tag() }}
-          {{ form.submit(value='Unfollow') }}
+          {{ form.submit(value=_('Unfollow')) }}
       </form>
     </div>
     {% endif %}

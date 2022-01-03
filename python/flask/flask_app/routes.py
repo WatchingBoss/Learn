@@ -1,11 +1,11 @@
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, g
 from flask_app import app, db
 import flask_app.forms as forms
 from flask_login import current_user, login_user, logout_user, login_required
 from flask_app.models import User, Post
 from werkzeug.urls import url_parse
 from datetime import datetime
-from flask_babel import gettext as _
+from flask_babel import gettext as _, get_locale
 import flask_app.email as email
 
 
@@ -148,6 +148,7 @@ def before_request():
     if current_user.is_authenticated:
         current_user.last_seen = datetime.utcnow()
         db.session.commit()
+    g.locale = str(get_locale())
 
 
 @app.route('/logout')
