@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, request, g
+from flask import render_template, flash, redirect, url_for, request, g, jsonify
 from flask_app import app, db
 import flask_app.forms as forms
 from flask_login import current_user, login_user, logout_user, login_required
@@ -7,6 +7,13 @@ from werkzeug.urls import url_parse
 from datetime import datetime
 from flask_babel import gettext as _, get_locale
 import flask_app.email as email
+
+
+@app.route('/translate', methods=['POST'])
+@login_required
+def translate():
+    text = f"Translation of post with id {request.get_json()['post_id']}"
+    return jsonify({'text': text})
 
 
 @app.route('/reset_password/<token>', methods=['GET', 'POST'])

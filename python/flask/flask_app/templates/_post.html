@@ -11,7 +11,15 @@
                  <p class="col">{{ moment(post.timestamp).fromNow() }}</p>
              </div>
              <div class="mb-1">
-                 <p class="text-justify">{{ post.body }}</p>
+                 <p class="text-justify">
+                     <span id="post{{ post.id }}">{{ post.body }}</span>
+                     <br>
+                     <span id="translation{{ post.id }}" style="font-size: 0.8em;">
+                         <a href="javascript:translation(
+                         'translation{{ post.id }}',
+                         '{{ post.id }}');">Translate</a>
+                     </span>
+                 </p>
              </div>
          </div>
      </div>
