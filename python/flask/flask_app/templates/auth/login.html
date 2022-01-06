@@ -26,10 +26,10 @@
         <p>{{ form.submit(class='btn btn-primary') }}</p>
     </form>
 
-    <p> {{ _('New user?') }} <a href="{{ url_for('register') }}">{{ _('Click to register') }}</a></p>
+    <p> {{ _('New user?') }} <a href="{{ url_for('auth.register') }}">{{ _('Click to register') }}</a></p>
     <p>
         {{ _('Forget password?') }}
-        <a href="{{ url_for('reset_password_request') }}">{{ _('Click here to resert it') }}</a>
+        <a href="{{ url_for('auth.reset_password_request') }}">{{ _('Click here to resert it') }}</a>
     </p>
 </div>
 

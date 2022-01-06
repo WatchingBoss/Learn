@@ -1,6 +1,10 @@
-from flask_app import app, db
+from flask_app import create_app, db, cli
 from flask_app.models import User, Post
-from flask_app import cli
+
+
+app = create_app()
+cli.register(app)
+
 
 @app.shell_context_processor
 def make_shell_context():
