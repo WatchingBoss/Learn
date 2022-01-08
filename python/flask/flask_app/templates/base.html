@@ -33,21 +33,21 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-      <a class="navbar-brand" href="{{ url_for('index') }}">Learn Flask</a>
+      <a class="navbar-brand" href="{{ url_for('main.index') }}">Learn Flask</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav me-auto">
-          <li class="nav-item"> <a class="nav-link" aria-current="page" href="{{ url_for('index') }}"><span class="home">{{ _('Home') }}</span></a> </li>
-          <li class="nav-item"> <a class="nav-link" href="{{ url_for('explore') }}">{{ _('Explore') }}</a> </li>
+          <li class="nav-item"> <a class="nav-link" aria-current="page" href="{{ url_for('main.index') }}"><span class="home">{{ _('Home') }}</span></a> </li>
+          <li class="nav-item"> <a class="nav-link" href="{{ url_for('main.explore') }}">{{ _('Explore') }}</a> </li>
         </ul>
         <ul class="navbar-nav">
           {% if current_user.is_anonymous %}
           <li class="nav-item"> <a class="nav-link" href="{{ url_for('auth.login') }}">{{ _('Login') }}</a> </li>
           <li class="nav-item"> <a class="nav-link" href="{{ url_for('auth.register') }}">{{ _('Register') }}</a> </li>
           {% else %}
-          <li class="nav-item"> <a class="nav-link" href="{{ url_for('profile', username=current_user.username) }}">{{ _('Profile') }}</a> </li>
+          <li class="nav-item"> <a class="nav-link" href="{{ url_for('main.profile', username=current_user.username) }}">{{ _('Profile') }}</a> </li>
           <li class="nav-item"> <a class="nav-link" href="{{ url_for('auth.logout') }}">{{ _('Logout') }}</a> </li>
           {% endif %}
         </ul>

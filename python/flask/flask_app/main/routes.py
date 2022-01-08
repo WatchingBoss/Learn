@@ -23,16 +23,16 @@ def follow(username):
         user = User.query.filter_by(username=username).first()
         if user is None:
             flash(_("There is no %(username)s user", username=username))
-            return redirect(url_for('index'))
+            return redirect(url_for('main.ndex'))
         if user == current_user:
             flash(_("You cannot follow yourself"))
-            return redirect(url_for('profile', username=username))
+            return redirect(url_for('main.profile', username=username))
         current_user.follow(user)
         db.session.commit()
         flash(_(f"Now you following %(username)s user", username=username))
-        return redirect(url_for('profile', username=username))
+        return redirect(url_for('main.profile', username=username))
     else:
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
 
 
 @bp.route('/unfollow/<username>', methods=['POST'])
@@ -43,16 +43,16 @@ def unfollow(username):
         user = User.query.filter_by(username=username).first()
         if user is None:
             flash(_(f"There is no %(username)s user", username=username))
-            return redirect(url_for('index'))
+            return redirect(url_for('main.index'))
         if user == current_user:
             flash(_("You cannot unfollow yourself"))
-            return redirect(url_for('profile', username=username))
+            return redirect(url_for('main.profile', username=username))
         current_user.unfollow(user)
         db.session.commit()
         flash(_(f"Now you not following %(username)s user", username=username))
-        return redirect(url_for('profile', username=username))
+        return redirect(url_for('main.profile', username=username))
     else:
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
 
 
 @bp.route('/edit_profile', methods=['GET', 'POST'])
@@ -64,7 +64,7 @@ def edit_profile():
         current_user.about_me = form.about_me.data
         db.session.commit()
         flash(_('Your changes have been saved'))
-        return redirect(url_for('edit_profile'))
+        return redirect(url_for('main.edit_profile'))
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.about_me.data = current_user.about_me
@@ -78,8 +78,8 @@ def profile(username):
     page = request.args.get('page', 1, type=int)
     posts = user.posts.order_by(Post.timestamp.desc())\
                 .paginate(page, current_app.config['POSTS_PER_PAGE'], False)
-    next_url = url_for('profile', username=user.username, page=posts.next_num) if posts.has_next else None
-    prev_url = url_for('profile', username=user.username, page=posts.prev_num) if posts.has_prev else None
+    next_url = url_for('main.profile', username=user.username, page=posts.next_num) if posts.has_next else None
+    prev_url = url_for('main.profile', username=user.username, page=posts.prev_num) if posts.has_prev else None
     form = forms.EmptyForm()
     return render_template('profile.html', title='Profile', user=user, posts=posts.items, form=form,
                            next_url=next_url, prev_url=prev_url)
@@ -99,8 +99,8 @@ def explore():
     page = request.args.get('page', 1, type=int)
     posts = Post.query.order_by(Post.timestamp.desc())\
                 .paginate(page, current_app.config['POSTS_PER_PAGE'], False)
-    next_url = url_for('explore', page=posts.next_num) if posts.has_next else None
-    prev_url = url_for('explore', page=posts.prev_num) if posts.has_prev else None
+    next_url = url_for('main.explore', page=posts.next_num) if posts.has_next else None
+    prev_url = url_for('main.explore', page=posts.prev_num) if posts.has_prev else None
     return render_template('index.html', title='Home', posts=posts.items, next_url=next_url, prev_url=prev_url)
 
 
@@ -114,11 +114,11 @@ def index():
         db.session.add(post)
         db.session.commit()
         flash(_("You post is live now"))
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
     page = request.args.get('page', 1, type=int)
     posts = current_user.followed_posts()\
             .paginate(page, current_app.config['POSTS_PER_PAGE'], False)
-    next_url = url_for('index', page=posts.next_num) if posts.has_next else None
-    prev_url = url_for('index', page=posts.prev_num) if posts.has_prev else None
+    next_url = url_for('main.index', page=posts.next_num) if posts.has_next else None
+    prev_url = url_for('main.index', page=posts.prev_num) if posts.has_prev else None
     return render_template('index.html', title='Home', form=form, posts=posts.items,
                            next_url=next_url, prev_url=prev_url)

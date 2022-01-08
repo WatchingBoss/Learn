@@ -37,6 +37,8 @@ def create_app(config_class=Config):
     from flask_app.main import bp as main_bp
     app.register_blueprint(main_bp)
 
+    return app
+
 
 @babel.localeselector
 def get_locale():
