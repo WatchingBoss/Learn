@@ -4,6 +4,9 @@ from flask_app import app, db
 from flask_app.models import User, Post
 
 
+#TODO: Chapter 15. Better unit test
+
+
 class UserModelCase(unittest.TestCase):
     def setUp(self):
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'

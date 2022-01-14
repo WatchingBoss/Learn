@@ -7,3 +7,4 @@ set MAIL_PORT=8025
 @REM set MAIL_USERNAME=
 @REM set MAIL_PASSWORD=
 set ADMINS=['admin@email.com']
+set ELASTICSEARCH_URL=http://localhost:9200

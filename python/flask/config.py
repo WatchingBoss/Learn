@@ -15,3 +15,4 @@ class Config(object):
     # MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     ADMINS = os.environ.get('ADMINS') or ['admin@email.com']
     LANGUAGES = ['en', 'ru']
+    ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL')
