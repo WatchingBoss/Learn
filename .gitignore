@@ -26,6 +26,8 @@ data/
 *.db
 *.mo
 messages.mo
+.env
+env.bat
 
 
 no_commit_info.json
