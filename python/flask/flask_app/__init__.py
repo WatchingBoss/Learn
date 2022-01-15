@@ -40,6 +40,9 @@ def create_app(config_class=Config):
     from flask_app.main import bp as main_bp
     app.register_blueprint(main_bp)
 
+    from flask_app.admin import bp as admin_bp
+    app.register_blueprint(admin_bp)
+
     return app
 
 
