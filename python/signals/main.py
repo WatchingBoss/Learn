@@ -88,8 +88,8 @@ def get_candles(client, figi, tf: Timeframe):
     today = datetime.today()
     start = datetime(today.year, today.month, today.day, hour=13, minute=30, tzinfo=timezone.utc)
     candle_list = []
-    max_list = 101
-    for _ in range(10):
+    max_list = 1000
+    for _ in range(50):
         if len(candle_list) >= max_list:
             break
         try:
@@ -98,22 +98,28 @@ def get_candles(client, figi, tf: Timeframe):
             ).payload.candles
             start -= timedelta(days=1)
             for c in candles:
-                candle_list.append([c.time, c.o, c.h, c.l, c.c, c.v])
+                t = (c.time - timedelta(hours=4))
+                candle_list.append([t, c.o, c.h, c.l, c.c, c.v])
         except tinvest.exceptions.TooManyRequestsError:
+            print('Sleeping for 1 minute')
             time.sleep(60)
-
-    if len(candle_list) < max_list:
-        max_list = len(candle_list)
 
     tf.candles = pd.DataFrame(
         candle_list, columns=['Time', 'Open', 'High', 'Low', 'Close', 'Volume']
         ).sort_values(by='Time', ascending=True, ignore_index=True)
+    tf.candles['Time'] = tf.candles['Time'].apply(lambda x: x.strftime("%d/%m/%y %H:%M:%S"))
 
 
-def fill_candles(client, stock_dict):
-    for stock in stock_dict.values():
+def fill_candles(client, stock_list):
+    for stock in stock_list:
         for tf in [stock.m1, stock.m5, stock.m15]:
             get_candles(client, stock.figi, tf)
+
+
+def save_frames(stock_list, path):
+    for s in stock_list:
+        for tf in [s.m1, s.m5, s.m15]:
+            tf.candles.to_excel(os.path.join(path, f"{s.ticker}_{tf.interval}.xlsx"))
 
 
 async def print_stock(stock_dict):
@@ -146,12 +152,18 @@ async def main():
 
     client = tinvest.SyncClient(keys['token_tinkoff_real'])
 
-    stocks = client.get_market_search_by_ticker('CCL').payload.instruments
-    for s in stocks:
-        scanning_stocks[s.figi] = Stock(s.ticker, s.figi, s.isin, s.currency)
+    instruments = [client.get_market_search_by_ticker(ticker).payload.instruments[0]
+                   for ticker in ('CCL', 'UAL', 'AAPL')]
+    stocks = [Stock(i.ticker, i.figi, i.isin, i.currency) for i in instruments]
+    fill_candles(client, stocks)
+    save_frames(stocks, path_data_dir)
 
-    fill_candles(client, scanning_stocks)
-    await print_stock(scanning_stocks)
+    # stocks = client.get_market_search_by_ticker('CCL').payload.instruments
+    # for s in stocks:
+    #     scanning_stocks[s.figi] = Stock(s.ticker, s.figi, s.isin, s.currency)
+
+    # fill_candles(client, scanning_stocks)
+    # await print_stock(scanning_stocks)
 
 
 if __name__ == "__main__":

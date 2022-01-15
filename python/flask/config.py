@@ -1,7 +1,7 @@
 import os
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-
+#TODO: Using load_dotenv to load variables from .env file in basedir
 
 class Config(object):
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'this_is_hardcoded_string'
