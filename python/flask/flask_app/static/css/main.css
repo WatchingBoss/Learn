@@ -1,0 +1,12 @@
+body{
+    background-color: #212121;
+    color: white;
+}
+
+.form-sign-in {
+    max-width: 300px;
+}
+
+.error-message {
+    color: red;
+}
