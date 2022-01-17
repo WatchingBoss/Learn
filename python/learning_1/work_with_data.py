@@ -1,6 +1,7 @@
 import os
 from datetime import datetime
 import pandas as pd
+import matplotlib.pyplot as plt
 
 
 def get_df(path: str) -> pd.DataFrame:
@@ -16,6 +17,7 @@ def moving_average(df: pd.DataFrame, period: int) -> pd.Series:
 
 def main(df: pd.DataFrame):
     df['sma20'] = moving_average(df, 20)
+    
     print(df)
 
 
