@@ -5,13 +5,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def get_df(path: str) -> pd.DataFrame:
-    df = pd.read_excel(path)
-    df = df.drop(columns=df.columns[0])
-    df['Time'] = df['Time'].apply(lambda s: datetime.strptime(s, "%d/%m/%y %H:%M:%S"))
-    return df
-
-
 def moving_average(df: pd.DataFrame, period: int) -> pd.Series:
     return df['Close'].rolling(window=period, min_periods=period, center=False).mean()
 
@@ -45,10 +38,11 @@ def ma_cross_over_backtest(df):
     t1['Trade_return'] = (t1['cumpnl_long'].diff() / t1['Close']) * 100
 
     print(f"Number of trade count: {round(len(t1) / 2)}")
+    print(t1)
 
-    with pd.ExcelWriter(os.path.join(os.path.curdir, 'data', 'ma_t.xlsx')) as writer:
-        t.to_excel(writer, sheet_name='sheet_1', index=True)
-        t1.to_excel(writer, sheet_name='sheet_2', index=True)
+    # with pd.ExcelWriter(os.path.join(os.path.curdir, 'data', 'ma_t.xlsx')) as writer:
+    #     t.to_excel(writer, sheet_name='sheet_1', index=True)
+    #     t1.to_excel(writer, sheet_name='sheet_2', index=True)
 
     # fig, axs = plt.subplots(2, figsize=(15, 8))
     # axs[0].plot(t['cumpnl_long'])
@@ -57,8 +51,32 @@ def ma_cross_over_backtest(df):
 
 
 def main(df: pd.DataFrame):
-    ma_cross_over_backtest(df)
+    print(df)
 
 
-PATH = os.path.join('E:', os.sep, 'Document', 'data_to_analys', 'AAPL_15min' + '.xlsx')
-main(get_df(PATH))
+def get_df(path: str) -> pd.DataFrame:
+    df = pd.read_excel(path)
+    df = df.drop(columns=df.columns[0])
+    df['Time'] = df['Time'].apply(lambda s: datetime.strptime(s, "%d/%m/%y %H:%M:%S"))
+    return df
+
+
+def save_to_h5(path_in, path_out):
+    df = get_df(path_in)
+    df.to_hdf(path_out, 'data', format='table')
+
+
+def read_h5(path) -> pd.DataFrame:
+    df = pd.DataFrame(pd.read_hdf(path, 'data'))
+    return df
+
+
+FILE_NAME = 'AAPL_15min'
+PATH_XLSX = os.path.join('E:', os.sep, 'Document', 'data_to_analys', FILE_NAME + '.xlsx')
+PATH_H5 = os.path.join(os.path.curdir, 'data', FILE_NAME + '.h5')
+
+if os.path.isfile(PATH_H5):
+    main(read_h5(PATH_H5))
+else:
+    main(get_df(PATH_XLSX))
+    save_to_h5(PATH_XLSX, PATH_H5)
