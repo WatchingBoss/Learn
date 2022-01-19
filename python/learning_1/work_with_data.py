@@ -13,9 +13,10 @@ def ma_cross_over_backtest(df):
     t = pd.DataFrame({'Close': df['Close']})
     short_ma = 10
     long_ma = 20
-    t['Short_average'] = t['Close'].rolling(window=short_ma, min_periods=short_ma, center=False).mean()
-    t['Long_average'] = t['Close'].rolling(window=long_ma, min_periods=short_ma, center=False).mean()
+    t['Short_average'] = moving_average(df, short_ma)
+    t['Long_average'] = moving_average(df, long_ma)
     t['position_long'] = np.nan
+    # t['position_long'] = np.where(t.Short_average > t.Long_average, 1, 0)
     for x in range(len(t)):
         if t.Short_average[x] > t.Long_average[x]:
             t['position_long'][x] = 1
@@ -50,8 +51,37 @@ def ma_cross_over_backtest(df):
     # plt.show()
 
 
+def ma_backtest(df) -> pd.DataFrame:
+    short = 10
+    long = 20
+    df[f'ma{short}'] = moving_average(df, 10)
+    df[f'ma{long}'] = moving_average(df, 20)
+
+    ma_s = f'ma{short}'
+    ma_l = f'ma{long}'
+    df['position'] = np.where(df[ma_s] > df[ma_l], 1, -1)
+    df.dropna(inplace=True)
+
+    df['close_diff'] = df.Close / df.Close.shift(1)
+    df['returns'] = np.log(df.Close / df.Close.shift(1))
+
+    df['strategy'] = df['position'].shift(1) * df['returns']
+
+    df['cumsum'] = df['strategy'].cumsum()
+    df['exp_cumsum'] = df['strategy'].cumsum().apply(np.exp)
+
+    print(df[['returns', 'strategy']].mean() * long)
+    print(np.exp(df[['returns', 'strategy']].mean() * long) - 1)
+    print(df[['returns', 'strategy']].std() * long ** 0.5)
+    print((df[['returns', 'strategy']].apply(np.exp) - 1).std() * long ** 0.5)
+
+    return df
+
+
 def main(df: pd.DataFrame):
-    print(df)
+    df = ma_backtest(df)
+    df = df.drop(columns=['Time', 'Open', 'High', 'Low', 'Volume'])
+    print(df.tail(5).to_string())
 
 
 def get_df(path: str) -> pd.DataFrame:
