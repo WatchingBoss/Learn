@@ -1,20 +1,11 @@
 body {
     font-family: Arial serif;
     height: 100%;
-    background-image: url("https://img5.goodfon.com/original/1920x1200/a/65/anime-drunk-underwear-bra-boobs-office-lady-shy-red-blonde-s.jpg");
+    background-image: url("https://img5.goodfon.com/original/1920x1080/1/e5/krasivaia-devushka-pistolet-seksualnaia-stroinaia-figura-shi.jpg");
+    background-color: rgba(223, 168, 243, 0.75);
     background-size: cover;
-}
-
-#bg-image {
-    filter: blur(2px);
-
-    z-index: -1;
-    position: absolute;
-    height: 100%;
-    width: 100%;
-
-    background-position: top left;
-    background-size: cover;
+    background-attachment: fixed;
+    background-blend-mode: overlay;
 }
 
 .container {
@@ -22,8 +13,8 @@ body {
     margin: auto;
 }
 
-header{
-
+header {
+    color: black;
 }
 
 .text-center {
@@ -41,7 +32,7 @@ header{
 
 #survey-form {
     background-color: rgba(44, 41, 41, 0.75);
-    padding: 0.2em 0.5em;
+    padding: 1em 2em;
 }
 
 .form-group {
@@ -52,5 +43,5 @@ header{
 
 .form-group p, label {
     color: white;
-    font-size: 1.2em;
+    font-size: 1.25em;
 }
