@@ -54,8 +54,8 @@ def ma_cross_over_backtest(df):
 def ma_backtest(df) -> pd.DataFrame:
     short = 10
     long = 20
-    df[f'ma{short}'] = moving_average(df, 10)
-    df[f'ma{long}'] = moving_average(df, 20)
+    df[f'ma{short}'] = moving_average(df, short)
+    df[f'ma{long}'] = moving_average(df, long)
 
     ma_s = f'ma{short}'
     ma_l = f'ma{long}'
@@ -68,12 +68,19 @@ def ma_backtest(df) -> pd.DataFrame:
     df['strategy'] = df['position'].shift(1) * df['returns']
 
     df['cumsum'] = df['strategy'].cumsum()
-    df['exp_cumsum'] = df['strategy'].cumsum().apply(np.exp)
+    df['cumret'] = df['strategy'].cumsum().apply(np.exp) # Gross perfomance
 
-    print(df[['returns', 'strategy']].mean() * long)
-    print(np.exp(df[['returns', 'strategy']].mean() * long) - 1)
-    print(df[['returns', 'strategy']].std() * long ** 0.5)
-    print((df[['returns', 'strategy']].apply(np.exp) - 1).std() * long ** 0.5)
+    df['cummax'] = df['cumret'].cummax()
+
+    drawdown = df['cummax'] - df['cumret']
+    print(drawdown.max())
+
+    # TODO: Longest drawdown period
+
+    # print(df[['returns', 'strategy']].mean() * long)                           # Mean return log space
+    # print(np.exp(df[['returns', 'strategy']].mean() * long) - 1)               # Mean return regular space
+    # print(df[['returns', 'strategy']].std() * long ** 0.5)                     # Standart deviation log space
+    # print((df[['returns', 'strategy']].apply(np.exp) - 1).std() * long ** 0.5) # Standart deviation regular space
 
     return df
 
