@@ -47,7 +47,7 @@
         <Label Grid.Row="1" Grid.Column="1">
             <Button Background="Azure" Name="FillTextBoxButton" Click="FillTextBoxButton_Click">
                 <StackPanel Orientation="Horizontal">
-                    <Image Source="F:\Pictures\Icons\138544-interaction-assets\png\speech-bubble-3.png" Height="30" Margin="10" />
+                    <Image Source="C:\Users\action\Pictures\Icons\speech-bubble.png" Height="30" Margin="10" />
                     <TextBlock>Put all text to TextBox</TextBlock>
                 </StackPanel>
             </Button>
