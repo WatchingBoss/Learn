@@ -1,9 +1,21 @@
-﻿using WPF_with_MVVM_Tutorial.ViewModels.Base;
+﻿using System.Windows;
+using System.Windows.Input;
+using WPF_with_MVVM_Tutorial.Infrastructure.Commands;
+using WPF_with_MVVM_Tutorial.ViewModels.Base;
 
 namespace WPF_with_MVVM_Tutorial.ViewModels
 {
     internal class MainWindowViewModel : ViewModel
     {
+        public MainWindowViewModel()
+        {
+            #region Commands
+
+            CloseApplicationCommand = new LambdaCommand(OnCloseApplicationCommandExecute, CanCloseApplicationCommandExecute);
+
+            #endregion
+        }
+
         #region Window Title
         private string title = "Statistic Analyses CV";
 
@@ -24,6 +36,19 @@ namespace WPF_with_MVVM_Tutorial.ViewModels
             get => status;
             set => Set(ref status, value);
         }
+        #endregion
+
+        #region Commands
+
+        #region CloseApplicationCommand
+        public ICommand CloseApplicationCommand { get; }
+        public bool CanCloseApplicationCommandExecute(object p) => true;
+        public void OnCloseApplicationCommandExecute(object p)
+        {
+            Application.Current.Shutdown();
+        }
+        #endregion
+        
         #endregion
     }
 }
