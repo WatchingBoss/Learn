@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WPF_with_MVVM_Tutorial.ViewModels.Base
 {
@@ -31,7 +27,7 @@ namespace WPF_with_MVVM_Tutorial.ViewModels.Base
         }
 
         private bool _Disposed;
-        protected virtual void Dispose(bool Disposing) 
+        protected virtual void Dispose(bool Disposing)
         {
             if (!Disposing || _Disposed) return;
             _Disposed = true;
