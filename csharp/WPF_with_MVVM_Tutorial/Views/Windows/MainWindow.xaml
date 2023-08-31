@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPF_with_MVVM_Tutorial"
+        xmlns:cmd="clr-namespace:WPF_with_MVVM_Tutorial.Infrastructure.Commands"
         xmlns:vm="clr-namespace:WPF_with_MVVM_Tutorial.ViewModels"
         mc:Ignorable="d"
         Title="{Binding Title}" Height="450" Width="800">
@@ -12,8 +13,15 @@
     </Window.DataContext>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
-            <MenuItem Header="Fle">
-                <MenuItem Header="Exit" Command="{Binding CloseApplicationCommand}"/>
+            <MenuItem Header="File">
+                <!--<MenuItem Header="Exit" Command="{Binding CloseApplicationCommand}"/>-->
+                <!--<MenuItem Header="Exit" Command="cmd:CloseApplicationCommand" />-->
+                <MenuItem Header="Exit">
+                    <MenuItem.Command>
+                        <cmd:CloseApplicationCommand/>
+                    </MenuItem.Command>
+                </MenuItem>
+                
             </MenuItem>
             <MenuItem Header="Help">
                 <MenuItem Header="About"/>
