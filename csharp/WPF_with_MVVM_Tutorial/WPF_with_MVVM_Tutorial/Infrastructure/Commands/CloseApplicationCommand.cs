@@ -1,7 +1,7 @@
 ﻿using System.Windows;
-using WPF_with_MVVM_Tutorial.Infrastructure.Commands.Base;
+using CV_WPF.Infrastructure.Commands.Base;
 
-namespace WPF_with_MVVM_Tutorial.Infrastructure.Commands
+namespace CV_WPF.Infrastructure.Commands
 {
     internal class CloseApplicationCommand : Command
     {

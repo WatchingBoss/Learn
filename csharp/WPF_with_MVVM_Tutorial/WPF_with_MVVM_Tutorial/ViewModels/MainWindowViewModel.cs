@@ -1,9 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Input;
-using WPF_with_MVVM_Tutorial.Infrastructure.Commands;
-using WPF_with_MVVM_Tutorial.ViewModels.Base;
+using CV_WPF.Infrastructure.Commands;
+using CV_WPF.ViewModels.Base;
 
-namespace WPF_with_MVVM_Tutorial.ViewModels
+namespace CV_WPF.ViewModels
 {
     internal class MainWindowViewModel : ViewModel
     {
