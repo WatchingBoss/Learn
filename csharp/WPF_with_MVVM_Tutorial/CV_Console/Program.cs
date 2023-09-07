@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
@@ -18,7 +20,7 @@ namespace CV_Console
             return await result.Content.ReadAsStreamAsync();
         }
 
-        private static IEnumerable<string> GetGataLines()
+        private static IEnumerable<string> GetDataLines()
         {
             using var data_stream = GetDataStream().Result;
             using var data_reader = new StreamReader(data_stream);
@@ -31,12 +33,19 @@ namespace CV_Console
             }
         }
 
+        private static DateTime[] GetDates() => GetDataLines()
+            .First()
+            .Split(',')
+            .Skip(4)
+            .Select(s => DateTime.Parse(s, CultureInfo.InvariantCulture))
+            .ToArray();
+
         static void Main(string[] args)
         {
-            foreach (var data_line in GetGataLines())
-                Console.WriteLine(data_line);
-
-
+            //foreach (var data_line in GetDataLines())
+            //    Console.WriteLine(data_line);
+            
+            Console.WriteLine(string.Join("\r\n", GetDates()));
 
         }
     }
