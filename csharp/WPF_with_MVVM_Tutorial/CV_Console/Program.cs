@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Net.WebSockets;
 using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 
@@ -29,7 +30,7 @@ namespace CV_Console
             {
                 var line = data_reader.ReadLine();
                 if (string.IsNullOrWhiteSpace(line)) continue;
-                yield return line;
+                yield return line.Replace("Korea, South", "South Korea");
             }
         }
 
@@ -40,12 +41,33 @@ namespace CV_Console
             .Select(s => DateTime.Parse(s, CultureInfo.InvariantCulture))
             .ToArray();
 
+        private static IEnumerable<(string Country, string Province, int[] Counts)> GetData()
+        {
+            var lines = GetDataLines()
+                .Skip(1)
+                .Select(line => line.Split(","));
+
+            foreach(var line in lines)
+            {
+                var province = line[0].Trim();
+                var country = line[1].Trim(' ', '"');
+                var counts = line.Skip(4).Select(int.Parse).ToArray();
+
+                yield return (province, country, counts);
+            }
+        }
+
         static void Main(string[] args)
         {
             //foreach (var data_line in GetDataLines())
             //    Console.WriteLine(data_line);
             
-            Console.WriteLine(string.Join("\r\n", GetDates()));
+            //Console.WriteLine(string.Join("\r\n", GetDates()));
+
+            var russia_data = GetData()
+                .First(v => v.Country.Equals("Russia", StringComparison.OrdinalIgnoreCase));
+            Console.WriteLine(string.Join("\r\n", GetDates().Zip(russia_data.Counts, (date, count) => $"{date:dd:MM} - {count}")));
+
 
         }
     }
