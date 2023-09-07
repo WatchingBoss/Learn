@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:fa="http://schemas.fontawesome.com/icons/"
-        xmlns:oxy="http://oxyplot.org/wpf"
         xmlns:local="clr-namespace:CV_WPF"
         xmlns:cmd="clr-namespace:CV_WPF.Infrastructure.Commands"
         xmlns:vm="clr-namespace:CV_WPF.ViewModels"
@@ -19,9 +18,7 @@
     <Window.Resources>
         <cmd:CloseApplicationCommand x:Key="CloseApplicationCommand"/>
     </Window.Resources>
-    
     <DockPanel>
-        
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File">
                 <!--<MenuItem Header="Exit" Command="{Binding CloseApplicationCommand}"/>-->
@@ -46,20 +43,9 @@
                 <ProgressBar Width="150" Height="12" Value="10"/>
             </StatusBarItem>
         </StatusBar>
-
+        
         <TabControl>
-            <TabItem Header="Graph">
-                <oxy:Plot>
-                    <oxy:Plot.Axes>
-                        <oxy:LinearAxis Position="Left"/>
-                        <oxy:LinearAxis Position="Bottom"/>
-                    </oxy:Plot.Axes>
-                    <oxy:LineSeries Color="Red"
-                                    ItemsSource="{Binding TestDataPoint}"
-                                    DataFieldX="XValue" DataFieldY="YValue"/>
-                </oxy:Plot>
-            </TabItem>
-            <TabItem Visibility="Collapsed">
+            <TabItem>
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="Regular_File" Height="12" Margin="0 0 5 0" Foreground="Gray"/>
@@ -91,7 +77,7 @@
                                   HorizontalAlignment="Right" Width="4"/>
                 </Grid>
             </TabItem>
+            <TabItem Header="Tab 2"></TabItem>
         </TabControl>
-        
     </DockPanel>
 </Window>
