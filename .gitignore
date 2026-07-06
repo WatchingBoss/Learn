@@ -40,3 +40,5 @@ csharp/EFCore_learn/db/Northwind.db
 csharp/EFCore_learn/db/Northwind.sql
 csharp/.DS_Store
 .DS_Store
+/binary_tree/.vscode
+/binary_tree/tree_2.dSYM
