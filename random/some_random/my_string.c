@@ -77,7 +77,7 @@ String *UserInput( ) {
 
 int main( ) {
 	String *user_input = UserInput( );
-	String *str1 = MakeString("This is afirst string");
+	String *str1 = MakeString("This is a first string");
 	String *str2 = MakeString( "This is a second string" );
 	String *str3 = CatString( str1, str2 );
 
